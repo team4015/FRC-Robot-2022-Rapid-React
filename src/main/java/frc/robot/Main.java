@@ -23,5 +23,4 @@ public final class Main {
     RobotBase.startRobot(Robot::new);
   }
 
-  kajs dk askjdkasj dkjashd kjasdkka
 }
