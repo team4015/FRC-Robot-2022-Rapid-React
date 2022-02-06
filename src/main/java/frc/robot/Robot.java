@@ -14,8 +14,8 @@
 
 package frc.robot;
 
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 public class Robot
 {
