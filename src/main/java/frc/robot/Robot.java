@@ -53,7 +53,7 @@ public class Robot
    * ------------------------------------- */
   private void initialize()
   {
-
+    intake.stop();
   }
 
   /* -------------------------------------
