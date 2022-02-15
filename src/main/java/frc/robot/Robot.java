@@ -21,14 +21,23 @@ public class Robot
 {
   // SUBSYSTEMS //
 
-  public ExampleSubsystem exampleSubsystem;
+  public Climber climber;
+  public Conveyor conveyor;
+  public Drivetrain drivetrain;
+  public Intake intake;
+  public Shooter shooter;
+
 
   // CONSTRUCTOR //
 
   public Robot()
   {
     // instantiate subsystems
-    exampleSubsystem = new ExampleSubsystem();
+    climber = new Climber();
+    conveyor = new Conveyor();
+    drivetrain = new Drivetrain();
+    intake = new Intake();
+    shooter = new Shooter();
 
     initialize();
     setDefaultCommands();
@@ -54,6 +63,5 @@ public class Robot
    * ------------------------------------- */
   private void setDefaultCommands()
   {
-    exampleSubsystem.setDefaultCommand(new ExampleCommand(this));
   }
 }
