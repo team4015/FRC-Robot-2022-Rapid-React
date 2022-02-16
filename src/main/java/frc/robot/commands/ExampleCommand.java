@@ -30,7 +30,7 @@ public class ExampleCommand extends CommandBase
     this.robot = robot;
 
     // subsystems that this command requires
-    addRequirements(robot.exampleSubsystem);
+    //addRequirements(robot.exampleSubsystem);
   }
 
   // METHODS //

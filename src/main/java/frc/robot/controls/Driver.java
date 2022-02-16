@@ -15,7 +15,6 @@ package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.*;
-import frc.robot.Constants;
 import frc.robot.commands.*;
 import frc.robot.Robot;
 
@@ -24,19 +23,23 @@ public class Driver
     // JOYSTICKS / CONTROLLERS //
     private Joystick dualshock;
 
+    public static final int DUALSHOCK = 0;
+
 
     // BUTTONS //
 
 
 
 	// CONSTANTS //
-
+    public static final double DEADZONE = 0.15; // Deadzone applied to joysticks to aid in adjusting sensitivity
+    public static final double MAX_THROTTLE_SPEED = 0.30;
+    public static final double MAX_STEER_SPEED = 0.2;
 
 
     public Driver(Robot robot)
     {
 		// instantiate joysticks / controllers
-        dualshock = new Joystick(Constants.DUALSHOCK);
+        dualshock = new Joystick(DUALSHOCK);
 
         // bind button objects to physical buttons
 
@@ -56,15 +59,10 @@ public class Driver
     ===================================== */
     public double getThrottle()
     {
-        double throttleValue = 0;
-        
-        throttleValue = -dualshock.getY();
-        throttleValue *= Constants.MAX_THROTTLE_SPEED;
+        double throttleValue = -dualshock.getY();
+        if (Math.abs(throttleValue) < DEADZONE) return 0;
 
-        if (Math.abs(throttleValue) < Constants.DEADZONE)
-        {
-            return 0;
-        }
+        throttleValue *= MAX_THROTTLE_SPEED;
 
         return throttleValue;
     }
@@ -78,15 +76,10 @@ public class Driver
     ===================================== */
     public double getSteer()
     {
-        double steerValue = 0;
+        double steerValue =  dualshock.getZ();
+        if (Math.abs(steerValue) < DEADZONE) return 0;
 
-        steerValue = dualshock.getZ();
-        steerValue *= Constants.MAX_STEER_SPEED;
-
-        if (Math.abs(steerValue) < Constants.DEADZONE)
-        {
-            return 0;
-        }
+        steerValue *= MAX_STEER_SPEED;
 
         return steerValue;
     }

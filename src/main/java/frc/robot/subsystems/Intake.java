@@ -15,21 +15,28 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-import frc.robot.Constants;
 
 public class Intake extends SubsystemBase
 {
   // HARDWARE //
-
   private PWMSparkMax intakeMotor;
   private DoubleSolenoid intakePiston;
   private boolean deployed;
 
+  // PORTS //
+  public static final int INTAKE_SPARK = -1;
+  public static final int INTAKE_PISTON_DEPLOY = -1;
+  public static final int INTAKE_PISTON_RETRACT = -1;
+
+  // CONSTANTS //
+  public static final double INTAKE_SPEED = 0.2;
+  public static final double INTAKE_REVERSE_SPEED = -0.2;
+
   public Intake()
   {
     // instantiate hardware
-    intakeMotor = new PWMSparkMax(Constants.INTAKE_SPARK); // The intake is run by one brushless motor controlled by one SparkMax motor controller
-    intakePiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.INTAKE_PISTON_DEPLOY, Constants.INTAKE_PISTON_RETRACT);
+    intakeMotor = new PWMSparkMax(INTAKE_SPARK); // The intake is run by one brushless motor controlled by one SparkMax motor controller
+    intakePiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE_PISTON_DEPLOY, INTAKE_PISTON_RETRACT);
     deployed = false;
   }
 
@@ -65,7 +72,7 @@ public class Intake extends SubsystemBase
   {
     if (deployed) // Prevents the intake from spinning when held up inside the chassis
     {
-      intakeMotor.set(Constants.INTAKE_SPEED);
+      intakeMotor.set(INTAKE_SPEED);
     }
   }
 
@@ -87,7 +94,7 @@ public class Intake extends SubsystemBase
   {
     if (deployed)
     {
-      intakeMotor.set(Constants.INTAKE_REVERSE_SPEED);
+      intakeMotor.set(INTAKE_REVERSE_SPEED);
     }
   }
 }
