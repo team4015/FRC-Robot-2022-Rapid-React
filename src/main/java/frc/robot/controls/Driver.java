@@ -21,9 +21,11 @@ import frc.robot.Robot;
 public class Driver
 {
     // JOYSTICKS / CONTROLLERS //
-    private Joystick dualshock;
+    private Joystick throttle;
+    private Joystick steer;
 
-    public static final int DUALSHOCK = 0;
+    public static final int THROTTLE = 0;
+    public static final int STEER = 1;
 
 
     // BUTTONS //
@@ -39,7 +41,8 @@ public class Driver
     public Driver(Robot robot)
     {
 		// instantiate joysticks / controllers
-        dualshock = new Joystick(DUALSHOCK);
+        throttle = new Joystick(THROTTLE);
+        steer = new Joystick(STEER);
 
         // bind button objects to physical buttons
 
@@ -59,7 +62,7 @@ public class Driver
     ===================================== */
     public double getThrottle()
     {
-        double throttleValue = -dualshock.getY();
+        double throttleValue = -throttle.getY();
         if (Math.abs(throttleValue) < DEADZONE) return 0;
 
         throttleValue *= MAX_THROTTLE_SPEED;
@@ -76,7 +79,7 @@ public class Driver
     ===================================== */
     public double getSteer()
     {
-        double steerValue =  dualshock.getZ();
+        double steerValue =  steer.getX();
         if (Math.abs(steerValue) < DEADZONE) return 0;
 
         steerValue *= MAX_STEER_SPEED;

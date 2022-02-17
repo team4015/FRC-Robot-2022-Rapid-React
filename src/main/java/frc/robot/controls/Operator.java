@@ -21,7 +21,10 @@ import frc.robot.Robot;
 public class Operator
 {
     // JOYSTICKS / CONTROLLERS //
-    Joystick dualshock;
+    private Joystick dualshock;
+
+    // PORTS //
+    public static final int DUALSHOCK = 2;
 
     // BUTTONS //
     private JoystickButton intakeIn;
@@ -29,7 +32,6 @@ public class Operator
 
     private JoystickButton intakeDeploy;
     private JoystickButton intakeRetract;
-
 
 	// CONSTANTS //
     public static final int DUALSHOCK = 2; 
