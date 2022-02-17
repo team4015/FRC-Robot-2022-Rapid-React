@@ -14,7 +14,7 @@
 
 package frc.robot;
 
-import frc.robot.commands.*;
+import frc.robot.commands.intake.*;
 import frc.robot.subsystems.*;
 
 public class Robot
@@ -63,5 +63,6 @@ public class Robot
    * ------------------------------------- */
   private void setDefaultCommands()
   {
+    intake.setDefaultCommand(new IntakeStop(this));
   }
 }
