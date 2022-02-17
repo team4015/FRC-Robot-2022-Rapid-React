@@ -23,9 +23,6 @@ public class Operator
     // JOYSTICKS / CONTROLLERS //
     private Joystick dualshock;
 
-    // PORTS //
-    public static final int DUALSHOCK = 2;
-
     // BUTTONS //
     private JoystickButton intakeIn;
     private JoystickButton intakeOut;
