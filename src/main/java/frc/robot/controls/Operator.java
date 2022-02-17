@@ -1,5 +1,5 @@
 /* ==================================================
- * Authors:
+ * Authors: Lucas Jacobs
  *
  * --------------------------------------------------
  * Description:
@@ -13,16 +13,20 @@
 
 package frc.robot.controls;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.button.*;
+import frc.robot.commands.*;
 import frc.robot.Robot;
 
 public class Operator
 {
     // JOYSTICKS / CONTROLLERS //
+    private Joystick dualshock;
 
-
+    // PORTS //
+    public static final int DUALSHOCK = 2;
 
     // BUTTONS //
-
 
 
 	// CONSTANTS //
@@ -32,6 +36,7 @@ public class Operator
     public Operator(Robot robot)
     {
 		// instantiate joysticks / controllers
+        dualshock = new Joystick(DUALSHOCK);
 
         // bind button objects to physical buttons
 
