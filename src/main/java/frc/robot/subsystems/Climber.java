@@ -38,21 +38,21 @@ public class Climber extends SubsystemBase
   }
 
   // METHODS //
-  //unwind() winds out cabel and strap to climb
+  //unwind() winds out cable and strap to climb
 public void unwind(){
     spoolmotor.set(SPOOL_REVERSE_SPEED);
   }
-  //extend() unwinds cabel, and extends the extension rod
+  //extend() unwinds cable, and extends the extension rod
 public void extend(){
   unwind();
   gearmotor.set(GEAR_SPEED);
 }
-//retract() retracts the rod, after the cabel has been unwinded.
+//retract() retracts the rod, after the cable has been unwinded.
 public void retract(){
   spoolmotor.set(0);
   gearmotor.set(GEAR_REVERSE_SPEED);
 }
-//climb() after the rod has been retracted, the spool winds in the cabel, so the robot can climb.
+//climb() after the rod has been retracted, the spool winds in the cable, so the robot can climb.
 public void climb(){
   spoolmotor.set(SPOOL_SPEED);
   gearmotor.set(0);
