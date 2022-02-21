@@ -15,6 +15,7 @@
 package frc.robot;
 
 import frc.robot.commands.intake.*;
+import frc.robot.commands.climber.*;
 import frc.robot.subsystems.*;
 
 public class Robot
@@ -54,6 +55,7 @@ public class Robot
   private void initialize()
   {
     intake.stop();
+    climber.stop();
   }
 
   /* -------------------------------------
@@ -64,5 +66,6 @@ public class Robot
   private void setDefaultCommands()
   {
     intake.setDefaultCommand(new IntakeStop(this));
+    climber.setDefaultCommand(new ClimberStop(this));
   }
 }
