@@ -1,8 +1,7 @@
 /* ==================================================
-Authour: Shane Pinto
-Description: IntakeRetract.java is a command that 
-tells the intake subsystem to retract the intake 
-piston.
+Authour: Lucas
+Description: IntakeFlip.java is a command that deploys the intake
+if it is retracted and retracts the intake if it is deployed
 ================================================== */
 
 package frc.robot.commands.intake;
@@ -10,12 +9,12 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 
-public class IntakeRetract extends CommandBase
+public class IntakeFlip extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private Robot robot;
 
-  public IntakeRetract(Robot robot)
+  public IntakeFlip(Robot robot)
   {
     this.robot = robot;
     addRequirements(robot.intake);
@@ -32,7 +31,7 @@ public class IntakeRetract extends CommandBase
   @Override
   public void execute()
   {
-    robot.intake.retract();
+    robot.intake.flip();
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +45,6 @@ public class IntakeRetract extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return true;
+    return false;
   }
 }
