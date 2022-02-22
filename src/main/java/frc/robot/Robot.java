@@ -14,6 +14,7 @@
 
 package frc.robot;
 
+import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.climber.*;
 import frc.robot.subsystems.*;
@@ -27,6 +28,7 @@ public class Robot
   public Drivetrain drivetrain;
   public Intake intake;
   public Shooter shooter;
+  public Driver driver;
 
 
   // CONSTRUCTOR //
@@ -39,6 +41,7 @@ public class Robot
     drivetrain = new Drivetrain();
     intake = new Intake();
     shooter = new Shooter();
+    driver = new Driver(this);
 
     initialize();
     setDefaultCommands();
@@ -54,6 +57,7 @@ public class Robot
    * ------------------------------------- */
   private void initialize()
   {
+    drivetrain.stopMotors();
     intake.stop();
     climber.stop();
   }
@@ -67,5 +71,6 @@ public class Robot
   {
     intake.setDefaultCommand(new IntakeStop(this));
     climber.setDefaultCommand(new ClimberStop(this));
+    drivetrain.setDefaultCommand(new Drive(this));
   }
 }
