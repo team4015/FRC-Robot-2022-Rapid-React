@@ -27,7 +27,6 @@ public class Drivetrain extends SubsystemBase
   public static final int LEFT_MOTOR = -2; // port not final
 
   // CONSTANTS //
-
   
 
   // CONSTRUCTOR //
@@ -39,11 +38,11 @@ public class Drivetrain extends SubsystemBase
     leftMotor = new PWMSparkMax(LEFT_MOTOR);
   }
 
-  // METHODS //
-
-  public void moveMotors (double speed) {
-    rightMotor.set(speed);
-    leftMotor.set(speed);
+  // METHODS // 
+  
+  public void moveMotors (double speed, double turn) {
+    rightMotor.set(speed + turn);
+    leftMotor.set(speed - turn);
   }
 
   public void stopMotors() {
