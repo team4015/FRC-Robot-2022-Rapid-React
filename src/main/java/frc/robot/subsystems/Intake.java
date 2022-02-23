@@ -48,8 +48,11 @@ public class Intake extends SubsystemBase
   it is deployed
   ===================================== */
   public void flip() {
-    if (deployed) retract();
-    else deploy();
+    if (deployed) {
+      retract();
+    } else {
+      deploy();
+    }
   }
 
   /* =====================================
