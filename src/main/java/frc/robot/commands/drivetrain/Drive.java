@@ -46,7 +46,7 @@ public class Drive extends CommandBase
   @Override
   public void execute()
   {
-    robot.drivetrain.moveMotors(robot.driver.getThrottle());
+    robot.drivetrain.moveMotors(robot.driver.getThrottle(), robot.driver.getSteer());
   }
 
   // Called once the command ends or is interrupted.
