@@ -27,7 +27,6 @@ public class Drivetrain extends SubsystemBase
   public static final int LEFT_MOTOR = -2; // port not final
 
   // CONSTANTS //
-
   
 
   // CONSTRUCTOR //
