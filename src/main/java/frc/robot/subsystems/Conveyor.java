@@ -79,9 +79,17 @@ public class Conveyor extends SubsystemBase
       timer.start();
       while(!conveyorSwitch.get() && timer.get() < CONVEYOR_TIMEOUT);
 
+<<<<<<< Updated upstream
       timer.reset();
       timer.start();
       while(!conveyorSwitch.get() && timer.get() < CONVEYOR_TIMEOUT);
+=======
+<<<<<<< Updated upstream
+=======
+      timer.reset();
+      timer.start();
+      while(conveyorSwitch.get() && timer.get() < CONVEYOR_TIMEOUT);
+>>>>>>> Stashed changes
 
       timer.stop();
     }
@@ -110,5 +118,9 @@ public class Conveyor extends SubsystemBase
   public void reverse() { // This function will reverse the conveyor to outtake balls.
     conveyorMotor.set(CONVEYOR_REVERSE_SPEED);
   }
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 }
