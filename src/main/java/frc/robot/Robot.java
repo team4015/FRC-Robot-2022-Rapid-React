@@ -17,6 +17,7 @@ package frc.robot;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.climber.*;
+import frc.robot.controls.*;
 import frc.robot.subsystems.*;
 
 public class Robot
