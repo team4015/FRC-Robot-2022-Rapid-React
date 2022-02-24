@@ -1,65 +1,50 @@
 /* ==================================================
- * Authors: Lemi Miyu and Fawaaz
- *
- * --------------------------------------------------
- * Description:
- *
- * ================================================== */
+Author: Lucas Jacobs
+Description: IntakeFlip.java is a command that deploys the intake
+if it is retracted and retracts the intake if it is deployed
+================================================== */
 
-package frc.robot.commands.drivetrain;
+package frc.robot.commands.intake;
 
-import frc.robot.Robot;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 
-public class Drive extends CommandBase
+public class IntakeFlip extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-
-  // VARIABLES //
-
   private Robot robot;
 
-  // CONSTANTS //
-
-
-
-  // CONSTRUCTOR //
-
-  public Drive(Robot robot)
+  public IntakeFlip(Robot robot)
   {
     this.robot = robot;
-
-    // subsystems that this command requires
-    addRequirements(robot.drivetrain);
+    addRequirements(robot.intake);
   }
-
-  // METHODS //
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize()
   {
-    robot.drivetrain.stopMotors();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute()
   {
-    robot.drivetrain.moveMotors(robot.driver.getThrottle(), robot.driver.getSteer());
+    robot.intake.flip();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted)
   {
-    robot.drivetrain.stopMotors();
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished()
   {
-    return false;
+    return true;
   }
 }
