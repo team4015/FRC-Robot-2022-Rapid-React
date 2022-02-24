@@ -10,7 +10,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 
 public class Drivetrain extends SubsystemBase
 {
@@ -18,8 +18,8 @@ public class Drivetrain extends SubsystemBase
 
   // declare motor controllers, solenoids, and other hardware here
 
-  private PWMSparkMax rightMotor;
-  private PWMSparkMax leftMotor;
+  private Talon rightMotor;
+  private Talon leftMotor;
 
   // PORTS //
 
@@ -34,8 +34,8 @@ public class Drivetrain extends SubsystemBase
   public Drivetrain()
   {
     // instantiate hardware
-    rightMotor = new PWMSparkMax (RIGHT_MOTOR);
-    leftMotor = new PWMSparkMax(LEFT_MOTOR);
+    rightMotor = new Talon (RIGHT_MOTOR);
+    leftMotor = new Talon(LEFT_MOTOR);
   }
 
   // METHODS // 
