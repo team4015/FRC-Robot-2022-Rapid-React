@@ -16,6 +16,10 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.intake.*;
+import frc.robot.commands.climber.ClimberClimb;
+import frc.robot.commands.climber.ClimberExtend;
+import frc.robot.commands.climber.ClimberRetract;
+import frc.robot.commands.climber.ClimberUnwind;
 import frc.robot.commands.conveyor.*;
 import frc.robot.Robot;
 
@@ -33,6 +37,12 @@ public class Operator
     private JoystickButton conveyorFeed;
     private JoystickButton conveyorReverse;
 
+    private JoystickButton climberClimb;
+    private JoystickButton climberUnwind;
+    private JoystickButton climberExtend;
+    private JoystickButton climberRetract;
+
+
 	// CONSTANTS //
     public static final int DUALSHOCK = 2; 
 
@@ -43,6 +53,11 @@ public class Operator
 
     public static final int CONVEYOR_FEED = 7;
     public static final int CONVEYOR_REVERSE = 5;
+
+    public static final int CLIMBER_CLIMB = 1;
+    public static final int CLIMBER_UNWIND = 4;
+    public static final int CLIMBER_EXTEND = 3;
+    public static final int CLIMBER_RETRACT = 2;
 
 
     public Operator(Robot robot)
@@ -59,6 +74,11 @@ public class Operator
         conveyorFeed = new JoystickButton(dualshock, CONVEYOR_FEED);
         conveyorReverse = new JoystickButton(dualshock, CONVEYOR_REVERSE);
 
+        climberClimb = new JoystickButton(dualshock, CLIMBER_CLIMB);
+        climberUnwind = new JoystickButton(dualshock, CLIMBER_UNWIND);
+        climberExtend = new JoystickButton(dualshock, CLIMBER_EXTEND);
+        climberRetract = new JoystickButton(dualshock, CLIMBER_RETRACT);
+
         // bind buttons to commands
         intakeIn.whenHeld(new IntakeSpin(robot));
         intakeOut.whenHeld(new IntakeReverse(robot));
@@ -67,6 +87,11 @@ public class Operator
 
         conveyorFeed.whenHeld(new ConveyorFeed(robot));
         conveyorReverse.whenHeld(new ConveyorReverse(robot));
+
+        climberClimb.whenHeld(new ClimberClimb(robot));
+        climberUnwind.whenHeld(new ClimberUnwind(robot));
+        climberExtend.whenHeld(new ClimberExtend(robot));
+        climberRetract.whenHeld(new ClimberRetract(robot));
     }
 
 	// METHODS //
