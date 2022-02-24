@@ -60,7 +60,10 @@ public class Robot
   private void initialize()
   {
     drivetrain.stopMotors();
+
     intake.stop();
+    intake.retract();
+
     climber.stop();
     conveyor.stop();
   }
