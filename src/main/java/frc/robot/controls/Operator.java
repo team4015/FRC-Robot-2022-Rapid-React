@@ -16,6 +16,7 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.intake.*;
+import frc.robot.commands.conveyor.*;
 import frc.robot.Robot;
 
 public class Operator
@@ -29,6 +30,9 @@ public class Operator
 
     private JoystickButton intakeFlip;
 
+    private JoystickButton conveyorFeed;
+    private JoystickButton conveyorReverse;
+
 	// CONSTANTS //
     public static final int DUALSHOCK = 2; 
 
@@ -36,6 +40,9 @@ public class Operator
     public static final int INTAKE_OUT = 6;
 
     public static final int INTAKE_FLIP = 10;
+
+    public static final int CONVEYOR_FEED = 7;
+    public static final int CONVEYOR_REVERSE = 5;
 
 
     public Operator(Robot robot)
@@ -49,11 +56,17 @@ public class Operator
 
         intakeFlip = new JoystickButton(dualshock, INTAKE_FLIP);
 
+        conveyorFeed = new JoystickButton(dualshock, CONVEYOR_FEED);
+        conveyorReverse = new JoystickButton(dualshock, CONVEYOR_REVERSE);
+
         // bind buttons to commands
         intakeIn.whenHeld(new IntakeSpin(robot));
         intakeOut.whenHeld(new IntakeReverse(robot));
 
         intakeFlip.whenPressed(new IntakeFlip(robot));
+
+        conveyorFeed.whenHeld(new ConveyorFeed(robot));
+        conveyorReverse.whenHeld(new ConveyorReverse(robot));
     }
 
 	// METHODS //
