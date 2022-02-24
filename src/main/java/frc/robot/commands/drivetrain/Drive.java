@@ -2,8 +2,10 @@
  * Authors: Lemi Miyu and Fawaaz
  *
  * --------------------------------------------------
- * Description:
- *
+ * Description: Command that will send joystick
+ * readings to the drivetrain subsystem to write a 
+ * speed to the motors so that the robot can move
+ * according to joystick input.
  * ================================================== */
 
 package frc.robot.commands.drivetrain;
