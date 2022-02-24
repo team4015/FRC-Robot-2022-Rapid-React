@@ -16,10 +16,7 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.intake.*;
-import frc.robot.commands.climber.ClimberClimb;
-import frc.robot.commands.climber.ClimberExtend;
-import frc.robot.commands.climber.ClimberRetract;
-import frc.robot.commands.climber.ClimberUnwind;
+import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
 import frc.robot.Robot;
 
