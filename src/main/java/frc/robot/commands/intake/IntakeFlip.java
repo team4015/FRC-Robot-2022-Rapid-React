@@ -1,8 +1,7 @@
 /* ==================================================
-Authour: Shane Pinto
-Description: IntakeDeploy.java is a command that 
-tells the intake subsystem to deploy the intake 
-piston.
+Author: Lucas Jacobs
+Description: IntakeFlip.java is a command that deploys the intake
+if it is retracted and retracts the intake if it is deployed
 ================================================== */
 
 package frc.robot.commands.intake;
@@ -10,12 +9,12 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 
-public class IntakeDeploy extends CommandBase
+public class IntakeFlip extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private Robot robot;
 
-  public IntakeDeploy(Robot robot)
+  public IntakeFlip(Robot robot)
   {
     this.robot = robot;
     addRequirements(robot.intake);
@@ -32,7 +31,7 @@ public class IntakeDeploy extends CommandBase
   @Override
   public void execute()
   {
-    robot.intake.deploy();
+    robot.intake.flip();
   }
 
   // Called once the command ends or is interrupted.

@@ -43,6 +43,19 @@ public class Intake extends SubsystemBase
   // METHODS //
 
   /* =====================================
+  flip() deploys the intake if it is 
+  retracted and retracts the intake if 
+  it is deployed
+  ===================================== */
+  public void flip() {
+    if (deployed) {
+      retract();
+    } else {
+      deploy();
+    }
+  }
+
+  /* =====================================
   deploy() extends the intake piston so 
   that the intake hangs in front of the
   robot chassis.

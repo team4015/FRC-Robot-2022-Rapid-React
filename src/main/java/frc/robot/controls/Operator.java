@@ -27,8 +27,7 @@ public class Operator
     private JoystickButton intakeIn;
     private JoystickButton intakeOut;
 
-    private JoystickButton intakeDeploy;
-    private JoystickButton intakeRetract;
+    private JoystickButton intakeFlip;
 
 	// CONSTANTS //
     public static final int DUALSHOCK = 2; 
@@ -36,8 +35,7 @@ public class Operator
     public static final int INTAKE_IN = 8;
     public static final int INTAKE_OUT = 6;
 
-    public static final int INTAKE_DEPLOY = 10;
-    public static final int INTAKE_RETRACT = 9;
+    public static final int INTAKE_FLIP = 10;
 
 
     public Operator(Robot robot)
@@ -49,15 +47,13 @@ public class Operator
         intakeIn = new JoystickButton(dualshock, INTAKE_IN);
         intakeOut = new JoystickButton(dualshock, INTAKE_OUT);
 
-        intakeDeploy = new JoystickButton(dualshock, INTAKE_DEPLOY);
-        intakeRetract = new JoystickButton(dualshock, INTAKE_RETRACT); 
+        intakeFlip = new JoystickButton(dualshock, INTAKE_FLIP);
 
         // bind buttons to commands
         intakeIn.whenHeld(new IntakeSpin(robot));
         intakeOut.whenHeld(new IntakeReverse(robot));
 
-        intakeDeploy.whenPressed(new IntakeDeploy(robot));
-        intakeRetract.whenPressed(new IntakeRetract(robot));
+        intakeFlip.whenPressed(new IntakeFlip(robot));
     }
 
 	// METHODS //
