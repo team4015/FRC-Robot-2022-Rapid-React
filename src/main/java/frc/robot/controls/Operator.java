@@ -1,5 +1,5 @@
 /* ==================================================
- * Authors: Lucas Jacobs
+ * Authors: Lucas Jacobs and Jason Wang
  *
  * --------------------------------------------------
  * Description:
@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
+import frc.robot.commands.shooter.*;
 import frc.robot.Robot;
 
 public class Operator
@@ -39,6 +40,7 @@ public class Operator
     private JoystickButton climberExtend;
     private JoystickButton climberRetract;
 
+    private JoystickButton shooterSpin;
 
 	// CONSTANTS //
     public static final int DUALSHOCK = 2; 
@@ -55,6 +57,8 @@ public class Operator
     public static final int CLIMBER_UNWIND = 4;
     public static final int CLIMBER_EXTEND = 3;
     public static final int CLIMBER_RETRACT = 2;
+
+    public static final int SHOOTER_SPIN = 9;
 
 
     public Operator(Robot robot)
@@ -76,6 +80,8 @@ public class Operator
         climberExtend = new JoystickButton(dualshock, CLIMBER_EXTEND);
         climberRetract = new JoystickButton(dualshock, CLIMBER_RETRACT);
 
+        shooterSpin = new JoystickButton(dualshock, SHOOTER_SPIN);
+
         // bind buttons to commands
         intakeIn.whenHeld(new IntakeSpin(robot));
         intakeOut.whenHeld(new IntakeReverse(robot));
@@ -89,9 +95,11 @@ public class Operator
         climberUnwind.whenHeld(new ClimberUnwind(robot));
         climberExtend.whenHeld(new ClimberExtend(robot));
         climberRetract.whenHeld(new ClimberRetract(robot));
+
+        shooterSpin.whenHeld(new ShooterSetSpeed(robot));
+        shooterSpin.whenReleased(new ShooterSpin(robot));
     }
 
-	// METHODS //
-
+	// METHODS
     // Add methods here which return values for various robot controls by reading the controllers.
 }

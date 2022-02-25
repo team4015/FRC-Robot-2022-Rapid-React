@@ -3,7 +3,7 @@
  *
  * --------------------------------------------------
  * Description: 
- * Contains the functions to control the climber.
+ * Climber.java contains the functions to control the climber.
  *
  * ================================================== */
 
