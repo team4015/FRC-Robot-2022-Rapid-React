@@ -41,6 +41,9 @@ public class Drivetrain extends SubsystemBase
   // METHODS // 
   
   public void moveMotors (double speed, double turn) {
+    speed = Math.pow(speed, 2);
+    turn = Math.pow(turn, 2);
+
     rightMotor.set(speed + turn);
     leftMotor.set(speed - turn);
   }
