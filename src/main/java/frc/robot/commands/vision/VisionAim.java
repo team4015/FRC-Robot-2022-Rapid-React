@@ -20,8 +20,7 @@ public class VisionAim extends CommandBase
   private Robot robot;
 
   // CONSTANTS //
-
-
+  final static double TURN_SPEED = 0.1;
 
   // CONSTRUCTOR //
 
@@ -46,7 +45,9 @@ public class VisionAim extends CommandBase
   @Override
   public void execute()
   {
-    robot.vision.aimAtTarget();
+    double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
+
+    robot.drivetrain.moveMotors(0, turn * TURN_SPEED);
   }
 
   // Called once the command ends or is interrupted.

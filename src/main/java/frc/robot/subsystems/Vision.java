@@ -16,7 +16,6 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 
 public class Vision extends SubsystemBase {
   // HARDWARE //
@@ -27,18 +26,14 @@ public class Vision extends SubsystemBase {
   final static int HEIGHT = 120;
   final static int WIDTH = 160;
   final static int FPS = 30;
-  final static double TURN_SPEED = 0.1;
 
   // VARIABLES //
   private VisionThread visionThread;
   private double xCentre;
   private Object imgLock;
-  private Robot robot;
 
 
-  public Vision(Robot robot) {
-    this.robot = robot;
-  }
+  public Vision() {}
 
   // METHODS //
 
@@ -62,7 +57,11 @@ public class Vision extends SubsystemBase {
       if (!pipeline.filterContoursOutput().isEmpty()) {
         Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0)); //Gets bounding rectangle around the target
         synchronized (imgLock) {
-          xCentre = r.x + (r.width / 2); //Set the sentre of the bounding rectangle
+          xCentre = r.x + (r.width / 2); //Set the centre of the bounding rectangle
+
+          /* Resize xCentre so that it is in the original resolution of the camera
+          * and not the resized resolution in the pipeline */
+          xCentre /= WIDTH/pipeline.filterContoursOutput().get(0).cols();
         }
       }
     });
@@ -74,15 +73,14 @@ public class Vision extends SubsystemBase {
   Author: Lucas Jacobs
 
   Desc:
-  This method makes the robot turn in place 
-  to face the target
+  This method returns the amount that the robot should turn
+  in order to aim at the target
   ===================================== */
-  public void aimAtTarget() {
+  public double aimAtTarget() {
     double xCentre;
     synchronized (imgLock) {
-        xCentre = this.xCentre;
+      xCentre = this.xCentre;
     }
-    double turn = xCentre - (WIDTH / 2); // find difference between the target and where the robot is pointed
-    robot.drivetrain.moveMotors(0, turn * TURN_SPEED);
+    return xCentre - (WIDTH/ 2); // return difference between the target and where the robot is pointed
   }
 }
