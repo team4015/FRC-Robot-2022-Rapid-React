@@ -10,6 +10,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 
 public class Drivetrain extends SubsystemBase
@@ -20,6 +21,7 @@ public class Drivetrain extends SubsystemBase
 
   private Talon rightMotor;
   private Talon leftMotor;
+  private DifferentialDrive drive;
 
   // PORTS //
 
@@ -36,17 +38,17 @@ public class Drivetrain extends SubsystemBase
     // instantiate hardware
     rightMotor = new Talon (RIGHT_MOTOR);
     leftMotor = new Talon(LEFT_MOTOR);
+
+    drive = new DifferentialDrive(leftMotor, rightMotor);
   }
 
   // METHODS // 
   
   public void moveMotors (double speed, double turn) {
-    rightMotor.set(speed + turn);
-    leftMotor.set(speed - turn);
+    drive.arcadeDrive(speed, turn);
   }
 
   public void stopMotors() {
-    rightMotor.set(0);
-    leftMotor.set(0);
+    drive.stopMotor();
   }
 }
