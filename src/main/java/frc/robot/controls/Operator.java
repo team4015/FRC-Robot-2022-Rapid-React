@@ -98,8 +98,7 @@ public class Operator
 
         shooterSpin.whenHeld(new ShooterSetSpeed(robot));
         shooterSpin.whenReleased(new ShooterSpin(robot));
-    }
-
-	// METHODS
+        // METHODS
     // Add methods here which return values for various robot controls by reading the controllers.
+    }
 }
