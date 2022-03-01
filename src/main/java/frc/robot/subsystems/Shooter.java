@@ -14,16 +14,14 @@ public class Shooter extends SubsystemBase
 {
   // HARDWARE //
   private PWMTalonSRX motor;
-  public double speed;
  // Ports //
  public static final int SHOOTER_MOTOR = -1;
- // Constants // 
-public static final double DEFAULT_SHOOTER_SPEED = 0;
+ // Constants //
+ public static final double DEFAULT_SHOOTER_SPEED= 0.5;
   public Shooter()
   {
     // instantiate hardware
     motor = new PWMTalonSRX(SHOOTER_MOTOR);
-    speed = DEFAULT_SHOOTER_SPEED; //default speed
   }
   // METHODS //
   // spins the motor for the shooter

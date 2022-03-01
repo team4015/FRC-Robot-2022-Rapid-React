@@ -32,6 +32,7 @@ public class Robot
   public Intake intake;
   public Shooter shooter;
   public Driver driver;
+  public Operator operator;
 
 
   // CONSTRUCTOR //
@@ -45,6 +46,7 @@ public class Robot
     intake = new Intake();
     shooter = new Shooter();
     driver = new Driver(this);
+    operator = new Operator(this);
 
     initialize();
     setDefaultCommands();
