@@ -1,5 +1,5 @@
 /* ==================================================
- * Authors: Lucas Jacobs
+ * Authors: Lucas Jacobs and Jason Wang
  *
  * --------------------------------------------------
  * Description:
@@ -19,6 +19,7 @@ import frc.robot.commands.intake.*;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
 import frc.robot.commands.vision.*;
+import frc.robot.commands.shooter.*;
 import frc.robot.Robot;
 
 public class Operator
@@ -41,9 +42,10 @@ public class Operator
     private JoystickButton climberRetract;
 
     private JoystickButton visionAim;
+    private JoystickButton shooterSpin;
 
 	// CONSTANTS //
-    public static final int DUALSHOCK = 2; 
+    public static final int DUALSHOCK = 2;
 
     public static final int INTAKE_IN = 8;
     public static final int INTAKE_OUT = 6;
@@ -59,6 +61,8 @@ public class Operator
     public static final int CLIMBER_RETRACT = 2;
 
     public static final int VISION_AIM = 9;
+    public static final int SHOOTER_SPIN = 9;
+
 
     public Operator(Robot robot)
     {
@@ -80,6 +84,7 @@ public class Operator
         climberRetract = new JoystickButton(dualshock, CLIMBER_RETRACT);
 
         visionAim = new JoystickButton(dualshock, VISION_AIM);
+        shooterSpin = new JoystickButton(dualshock, SHOOTER_SPIN);
 
         // bind buttons to commands
         intakeIn.whenHeld(new IntakeSpin(robot));
@@ -96,9 +101,13 @@ public class Operator
         climberRetract.whenHeld(new ClimberRetract(robot));
 
         visionAim.whenHeld(new VisionAim(robot));
+        shooterSpin.whenHeld(new ShooterSpin(robot));
     }
-
-	// METHODS //
+       // METHODS
 
     // Add methods here which return values for various robot controls by reading the controllers.
+    public double getShooterPower(){
+        return dualshock.getThrottle();
+    }
 }
+

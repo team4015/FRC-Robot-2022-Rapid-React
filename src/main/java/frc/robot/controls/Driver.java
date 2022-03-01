@@ -14,8 +14,6 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.*;
-import frc.robot.commands.*;
 import frc.robot.Robot;
 
 public class Driver
@@ -55,7 +53,7 @@ public class Driver
 
 
 
-    
+
     /* =====================================
     getThrottle() will return the current
     value of the Y-Axis of the left stick on the controller

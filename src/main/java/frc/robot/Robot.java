@@ -18,6 +18,7 @@ import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
+import frc.robot.commands.shooter.*;
 import frc.robot.controls.*;
 import frc.robot.subsystems.*;
 
@@ -75,6 +76,7 @@ public class Robot
     conveyor.stop();
 
     vision.initCamera();
+    shooter.stop();
   }
 
   /* -------------------------------------
@@ -88,5 +90,6 @@ public class Robot
     climber.setDefaultCommand(new ClimberStop(this));
     drivetrain.setDefaultCommand(new Drive(this));
     conveyor.setDefaultCommand(new ConveyorStop(this));
+    shooter.setDefaultCommand(new ShooterStop(this));
   }
 }
