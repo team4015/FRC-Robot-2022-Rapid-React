@@ -14,35 +14,31 @@ public class Shooter extends SubsystemBase
 {
   // HARDWARE //
   private PWMTalonSRX motor;
-  private double speed;
-  private double motorSpeed;
+  public double speed;
  // Ports //
  public static final int SHOOTER_MOTOR = -1;
  // Constants // 
+public static final double DEFAULT_SHOOTER_SPEED = 0;
   public Shooter()
   {
     // instantiate hardware
     motor = new PWMTalonSRX(SHOOTER_MOTOR);
-    speed = 0; //default speed
+    speed = DEFAULT_SHOOTER_SPEED; //default speed
   }
   // METHODS //
   // spins the motor for the shooter
-  public void spin(){
+  public void spin(double speed){
+    if(speed>1){
+      speed=1;
+    }else if(speed<0){
+      speed=0;
+    }
     motor.set(speed);
   }//stops the motor for the shooter
   public void stop(){
     motor.set(0);
   }//updates the speed for the motor to accomodate the distance from the target
   // this updated speed would be the speed the algorithm calculates in vision.java
-  public void setSpeed(){
-    this.speed = motorSpeed;
-    if(speed>1){
-      speed=1;
-    }if(speed<0){
-      speed=0;
-    }
-  }
-
 }
 
 //things to go in vision:

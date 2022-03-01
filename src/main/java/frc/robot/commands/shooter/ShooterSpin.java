@@ -29,7 +29,9 @@ public class ShooterSpin extends CommandBase{
   @Override
   public void execute()
   {
-    robot.shooter.spin();
+    robot.shooter.spin(1);
+    robot.shooter.set(robot.operator.getShooterPower());
+    //change to robot.shooter.set(robot.operator.getZ()); later or whatever axis
   }
   // Called once the command ends or is interrupted.
   @Override

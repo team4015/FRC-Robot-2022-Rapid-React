@@ -96,9 +96,12 @@ public class Operator
         climberExtend.whenHeld(new ClimberExtend(robot));
         climberRetract.whenHeld(new ClimberRetract(robot));
 
-        shooterSpin.whenHeld(new ShooterSetSpeed(robot));
-        shooterSpin.whenReleased(new ShooterSpin(robot));
+        shooterSpin.whenHeld(new ShooterSpin(robot));
         // METHODS
+        public double getShooterPower(){
+            return dualshock.getThrottle(); 
+        }
+        
     // Add methods here which return values for various robot controls by reading the controllers.
     }
-}
+}  
