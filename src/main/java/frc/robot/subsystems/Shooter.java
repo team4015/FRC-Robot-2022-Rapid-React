@@ -15,7 +15,7 @@ public class Shooter extends SubsystemBase
   // HARDWARE //
   private PWMTalonSRX motor;
  // Ports //
- public static final int SHOOTER_MOTOR = -1;
+ public static final int SHOOTER_MOTOR = 2;
  // Constants //
  public static final double DEFAULT_SHOOTER_SPEED= 0.5;
   public Shooter()
