@@ -33,6 +33,7 @@ public class Shooter extends SubsystemBase
     }
     motor.set(speed);
   }//stops the motor for the shooter
+  
   public void stop(){
     motor.set(0);
   }//updates the speed for the motor to accomodate the distance from the target
