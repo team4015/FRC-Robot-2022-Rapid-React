@@ -43,7 +43,7 @@ public class Operator
     private JoystickButton shooterSpin;
 
 	// CONSTANTS //
-    public static final int DUALSHOCK = 2; 
+    public static final int DUALSHOCK = 2;
 
     public static final int INTAKE_IN = 8;
     public static final int INTAKE_OUT = 6;
@@ -99,10 +99,10 @@ public class Operator
         shooterSpin.whenHeld(new ShooterSpin(robot));
     }
        // METHODS
-        
+
     // Add methods here which return values for various robot controls by reading the controllers.
     public double getShooterPower(){
-        return dualshock.getThrottle(); 
+        return dualshock.getThrottle();
     }
-}  
+}
 
