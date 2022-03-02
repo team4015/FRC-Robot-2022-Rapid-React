@@ -41,10 +41,6 @@ public class Robot
 
   public Robot()
   {
-    // Instantiate Controls
-    driver = new Driver(this);
-    operator = new Operator(this);
-
     // Instantiate Subsystems
     climber = new Climber();
     conveyor = new Conveyor();
@@ -52,6 +48,10 @@ public class Robot
     intake = new Intake();
     shooter = new Shooter();
     vision = new Vision();
+
+    // Instantiate Controls
+    driver = new Driver(this);
+    operator = new Operator(this);
 
     initialize();
     setDefaultCommands();
