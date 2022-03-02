@@ -40,7 +40,9 @@ public class Vision extends SubsystemBase {
   private Object imgLock;
 
 
-  public Vision() {}
+  public Vision() {
+    xCentre = WIDTH/2.0;
+  }
 
   // METHODS //
 
@@ -105,7 +107,7 @@ public class Vision extends SubsystemBase {
       xCentre = this.xCentre;
     }
 
-    double turn = xCentre - (WIDTH/ 2);
+    double turn = xCentre - (WIDTH/ 2.0);
 
     // If the robot is within the turn threshold of pointing straight at the target, it wil stop turning
     if (Math.abs(turn) < TURN_THRESHOLD) turn = 0;
