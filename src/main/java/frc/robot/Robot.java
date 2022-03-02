@@ -83,6 +83,6 @@ public class Robot
     climber.setDefaultCommand(new ClimberStop(this));
     drivetrain.setDefaultCommand(new Drive(this));
     conveyor.setDefaultCommand(new ConveyorStop(this));
-    shooter.setDefaultCommand(new ShooterStop(this));
+    shooter.setDefaultCommand(new ShooterSpin(this));
   }
 }
