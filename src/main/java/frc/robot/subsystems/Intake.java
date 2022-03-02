@@ -24,9 +24,9 @@ public class Intake extends SubsystemBase
   private boolean deployed;
 
   // PORTS //
-  public static final int INTAKE_SPARK = -1;
-  public static final int INTAKE_PISTON_DEPLOY = -1;
-  public static final int INTAKE_PISTON_RETRACT = -1;
+  public static final int INTAKE_SPARK = 4;
+  public static final int INTAKE_PISTON_DEPLOY = 1;
+  public static final int INTAKE_PISTON_RETRACT = 0;
 
   // CONSTANTS //
   public static final double INTAKE_SPEED = 0.2;

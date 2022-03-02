@@ -42,9 +42,8 @@ public class Operator
     private JoystickButton climberRetract;
 
     private JoystickButton visionAim;
-    private JoystickButton shooterSpin;
+	  // PORTS //
 
-	// CONSTANTS //
     public static final int DUALSHOCK = 2;
 
     public static final int INTAKE_IN = 8;
@@ -61,7 +60,9 @@ public class Operator
     public static final int CLIMBER_RETRACT = 2;
 
     public static final int VISION_AIM = 9;
-    public static final int SHOOTER_SPIN = 9;
+  
+    // CONSTANTS //
+    public static final double SHOOTER_DEADZONE = 0.1;
 
 
     public Operator(Robot robot)
@@ -84,8 +85,6 @@ public class Operator
         climberRetract = new JoystickButton(dualshock, CLIMBER_RETRACT);
 
         visionAim = new JoystickButton(dualshock, VISION_AIM);
-        shooterSpin = new JoystickButton(dualshock, SHOOTER_SPIN);
-
         // bind buttons to commands
         intakeIn.whenHeld(new IntakeSpin(robot));
         intakeOut.whenHeld(new IntakeReverse(robot));
@@ -99,15 +98,24 @@ public class Operator
         climberUnwind.whenHeld(new ClimberUnwind(robot));
         climberExtend.whenHeld(new ClimberExtend(robot));
         climberRetract.whenHeld(new ClimberRetract(robot));
-
+      
         visionAim.whenHeld(new VisionAim(robot));
-        shooterSpin.whenHeld(new ShooterSpin(robot));
     }
        // METHODS
 
     // Add methods here which return values for various robot controls by reading the controllers.
+
+    /* Authors: Jason Wang & Lucas Jacobs*
+    * Desc:
+    * Returns the power given to the shooter by reading the left
+    * joystick of the controller*/
+
     public double getShooterPower(){
-        return dualshock.getThrottle();
+        double power = -dualshock.getY();
+
+        if (Math.abs(power) < SHOOTER_DEADZONE) power = 0;
+
+        return power;
     }
 }
 
