@@ -32,8 +32,8 @@ public class Driver
 
 	// CONSTANTS //
     public static final double DEADZONE = 0.15; // Deadzone applied to joysticks to aid in adjusting sensitivity
-    public static final double MAX_THROTTLE_SPEED = 0.30;
-    public static final double MAX_STEER_SPEED = 0.2;
+    public static final double MAX_THROTTLE_SPEED = 0.7;
+    public static final double MAX_STEER_SPEED = 0.5;
 
 
     public Driver(Robot robot)
