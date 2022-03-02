@@ -104,7 +104,7 @@ public class Operator
     * joystick of the controller*/
 
     public double getShooterPower(){
-        double power = dualshock.getThrottle();
+        double power = -dualshock.getY();
 
         if (Math.abs(power) < SHOOTER_DEADZONE) power = 0;
 
