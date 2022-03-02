@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
+import frc.robot.commands.vision.*;
 import frc.robot.commands.shooter.*;
 import frc.robot.Robot;
 
@@ -40,7 +41,8 @@ public class Operator
     private JoystickButton climberExtend;
     private JoystickButton climberRetract;
 
-	// PORTS //
+    private JoystickButton visionAim;
+	  // PORTS //
 
     public static final int DUALSHOCK = 2;
 
@@ -57,6 +59,8 @@ public class Operator
     public static final int CLIMBER_EXTEND = 3;
     public static final int CLIMBER_RETRACT = 2;
 
+    public static final int VISION_AIM = 9;
+  
     // CONSTANTS //
     public static final double SHOOTER_DEADZONE = 0.1;
 
@@ -80,6 +84,7 @@ public class Operator
         climberExtend = new JoystickButton(dualshock, CLIMBER_EXTEND);
         climberRetract = new JoystickButton(dualshock, CLIMBER_RETRACT);
 
+        visionAim = new JoystickButton(dualshock, VISION_AIM);
         // bind buttons to commands
         intakeIn.whenHeld(new IntakeSpin(robot));
         intakeOut.whenHeld(new IntakeReverse(robot));
@@ -93,6 +98,8 @@ public class Operator
         climberUnwind.whenHeld(new ClimberUnwind(robot));
         climberExtend.whenHeld(new ClimberExtend(robot));
         climberRetract.whenHeld(new ClimberRetract(robot));
+      
+        visionAim.whenHeld(new VisionAim(robot));
     }
        // METHODS
 

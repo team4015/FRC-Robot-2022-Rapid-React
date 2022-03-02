@@ -24,27 +24,32 @@ import frc.robot.subsystems.*;
 
 public class Robot
 {
-  // SUBSYSTEMS //
+  // CONTROLS //
+  public Driver driver;
+  public Operator operator;
 
+  // SUBSYSTEMS //
   public Climber climber;
   public Conveyor conveyor;
   public Drivetrain drivetrain;
   public Intake intake;
   public Shooter shooter;
-  public Driver driver;
-  public Operator operator;
+  public Vision vision;
 
 
   // CONSTRUCTOR //
 
   public Robot()
   {
-    // instantiate subsystems
+    // Instantiate Subsystems
     climber = new Climber();
     conveyor = new Conveyor();
     drivetrain = new Drivetrain();
     intake = new Intake();
     shooter = new Shooter();
+    vision = new Vision();
+
+    // Instantiate Controls
     driver = new Driver(this);
     operator = new Operator(this);
 
@@ -69,6 +74,8 @@ public class Robot
 
     climber.stop();
     conveyor.stop();
+
+    vision.initCamera();
     shooter.stop();
   }
 
