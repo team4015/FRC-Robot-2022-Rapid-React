@@ -40,6 +40,6 @@ public class ClimberStop extends CommandBase{
   @Override
   public boolean isFinished()
   {
-    return true;
+    return false;
   }
 }
