@@ -86,20 +86,20 @@ public class Operator
 
         visionAim = new JoystickButton(dualshock, VISION_AIM);
         // bind buttons to commands
-        intakeIn.whenHeld(new IntakeSpin(robot));
-        intakeOut.whenHeld(new IntakeReverse(robot));
+        intakeIn.whileHeld(new IntakeSpin(robot));
+        intakeOut.whileHeld(new IntakeReverse(robot));
 
         intakeFlip.whenPressed(new IntakeFlip(robot));
 
-        conveyorFeed.whenHeld(new ConveyorFeed(robot));
-        conveyorReverse.whenHeld(new ConveyorReverse(robot));
+        conveyorFeed.whileHeld(new ConveyorFeed(robot));
+        conveyorReverse.whileHeld(new ConveyorReverse(robot));
 
-        climberClimb.whenHeld(new ClimberClimb(robot));
-        climberUnwind.whenHeld(new ClimberUnwind(robot));
-        climberExtend.whenHeld(new ClimberExtend(robot));
-        climberRetract.whenHeld(new ClimberRetract(robot));
+        climberClimb.whileHeld(new ClimberClimb(robot));
+        climberUnwind.whileHeld(new ClimberUnwind(robot));
+        climberExtend.whileHeld(new ClimberExtend(robot));
+        climberRetract.whileHeld(new ClimberRetract(robot));
       
-        visionAim.whenHeld(new VisionAim(robot));
+        visionAim.whileHeld(new VisionAim(robot));
     }
        // METHODS
 
