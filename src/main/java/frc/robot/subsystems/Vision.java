@@ -84,9 +84,12 @@ public class Vision extends SubsystemBase {
           pipeline.rgbThresholdGreen = green;
           pipeline.rgbThresholdBlue = blue;
 
-          SmartDashboard.putNumberArray("red", red);
-          SmartDashboard.putNumberArray("blue", blue);
-          SmartDashboard.putNumberArray("green", green);
+          SmartDashboard.putNumber("reddown", red[0]);
+          SmartDashboard.putNumber("redup", red[1]);
+          SmartDashboard.putNumber("bluedown", blue[0]);
+          SmartDashboard.putNumber("blueup", blue[1]);
+          SmartDashboard.putNumber("greenup", green[1]);
+          SmartDashboard.putNumber("greendown", green[0]);
       }
       
       //Create output frames which will have rectangles drawn on them

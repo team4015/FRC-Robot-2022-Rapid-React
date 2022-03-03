@@ -28,9 +28,9 @@ public class Driver
 
 
     // BUTTONS //
-    public static final int RUPPERUP = 0;
+    public static final int RUPPERUP = 6;
     public static final int RUPPERDOWN = 1;
-    public static final int RLOWERUP = 0;
+    public static final int RLOWERUP = 6;
     public static final int RLOWERDOWN = 1;
     public static final int GUPPERUP = 2;
     public static final int GUPPERDOWN = 3;
@@ -57,7 +57,7 @@ public class Driver
 
 
 	// CONSTANTS //
-    public static final double DEADZONE = 0.15; // Deadzone applied to joysticks to aid in adjusting sensitivity
+    public static final double DEADZONE = 1; // Deadzone applied to joysticks to aid in adjusting sensitivity
     public static final double MAX_THROTTLE_SPEED = 0.7;
     public static final double MAX_STEER_SPEED = 0.5;
 
