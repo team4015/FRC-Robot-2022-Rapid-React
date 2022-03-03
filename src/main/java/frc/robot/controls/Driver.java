@@ -14,7 +14,10 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Robot;
+
+import frc.robot.commands.drivetrain.*;
 
 public class Driver
 {
@@ -27,13 +30,17 @@ public class Driver
 
 
     // BUTTONS //
-
+    private JoystickButton lowSpeed;
+    private JoystickButton highSpeed;
 
 
 	// CONSTANTS //
     public static final double DEADZONE = 0.15; // Deadzone applied to joysticks to aid in adjusting sensitivity
-    public static final double MAX_THROTTLE_SPEED = 0.7;
-    public static final double MAX_STEER_SPEED = 0.5;
+    public double MAX_THROTTLE_SPEED = 0.8;
+    public double MAX_STEER_SPEED = 0.5;
+
+    public static final int LOW_SPEED = 5;
+    public static final int HIGH_SPEED = 3;
 
 
     public Driver(Robot robot)
@@ -43,8 +50,12 @@ public class Driver
         steer = new Joystick(STEER);
 
         // bind button objects to physical buttons
+        lowSpeed = new JoystickButton(throttle, LOW_SPEED);
+        highSpeed = new JoystickButton(throttle, HIGH_SPEED);
 
         // bind buttons to commands
+        lowSpeed.whenPressed(new LowSpeed(robot));
+        highSpeed.whenPressed(new HighSpeed(robot));
     }
 
 	// METHODS //

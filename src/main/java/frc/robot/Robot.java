@@ -16,6 +16,7 @@ package frc.robot;
 
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.intake.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
 import frc.robot.commands.shooter.*;
@@ -68,6 +69,7 @@ public class Robot
   private void initialize()
   {
     drivetrain.stopMotors();
+    SmartDashboard.putString("Drive Speed", "HIGH");
 
     intake.stop();
     intake.retract();
