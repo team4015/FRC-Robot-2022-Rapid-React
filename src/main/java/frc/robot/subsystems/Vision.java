@@ -133,4 +133,23 @@ public class Vision extends SubsystemBase {
 
     return turn; // return difference between the target and where the robot is pointed
   }
+
+  /* =====================================
+  Author: Lucas Jacobs
+
+  Desc:
+  This method returns the speed the shooter should spin to get in the target
+  ===================================== */
+  public double autShooterSpeed() {
+    double width;
+    synchronized (imgLock) {
+      width = this.width;
+    }
+
+    double speed = .5; // PUT SOME FUNCTION INVOLVING WIDTH HERE
+
+    SmartDashboard.putNumber("Shooter speed", speed);
+
+    return speed; // return difference between the target and where the robot is pointed
+  }
 }
