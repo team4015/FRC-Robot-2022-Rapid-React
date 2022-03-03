@@ -29,8 +29,8 @@ public class Intake extends SubsystemBase
   public static final int INTAKE_PISTON_RETRACT = 0;
 
   // CONSTANTS //
-  public static final double INTAKE_SPEED = 0.5;
-  public static final double INTAKE_REVERSE_SPEED = -0.5;
+  public static final double INTAKE_SPEED = 0.7;
+  public static final double INTAKE_REVERSE_SPEED = -0.7;
 
   public Intake()
   {

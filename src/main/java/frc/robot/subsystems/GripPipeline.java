@@ -70,23 +70,23 @@ public class GripPipeline implements VisionPipeline {
 		rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, rgbThresholdOutput);
 
 		// Step CV_erode0:
-		Mat cvErodeSrc = rgbThresholdOutput;
+		/*Mat cvErodeSrc = rgbThresholdOutput;
 		Mat cvErodeKernel = new Mat();
 		Point cvErodeAnchor = new Point(-1, -1);
 		double cvErodeIterations = 1;
 		int cvErodeBordertype = Core.BORDER_CONSTANT;
 		Scalar cvErodeBordervalue = new Scalar(-1);
-		cvErode(cvErodeSrc, cvErodeKernel, cvErodeAnchor, cvErodeIterations, cvErodeBordertype, cvErodeBordervalue, cvErodeOutput);
+		cvErode(cvErodeSrc, cvErodeKernel, cvErodeAnchor, cvErodeIterations, cvErodeBordertype, cvErodeBordervalue, cvErodeOutput);*/
 
 		// Step Resize_Image0:
-		Mat resizeImageInput = cvErodeOutput;
+		/*Mat resizeImageInput = cvErodeOutput;
 		double resizeImageWidth = 160.0;
 		double resizeImageHeight = 160.0;
 		int resizeImageInterpolation = Imgproc.INTER_CUBIC;
-		resizeImage(resizeImageInput, resizeImageWidth, resizeImageHeight, resizeImageInterpolation, resizeImageOutput);
+		resizeImage(resizeImageInput, resizeImageWidth, resizeImageHeight, resizeImageInterpolation, resizeImageOutput);*/
 
 		// Step Find_Contours0:
-		Mat findContoursInput = resizeImageOutput;
+		Mat findContoursInput = rgbThresholdOutput;
 		boolean findContoursExternalOnly = false;
 		findContours(findContoursInput, findContoursExternalOnly, findContoursOutput);
 

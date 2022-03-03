@@ -47,6 +47,7 @@ public class Vision extends SubsystemBase {
   public Vision() {
     xCentre = IMG_WIDTH/2.0;
     width = IMG_WIDTH/2.0;
+    imgLock = new Object();
   }
 
   // METHODS //
@@ -62,11 +63,12 @@ public class Vision extends SubsystemBase {
     // initalize camera
     UsbCamera cam = CameraServer.startAutomaticCapture();
 
+    cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
+    cam.setFPS(FPS);
+
     CvSink vIn = CameraServer.getVideo();
     CvSource vOut = CameraServer.putVideo("Target Video", IMG_WIDTH, IMG_HEIGHT);
-
-    cam.setResolution(CAM_WIDTH, CAM_HEIGHT);
-    cam.setFPS(FPS);
+    CvSource vOutFilter = CameraServer.putVideo("Filtered", IMG_WIDTH, IMG_HEIGHT);
 
     // initalize vision thread
     visionThread = new VisionThread(cam, new GripPipeline(), pipeline -> {
@@ -88,16 +90,18 @@ public class Vision extends SubsystemBase {
 
           if (contour.area() > biggest.area()) biggest = contour;
 
-          Imgproc.rectangle(output, contour, new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
+          Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
         }
         
         synchronized (imgLock) {
           xCentre = biggest.x + (biggest.width / 2); //Set the centre of the bounding rectangle
           width = biggest.width;
           SmartDashboard.putNumber("Width", width);
+          SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);
         }
       }
       vOut.putFrame(output);
+      vOutFilter.putFrame(pipeline.rgbThresholdOutput());
     });
 
     visionThread.start();
