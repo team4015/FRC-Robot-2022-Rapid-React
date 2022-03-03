@@ -14,11 +14,12 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.vision.*;
 import frc.robot.Robot;
 
 public class Driver
-{
-    // JOYSTICKS / CONTROLLERS //
+{   // JOYSTICKS / CONTROLLERS //
     private Joystick throttle;
     private Joystick steer;
 
@@ -27,6 +28,31 @@ public class Driver
 
 
     // BUTTONS //
+    public static final int RUPPERUP = 0;
+    public static final int RUPPERDOWN = 1;
+    public static final int RLOWERUP = 0;
+    public static final int RLOWERDOWN = 1;
+    public static final int GUPPERUP = 2;
+    public static final int GUPPERDOWN = 3;
+    public static final int GLOWERUP = 2;
+    public static final int GLOWERDOWN = 3;
+    public static final int BUPPERUP = 4;
+    public static final int BUPPERDOWN = 5;
+    public static final int BLOWERUP = 4;
+    public static final int BLOWERDOWN = 5;
+    
+    JoystickButton rUpperUp;
+    JoystickButton rUpperDown;
+    JoystickButton rLowerUp;
+    JoystickButton rLowerDown;
+    JoystickButton gUpperUp;
+    JoystickButton gUpperDown;
+    JoystickButton gLowerUp;
+    JoystickButton gLowerDown;
+    JoystickButton bUpperUp;
+    JoystickButton bUpperDown;
+    JoystickButton bLowerUp;
+    JoystickButton bLowerDown;
 
 
 
@@ -43,8 +69,33 @@ public class Driver
         steer = new Joystick(STEER);
 
         // bind button objects to physical buttons
+       rUpperUp = new JoystickButton(throttle, RUPPERUP);
+    rUpperDown = new JoystickButton(throttle, RUPPERDOWN);
+     rLowerUp = new JoystickButton(steer, RLOWERUP);
+     rLowerDown = new JoystickButton(steer, RLOWERDOWN);
+     gUpperUp = new JoystickButton(throttle, GUPPERUP);
+     gUpperDown = new JoystickButton(throttle, GUPPERDOWN);
+     gLowerUp = new JoystickButton(steer, GLOWERUP);
+     gLowerDown = new JoystickButton(steer, GLOWERDOWN);
+     bUpperUp = new JoystickButton(throttle, BUPPERUP);
+     bUpperDown = new JoystickButton(throttle, BUPPERDOWN);
+     bLowerUp = new JoystickButton(steer, BLOWERUP);
+     bLowerDown = new JoystickButton(steer, BLOWERDOWN);
 
         // bind buttons to commands
+        rUpperUp.whenPressed( new AddRedUp(robot, 1));
+    rUpperDown.whenPressed( new AddRedUp(robot, -1));
+     rLowerUp.whenPressed( new AddRedDown(robot, 1));
+     rLowerDown.whenPressed( new AddRedDown(robot, -1));
+     gUpperUp.whenPressed( new AddGreenUp(robot, 1));
+     gUpperDown.whenPressed( new AddGreenUp(robot, -1));
+     gLowerUp.whenPressed( new AddGreenDown(robot, 1));
+     gLowerDown.whenPressed( new AddGreenDown(robot, -1));
+     bUpperUp.whenPressed( new AddBlueUp(robot, 1));
+     bUpperDown.whenPressed( new AddBlueUp(robot, -1));
+     bLowerUp.whenPressed( new AddBlueDown(robot, 1));
+     bLowerDown.whenPressed( new AddBlueDown(robot, -1));
+
     }
 
 	// METHODS //

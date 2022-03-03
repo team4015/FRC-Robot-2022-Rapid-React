@@ -23,7 +23,13 @@ import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import frc.robot.controls.*;
+
 public class Vision extends SubsystemBase {
+  public double[] red = {100, 255};
+  public double[] blue = {240, 255};
+  public double[] green = {230, 255};
+
   // HARDWARE //
 
   // PORTS //
@@ -72,6 +78,16 @@ public class Vision extends SubsystemBase {
 
     // initalize vision thread
     visionThread = new VisionThread(cam, new GripPipeline(), pipeline -> {
+
+      synchronized (imgLock) {
+        pipeline.rgbThresholdRed = red;
+          pipeline.rgbThresholdGreen = green;
+          pipeline.rgbThresholdBlue = blue;
+
+          SmartDashboard.putNumberArray("red", red);
+          SmartDashboard.putNumberArray("blue", blue);
+          SmartDashboard.putNumberArray("green", green);
+      }
       
       //Create output frames which will have rectangles drawn on them
       Mat output = new Mat();

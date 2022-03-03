@@ -48,6 +48,11 @@ public class GripPipeline implements VisionPipeline {
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 
+	//bounds
+	double[] rgbThresholdRed = {123.83093525179856, 255.0};
+		double[] rgbThresholdGreen = {247.6618705035971, 255.0};
+		double[] rgbThresholdBlue = {227.02338129496403, 255.0};
+
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}
@@ -64,9 +69,6 @@ public class GripPipeline implements VisionPipeline {
 
 		// Step RGB_Threshold0:
 		Mat rgbThresholdInput = blurOutput;
-		double[] rgbThresholdRed = {123.83093525179856, 255.0};
-		double[] rgbThresholdGreen = {247.6618705035971, 255.0};
-		double[] rgbThresholdBlue = {227.02338129496403, 255.0};
 		rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, rgbThresholdOutput);
 
 		// Step CV_erode0:
