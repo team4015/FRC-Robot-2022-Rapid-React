@@ -152,9 +152,8 @@ public class Vision extends SubsystemBase {
     }
 
     double speed = .5; // PUT SOME FUNCTION INVOLVING WIDTH HERE
-
-    SmartDashboard.putNumber("Shooter speed", speed);
-
+    SmartDashboard.putNumber("Shooter Speed", speed);
+    
     return speed; // return difference between the target and where the robot is pointed
   }
 }
