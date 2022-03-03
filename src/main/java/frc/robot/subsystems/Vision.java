@@ -94,7 +94,7 @@ public class Vision extends SubsystemBase {
         synchronized (imgLock) {
           xCentre = biggest.x + (biggest.width / 2); //Set the centre of the bounding rectangle
           width = biggest.width;
-          SmartDashboard.putNumber("Width", width)
+          SmartDashboard.putNumber("Width", width);
         }
       }
       vOut.putFrame(output);
