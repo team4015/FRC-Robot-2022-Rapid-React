@@ -88,6 +88,11 @@ public class Vision extends SubsystemBase {
         for (int i = 0; i < pipeline.filterContoursOutput().size(); i++) {
           Rect contour = Imgproc.boundingRect(pipeline.filterContoursOutput().get(i));
 
+          //Paritial code to exclude contours around dark
+          //Point contourCentre = new Point(contour.y + contour.height/2, contour.x+contour.width/2);
+
+          //if (pipeline.rgbThresholdOutput().get((int) contourCentre.x, (int) contourCentre.y) == )
+
           if (contour.area() > biggest.area()) biggest = contour;
 
           Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
