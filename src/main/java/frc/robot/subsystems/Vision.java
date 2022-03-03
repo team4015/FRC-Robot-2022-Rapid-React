@@ -20,6 +20,7 @@ import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.vision.VisionThread;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
@@ -28,8 +29,10 @@ public class Vision extends SubsystemBase {
   // PORTS //
 
   // CONSTANTS //
-  final static int HEIGHT = 480;
-  final static int WIDTH = 640;
+  final static int CAM_HEIGHT = 480;
+  final static int CAM_WIDTH = 640;
+  final static int IMG_HEIGHT = 120;
+  final static int IMG_WIDTH = 160;
   final static int FPS = 30;
 
   final static int TURN_THRESHOLD = 20;
@@ -37,11 +40,13 @@ public class Vision extends SubsystemBase {
   // VARIABLES //
   private VisionThread visionThread;
   private double xCentre;
+  private double width;
   private Object imgLock;
 
 
   public Vision() {
-    xCentre = WIDTH/2.0;
+    xCentre = IMG_WIDTH/2.0;
+    width = IMG_WIDTH/2.0;
   }
 
   // METHODS //
@@ -58,9 +63,9 @@ public class Vision extends SubsystemBase {
     UsbCamera cam = CameraServer.startAutomaticCapture();
 
     CvSink vIn = CameraServer.getVideo();
-    CvSource vOut = CameraServer.putVideo("VideoOutput", 640, 480);
+    CvSource vOut = CameraServer.putVideo("Target Video", IMG_WIDTH, IMG_HEIGHT);
 
-    cam.setResolution(WIDTH, HEIGHT);
+    cam.setResolution(CAM_WIDTH, CAM_HEIGHT);
     cam.setFPS(FPS);
 
     // initalize vision thread
@@ -69,6 +74,8 @@ public class Vision extends SubsystemBase {
       //Create output frames which will have rectangles drawn on them
       Mat output = new Mat();
       vIn.grabFrame(output);
+
+      SmartDashboard.putNumber("Targets Detected", pipeline.filterContoursOutput().size());
 
       if (!pipeline.filterContoursOutput().isEmpty()) {
 
@@ -86,6 +93,8 @@ public class Vision extends SubsystemBase {
         
         synchronized (imgLock) {
           xCentre = biggest.x + (biggest.width / 2); //Set the centre of the bounding rectangle
+          width = biggest.width;
+          SmartDashboard.putNumber("Width", width)
         }
       }
       vOut.putFrame(output);
@@ -107,10 +116,16 @@ public class Vision extends SubsystemBase {
       xCentre = this.xCentre;
     }
 
-    double turn = xCentre - (WIDTH/ 2.0);
+    double turn = xCentre - (IMG_WIDTH/ 2.0);
+    SmartDashboard.putNumber("Dist to Target", turn);
 
     // If the robot is within the turn threshold of pointing straight at the target, it wil stop turning
-    if (Math.abs(turn) < TURN_THRESHOLD) turn = 0;
+    if (Math.abs(turn) < TURN_THRESHOLD) {
+      turn = 0;
+      SmartDashboard.putBoolean("ALIGNED", true);
+    } else {
+      SmartDashboard.putBoolean("ALIGNED", false);
+    }
 
     return turn; // return difference between the target and where the robot is pointed
   }
