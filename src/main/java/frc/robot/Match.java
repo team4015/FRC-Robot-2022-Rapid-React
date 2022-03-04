@@ -12,11 +12,15 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.auto.*;
 
 public class Match extends TimedRobot
 {
   private Robot robot;
+  private SequentialCommandGroup auto;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -27,6 +31,11 @@ public class Match extends TimedRobot
   {
     // instantiate the robot
     robot = new Robot();
+    auto = new SequentialCommandGroup(
+      new AutoShoot(robot, 3), //shoot
+      new AutoDrive(robot, 0, .5, .5), //turn
+      new AutoDrive(robot, .5, 0, .5) //drive away
+    );
   }
 
   /**
@@ -60,7 +69,8 @@ public class Match extends TimedRobot
   @Override
   public void autonomousInit()
   {
-
+    //Start Autonomous Commands
+    auto.schedule();
   }
 
   /** This function is called periodically during autonomous. */
