@@ -93,7 +93,7 @@ public class Vision extends SubsystemBase {
 
           //if (pipeline.rgbThresholdOutput().get((int) contourCentre.x, (int) contourCentre.y) == )
 
-          if (contour.area() > biggest.area()) biggest = contour;
+          if (contour.width > biggest.width) biggest = contour;
 
           Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
         }
