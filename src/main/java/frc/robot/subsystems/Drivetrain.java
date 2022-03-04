@@ -48,10 +48,6 @@ public class Drivetrain extends SubsystemBase
     drive.arcadeDrive(speed, turn);
   }
 
-  public void moveMotorsTank(double left, double right) {
-    drive.tankDrive(left, right);
-  }
-
   public void stopMotors() {
     drive.stopMotor();
   }
