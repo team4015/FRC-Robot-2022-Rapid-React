@@ -124,6 +124,15 @@ public class Vision extends SubsystemBase {
               i--;
 
               //*********Add potential to target Rect***************
+              //set left
+
+              targetRect.x = Math.min(targetRect.x, potential.x);
+              //set bott
+              targetRect.y = Math.min(targetRect.y, potential.y);
+              //set right
+              targetRect.width = Math.max(targetRect.x + targetRect.width, potential.x + potential.width) - targetRect.x;
+              //set top
+              targetRect.height = Math.max(targetRect.y + targetRect.height, potential.y + potential.height) - targetRect.y;
             }
           }
         }
