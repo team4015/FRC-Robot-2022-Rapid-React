@@ -42,6 +42,12 @@ public class Operator
     private JoystickButton climberRetract;
 
     private JoystickButton visionAim;
+
+    private POVButton shooterLow;
+    private POVButton shooterMed;
+    private POVButton shooterHigh;
+    private POVButton shooterExHigh;
+
 	  // PORTS //
 
     public static final int DUALSHOCK = 2;
@@ -60,6 +66,11 @@ public class Operator
     public static final int CLIMBER_RETRACT = 2;
 
     public static final int VISION_AIM = 9;
+
+    public static final int SHOOTER_LOW = 90;
+    public static final int SHOOTER_MED = 180;
+    public static final int SHOOTER_HIGH = 270;
+    public static final int SHOOTER_EX_HIGH = 0;
   
     // CONSTANTS //
     public static final double SHOOTER_DEADZONE = 0.1;
@@ -85,6 +96,12 @@ public class Operator
         climberRetract = new JoystickButton(dualshock, CLIMBER_RETRACT);
 
         visionAim = new JoystickButton(dualshock, VISION_AIM);
+
+        shooterLow = new POVButton(dualshock, SHOOTER_LOW);
+        shooterMed = new POVButton(dualshock, SHOOTER_MED);
+        shooterHigh = new POVButton(dualshock, SHOOTER_HIGH);
+        shooterExHigh = new POVButton(dualshock, SHOOTER_EX_HIGH);
+
         // bind buttons to commands
         intakeIn.whileHeld(new IntakeSpin(robot));
         intakeOut.whileHeld(new IntakeReverse(robot));
@@ -100,22 +117,27 @@ public class Operator
         climberRetract.whileHeld(new ClimberRetract(robot));
       
         visionAim.whileHeld(new VisionAim(robot));
+        
+        shooterLow.whileHeld(new ShooterSpin(robot, 0.4));
+        shooterMed.whileHeld(new ShooterSpin(robot, 0.44));
+        shooterHigh.whileHeld(new ShooterSpin(robot, 0.48));
+        shooterExHigh.whileHeld(new ShooterSpin(robot, 0.52));
     }
        // METHODS
 
     // Add methods here which return values for various robot controls by reading the controllers.
 
     /* Authors: Jason Wang & Lucas Jacobs*
-    * Desc:
+    * Desc: NOTNEEDED FOR HUMBER
     * Returns the power given to the shooter by reading the left
     * joystick of the controller*/
 
-    public double getShooterPower(){
+    /*public double getShooterPower(){
         double power = -dualshock.getY();
 
         if (Math.abs(power) < SHOOTER_DEADZONE) power = 0;
 
         return power;
-    }
+    }*/
 }
 

@@ -150,6 +150,7 @@ public class Vision extends SubsystemBase {
           xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
           width = biggest.width;
           SmartDashboard.putNumber("Width", width);
+          SmartDashboard.putBoolean("In Shooting Range", width >= 4 && width <= 9);
           SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);
         }
       }
@@ -199,7 +200,11 @@ public class Vision extends SubsystemBase {
       width = this.width;
     }
 
-    double speed = .45; // PUT SOME FUNCTION INVOLVING WIDTH HERE
+    double speed = 0; // PUT SOME FUNCTION INVOLVING WIDTH HERE
+
+    if (width == 4) speed = 0.48;
+    else if (width >= 5 && width <=  9) speed = -0.01333*width + 0.50666; //Experimentally Determined
+
     SmartDashboard.putNumber("Shooter Speed", speed);
 
     return speed; // return difference between the target and where the robot is pointed

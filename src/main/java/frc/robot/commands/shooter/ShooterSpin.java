@@ -13,10 +13,12 @@ public class ShooterSpin extends CommandBase{
     
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private Robot robot;
+  private double speed;
 
-  public ShooterSpin(Robot robot)
+  public ShooterSpin(Robot robot, double speed)
   {
     this.robot = robot;
+    this.speed = speed;
     addRequirements(robot.shooter);
   }
   // Called when the command is initially scheduled.
@@ -29,7 +31,7 @@ public class ShooterSpin extends CommandBase{
   @Override
   public void execute()
   {
-    robot.shooter.spin(robot.operator.getShooterPower());
+    robot.shooter.spin(speed);
       
     //change to robot.operator.axisy or smth, depending on what axis it is
   }
@@ -43,6 +45,6 @@ public class ShooterSpin extends CommandBase{
   @Override
   public boolean isFinished()
   {
-    return false;
+    return true;
   }
 }
