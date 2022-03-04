@@ -21,18 +21,20 @@ public class AutoShoot extends CommandBase
 
   private Robot robot;
   private Timer timer;
+  private double speed;
   private double timeToShot;
   boolean finished;
-  private final static double conveyorSpinTime = 1;
+  private final static double conveyorSpinTime = 1.5;
 
   // CONSTANTS //
   final static double TURN_SPEED = 0.1; //CHANGE THIS ALONG WITH VISION PACKAGE
 
   // CONSTRUCTOR //
 
-  public AutoShoot(Robot robot, double t)
+  public AutoShoot(Robot robot, double t, double speed)
   {
     this.robot = robot;
+    this.speed = speed;
     timer = new Timer();
     timeToShot = t;
     finished = false;
@@ -57,7 +59,8 @@ public class AutoShoot extends CommandBase
   {
 
     //Spin shoot
-    double speed = robot.vision.autoShooterSpeed();
+    double autoSpeed = robot.vision.autoShooterSpeed();
+    //robot.shooter.spin(autoSpeed);
     robot.shooter.spin(speed);
 
     //Aim or Shoot

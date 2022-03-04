@@ -32,9 +32,18 @@ public class Match extends TimedRobot
     // instantiate the robot
     robot = new Robot();
     auto = new SequentialCommandGroup(
-      new AutoShoot(robot, 3), //shoot
-      new AutoDrive(robot, 0, -.5, 1.2), //turn
-      new AutoDrive(robot, .7, 0, .9) //drive away
+
+      new AutoShoot(robot, 3, 0.44), //shoot
+
+      // Robot on right tarmac
+
+      new AutoDrive(robot, 0, -.5, 2.2), //turn
+      new AutoDrive(robot, .7, 0, 1.2) //drive away
+
+      //Robot on left tarmac
+      
+      //new AutoDrive(robot, 0, -.5, 2.4), //turn
+      //new AutoDrive(robot, .7, 0, 1.2) //drive away
     );
   }
 
