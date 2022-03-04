@@ -9,7 +9,11 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
@@ -83,10 +87,14 @@ public class Vision extends SubsystemBase {
 
         //Get biggest contour and find its centre
 
+        ArrayList<Rect> targets = new ArrayList<Rect>();
+
         Rect biggest = new Rect(); // Initialized to 0 area rectangle
 
         for (int i = 0; i < pipeline.filterContoursOutput().size(); i++) {
           Rect contour = Imgproc.boundingRect(pipeline.filterContoursOutput().get(i));
+
+          targets.add(contour);
 
           //Paritial code to exclude contours around dark
           //Point contourCentre = new Point(contour.y + contour.height/2, contour.x+contour.width/2);
@@ -97,13 +105,45 @@ public class Vision extends SubsystemBase {
 
           Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
         }
-        
-        //red on biggest
-        Imgproc.rectangle(output, biggest,  new Scalar(255, 0, 0, 255), 1);
-        
+        // --------------------------------------------- 
+        LinkedList<Rect> checkThese = new LinkedList<Rect>();
+
+        checkThese.add(biggest);
+
+        Rect targetRect = biggest;
+
+        while (checkThese.size() > 0) { // Go through rectangles in the taRGET
+          Rect checked = checkThese.pop();
+
+          for (int i = 0; i < targets.size(); i++) { //go THROUGH RECTANGLES NOT YET IN TARGET
+            Rect potential = targets.get(i);
+
+            //if potential rect is in target
+            if (Math.abs(potential.x - checked.x) < 70 && Math.abs(potential.y - checked.y) < 30) {
+              targets.remove(i);
+              i--;
+
+              //*********Add potential to target Rect***************
+              //set left
+
+              targetRect.x = Math.min(targetRect.x, potential.x);
+              //set bott
+              targetRect.y = Math.min(targetRect.y, potential.y);
+              //set right
+              targetRect.width = Math.max(targetRect.x + targetRect.width, potential.x + potential.width) - targetRect.x;
+              //set top
+              targetRect.height = Math.max(targetRect.y + targetRect.height, potential.y + potential.height) - targetRect.y;
+            }
+          }
+        }
+        //-----------------------------------------------------
+
+        //Add target rect in red on screen
+        Imgproc.rectangle(output, targetRect,  new Scalar(255, 0, 0, 255), 1);
+
         synchronized (imgLock) {
-          xCentre = biggest.x + (biggest.width / 2); //Set the centre of the bounding rectangle
-          width = biggest.width;
+          xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
+          width = targetRect.width;
           SmartDashboard.putNumber("Width", width);
           SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);
         }
