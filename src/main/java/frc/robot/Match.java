@@ -12,7 +12,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.CommandGroupBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.auto.*;
@@ -83,7 +83,8 @@ public class Match extends TimedRobot
   @Override
   public void teleopInit()
   {
-
+    auto.cancel();
+    SmartDashboard.putString("Auto Mode:", "TeleOp");
   }
 
   /** This function is called periodically during operator control. */

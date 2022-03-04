@@ -10,6 +10,7 @@ package frc.robot.commands.auto;
 
 import frc.robot.Robot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class AutoDrive extends CommandBase
@@ -50,6 +51,7 @@ public class AutoDrive extends CommandBase
   public void initialize()
   {
     timer.start();
+    SmartDashboard.putString("Auto Mode:", "Drive");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
