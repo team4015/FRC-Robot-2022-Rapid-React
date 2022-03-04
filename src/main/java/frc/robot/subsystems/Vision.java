@@ -112,6 +112,9 @@ public class Vision extends SubsystemBase {
 
         Rect targetRect = biggest;
 
+        //Biggest in red
+        Imgproc.rectangle(output, biggest,  new Scalar(0, 0, 255, 255), 1);
+
         while (checkThese.size() > 0) { // Go through rectangles in the taRGET
           Rect checked = checkThese.pop();
 
@@ -119,7 +122,8 @@ public class Vision extends SubsystemBase {
             Rect potential = targets.get(i);
 
             //if potential rect is in target
-            if (Math.abs(potential.x - checked.x) < 70 && Math.abs(potential.y - checked.y) < 30) {
+            if (Math.abs(potential.x - checked.x) < 40 && Math.abs(potential.y - checked.y) < 20) {
+              checkThese.add(potential);
               targets.remove(i);
               i--;
 
@@ -127,23 +131,24 @@ public class Vision extends SubsystemBase {
               //set left
 
               targetRect.x = Math.min(targetRect.x, potential.x);
-              //set bott
+              //set top
               targetRect.y = Math.min(targetRect.y, potential.y);
               //set right
               targetRect.width = Math.max(targetRect.x + targetRect.width, potential.x + potential.width) - targetRect.x;
-              //set top
+              //set bott
               targetRect.height = Math.max(targetRect.y + targetRect.height, potential.y + potential.height) - targetRect.y;
             }
           }
         }
         //-----------------------------------------------------
 
-        //Add target rect in red on screen
+        //Add target blue in red on screen
         Imgproc.rectangle(output, targetRect,  new Scalar(255, 0, 0, 255), 1);
+
 
         synchronized (imgLock) {
           xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
-          width = targetRect.width;
+          width = biggest.width;
           SmartDashboard.putNumber("Width", width);
           SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);
         }

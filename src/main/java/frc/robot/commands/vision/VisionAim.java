@@ -20,7 +20,7 @@ public class VisionAim extends CommandBase
   private Robot robot;
 
   // CONSTANTS //
-  final static double TURN_SPEED = 0.1;
+  final static double TURN_SPEED = 0.0001;
 
   // CONSTRUCTOR //
 
@@ -47,7 +47,7 @@ public class VisionAim extends CommandBase
   {
     double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
 
-    robot.drivetrain.moveMotors(0, turn * TURN_SPEED);
+    robot.drivetrain.moveMotors(0, 0);
 
     double speed = robot.vision.autoShooterSpeed();
     robot.shooter.spin(speed);
