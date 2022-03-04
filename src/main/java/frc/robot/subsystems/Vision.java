@@ -98,6 +98,9 @@ public class Vision extends SubsystemBase {
           Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
         }
         
+        //red on biggest
+        Imgproc.rectangle(output, biggest,  new Scalar(255, 0, 0, 255), 1);
+        
         synchronized (imgLock) {
           xCentre = biggest.x + (biggest.width / 2); //Set the centre of the bounding rectangle
           width = biggest.width;
