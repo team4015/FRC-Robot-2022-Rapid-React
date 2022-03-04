@@ -110,7 +110,7 @@ public class Vision extends SubsystemBase {
 
         checkThese.add(biggest);
 
-        Rect targetRect = biggest;
+        Rect targetRect = new Rect(biggest.x, biggest.y, biggest.width, biggest.height);
 
         //Biggest in red
         Imgproc.rectangle(output, biggest,  new Scalar(0, 0, 255, 255), 1);
@@ -199,7 +199,7 @@ public class Vision extends SubsystemBase {
       width = this.width;
     }
 
-    double speed = .5; // PUT SOME FUNCTION INVOLVING WIDTH HERE
+    double speed = .45; // PUT SOME FUNCTION INVOLVING WIDTH HERE
     SmartDashboard.putNumber("Shooter Speed", speed);
 
     return speed; // return difference between the target and where the robot is pointed

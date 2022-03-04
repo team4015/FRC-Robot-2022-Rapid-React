@@ -62,9 +62,9 @@ public class AutoShoot extends CommandBase
 
     //Aim or Shoot
     if (timer.get() < timeToShot) {
-      double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
+      // turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
 
-      robot.drivetrain.moveMotors(0, turn * TURN_SPEED);
+      //robot.drivetrain.moveMotors(0, turn * TURN_SPEED);
     } else if (timer.get() < timeToShot + conveyorSpinTime) {
 
       robot.conveyor.feed();

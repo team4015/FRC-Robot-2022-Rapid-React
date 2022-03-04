@@ -45,9 +45,9 @@ public class VisionAim extends CommandBase
   @Override
   public void execute()
   {
-    double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
+    //double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
 
-    robot.drivetrain.moveMotors(0, 0);
+    //robot.drivetrain.moveMotorsTank(.5, .5);
 
     double speed = robot.vision.autoShooterSpeed();
     robot.shooter.spin(speed);
