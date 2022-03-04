@@ -9,7 +9,11 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
@@ -83,10 +87,14 @@ public class Vision extends SubsystemBase {
 
         //Get biggest contour and find its centre
 
+        ArrayList<Rect> targets = new ArrayList<Rect>();
+
         Rect biggest = new Rect(); // Initialized to 0 area rectangle
 
         for (int i = 0; i < pipeline.filterContoursOutput().size(); i++) {
           Rect contour = Imgproc.boundingRect(pipeline.filterContoursOutput().get(i));
+
+          targets.add(contour);
 
           //Paritial code to exclude contours around dark
           //Point contourCentre = new Point(contour.y + contour.height/2, contour.x+contour.width/2);
@@ -97,10 +105,35 @@ public class Vision extends SubsystemBase {
 
           Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
         }
-        
+        // --------------------------------------------- 
+        LinkedList<Rect> checkThese = new LinkedList<Rect>();
+
+        checkThese.add(biggest);
+
+        Rect targetRect = biggest;
+
+        while (checkThese.size() > 0) {
+          Rect checked = checkThese.pop();
+
+          for (int i = 0; i < targets.size(); i++) {
+            Rect potential = targets.get(i);
+
+            if (Math.abs(potential.x - checked.x) < 25 && Math.abs(potential.y - checked.y) < 7) {
+              targets.remove(i);
+              i--;
+
+              //*********Add potential to target Rect***************
+            }
+          }
+        }
+        //-----------------------------------------------------
+
+        //Add target rect in red on screen
+        Imgproc.rectangle(output, targetRect,  new Scalar(255, 0, 0, 255), 1);
+
         synchronized (imgLock) {
-          xCentre = biggest.x + (biggest.width / 2); //Set the centre of the bounding rectangle
-          width = biggest.width;
+          xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
+          width = targetRect.width;
           SmartDashboard.putNumber("Width", width);
           SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);
         }
