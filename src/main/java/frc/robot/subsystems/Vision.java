@@ -145,7 +145,7 @@ public class Vision extends SubsystemBase {
   Desc:
   This method returns the speed the shooter should spin to get in the target
   ===================================== */
-  public double autShooterSpeed() {
+  public double autoShooterSpeed() {
     double width;
     synchronized (imgLock) {
       width = this.width;
@@ -153,7 +153,7 @@ public class Vision extends SubsystemBase {
 
     double speed = .5; // PUT SOME FUNCTION INVOLVING WIDTH HERE
     SmartDashboard.putNumber("Shooter Speed", speed);
-    
+
     return speed; // return difference between the target and where the robot is pointed
   }
 }

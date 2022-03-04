@@ -29,7 +29,7 @@ public class VisionAim extends CommandBase
     this.robot = robot;
 
     // subsystems that this command requires
-    addRequirements(robot.vision, robot.drivetrain);
+    addRequirements(robot.vision, robot.drivetrain, robot.shooter);
   }
 
   // METHODS //
@@ -48,6 +48,9 @@ public class VisionAim extends CommandBase
     double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
 
     robot.drivetrain.moveMotors(0, turn * TURN_SPEED);
+
+    double speed = robot.vision.autoShooterSpeed();
+    robot.shooter.spin(speed);
   }
 
   // Called once the command ends or is interrupted.
