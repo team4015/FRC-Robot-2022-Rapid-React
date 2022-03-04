@@ -112,12 +112,13 @@ public class Vision extends SubsystemBase {
 
         Rect targetRect = biggest;
 
-        while (checkThese.size() > 0) {
+        while (checkThese.size() > 0) { // Go through rectangles in the taRGET
           Rect checked = checkThese.pop();
 
-          for (int i = 0; i < targets.size(); i++) {
+          for (int i = 0; i < targets.size(); i++) { //go THROUGH RECTANGLES NOT YET IN TARGET
             Rect potential = targets.get(i);
 
+            //if potential rect is in target
             if (Math.abs(potential.x - checked.x) < 25 && Math.abs(potential.y - checked.y) < 7) {
               targets.remove(i);
               i--;
