@@ -93,6 +93,7 @@ public class GripPipeline implements VisionPipeline {
 		// Step Filter_Contours0:
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
 		double filterContoursMinArea = 0.0;
+		double flmaxArea = 20;
 		double filterContoursMinPerimeter = 0.0;
 		double filterContoursMinWidth = 0.0;
 		double filterContoursMaxWidth = 15.0;
@@ -103,7 +104,7 @@ public class GripPipeline implements VisionPipeline {
 		double filterContoursMinVertices = 0.0;
 		double filterContoursMinRatio = 0.0;
 		double filterContoursMaxRatio = 1000.0;
-		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
+		filterContours(filterContoursContours, filterContoursMinArea, flmaxArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
 
 	}
 
@@ -312,7 +313,7 @@ public class GripPipeline implements VisionPipeline {
 	 * @param minRatio minimum ratio of width to height
 	 * @param maxRatio maximum ratio of width to height
 	 */
-	private void filterContours(List<MatOfPoint> inputContours, double minArea,
+	private void filterContours(List<MatOfPoint> inputContours, double minArea, double maxArea,
 		double minPerimeter, double minWidth, double maxWidth, double minHeight, double
 		maxHeight, double[] solidity, double maxVertexCount, double minVertexCount, double
 		minRatio, double maxRatio, List<MatOfPoint> output) {
@@ -326,6 +327,7 @@ public class GripPipeline implements VisionPipeline {
 			if (bb.height < minHeight || bb.height > maxHeight) continue;
 			final double area = Imgproc.contourArea(contour);
 			if (area < minArea) continue;
+			if (area > maxArea) continue;
 			if (Imgproc.arcLength(new MatOfPoint2f(contour.toArray()), true) < minPerimeter) continue;
 			Imgproc.convexHull(contour, hull);
 			MatOfPoint mopHull = new MatOfPoint();

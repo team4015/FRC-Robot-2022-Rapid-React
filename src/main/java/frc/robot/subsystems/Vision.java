@@ -101,7 +101,7 @@ public class Vision extends SubsystemBase {
 
           //if (pipeline.rgbThresholdOutput().get((int) contourCentre.x, (int) contourCentre.y) == )
 
-          if (contour.area() > biggest.area()) biggest = contour;
+          if (contour.width > biggest.width) biggest = contour;
 
           Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
         }
@@ -119,7 +119,7 @@ public class Vision extends SubsystemBase {
             Rect potential = targets.get(i);
 
             //if potential rect is in target
-            if (Math.abs(potential.x - checked.x) < 30 && Math.abs(potential.y - checked.y) < 10) {
+            if (Math.abs(potential.x - checked.x) < 70 && Math.abs(potential.y - checked.y) < 30) {
               targets.remove(i);
               i--;
 
