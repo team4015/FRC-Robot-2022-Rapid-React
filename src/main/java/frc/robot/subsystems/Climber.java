@@ -19,8 +19,8 @@ public class Climber extends SubsystemBase
   private Spark gearmotor;
 
   // Ports //
-  public static final int CLIMBER_SPARK_SPOOL = -1;
-  public static final int CLIMBER_SPARK_GEAR = -1;
+  public static final int CLIMBER_SPARK_SPOOL = 6;
+  public static final int CLIMBER_SPARK_GEAR = 5;
 
   // CONSTANTS //
 

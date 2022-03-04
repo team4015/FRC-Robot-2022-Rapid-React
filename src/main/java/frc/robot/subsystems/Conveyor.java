@@ -19,7 +19,7 @@ public class Conveyor extends SubsystemBase
   // declare motor controllers, solenoids, and other hardware here
 
   // CONSTANTS //
-  final static int CONVEYOR_PORT = -1;
+  final static int CONVEYOR_PORT = 3;
 
   final static double CONVEYOR_SPEED = 0.2;
   final static double CONVEYOR_REVERSE_SPEED = -0.2;
