@@ -119,7 +119,7 @@ public class Vision extends SubsystemBase {
             Rect potential = targets.get(i);
 
             //if potential rect is in target
-            if (Math.abs(potential.x - checked.x) < 25 && Math.abs(potential.y - checked.y) < 7) {
+            if (Math.abs(potential.x - checked.x) < 30 && Math.abs(potential.y - checked.y) < 10) {
               targets.remove(i);
               i--;
 
