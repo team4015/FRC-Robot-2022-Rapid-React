@@ -29,7 +29,7 @@ public class VisionAim extends CommandBase
     this.robot = robot;
 
     // subsystems that this command requires
-    addRequirements(robot.vision, robot.drivetrain, robot.shooter);
+    addRequirements(robot.vision, /*robot.drivetrain,*/ robot.shooter);
   }
 
   // METHODS //
