@@ -38,12 +38,12 @@ public class Match extends TimedRobot
 
       // Robot on right tarmac
 
-      new AutoDrive(robot, 0, -.5, 1.2), //turn
+      new AutoDrive(robot, 0, -.5, 1.2), //turn left
       new AutoDrive(robot, .7, 0, 1.2) //drive away
 
       //Robot on left tarmac
       
-      //new AutoDrive(robot, 0, -.5, 1.2), //turn
+      //new AutoDrive(robot, 0, .5, 1.2), //turn right
       //new AutoDrive(robot, .7, 0, 1.2) //drive away
     );
   }
