@@ -72,7 +72,7 @@ public class Robot
     SmartDashboard.putString("Drive Speed", "HIGH");
 
     intake.stop();
-    intake.retract();
+    intake.deploy(); // Deploy default for humber
 
     climber.stop();
     conveyor.stop();

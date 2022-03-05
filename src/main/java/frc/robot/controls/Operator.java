@@ -85,7 +85,7 @@ public class Operator
         intakeIn = new JoystickButton(dualshock, INTAKE_IN);
         intakeOut = new JoystickButton(dualshock, INTAKE_OUT);
 
-        intakeFlip = new JoystickButton(dualshock, INTAKE_FLIP);
+        //intakeFlip = new JoystickButton(dualshock, INTAKE_FLIP);
 
         conveyorFeed = new JoystickButton(dualshock, CONVEYOR_FEED);
         conveyorReverse = new JoystickButton(dualshock, CONVEYOR_REVERSE);
@@ -106,7 +106,9 @@ public class Operator
         intakeIn.whileHeld(new IntakeSpin(robot));
         intakeOut.whileHeld(new IntakeReverse(robot));
 
-        intakeFlip.whenPressed(new IntakeFlip(robot));
+        //DONT ACCIDENTALLY FLIP AT HUMBER
+
+        // intakeFlip.whenPressed(new IntakeFlip(robot));
 
         conveyorFeed.whileHeld(new ConveyorFeed(robot));
         conveyorReverse.whileHeld(new ConveyorReverse(robot));
