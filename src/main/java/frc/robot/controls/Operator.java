@@ -46,7 +46,7 @@ public class Operator
     private POVButton shooterLow;
     private POVButton shooterMed;
     private POVButton shooterHigh;
-    private POVButton shooterExHigh;
+    private POVButton shooterReverse;
 
 	  // PORTS //
 
@@ -70,7 +70,7 @@ public class Operator
     public static final int SHOOTER_LOW = 90;
     public static final int SHOOTER_MED = 180;
     public static final int SHOOTER_HIGH = 270;
-    public static final int SHOOTER_EX_HIGH = 0;
+    public static final int SHOOTER_REVERSE = 0;
   
     // CONSTANTS //
     public static final double SHOOTER_DEADZONE = 0.1;
@@ -100,7 +100,7 @@ public class Operator
         shooterLow = new POVButton(dualshock, SHOOTER_LOW);
         shooterMed = new POVButton(dualshock, SHOOTER_MED);
         shooterHigh = new POVButton(dualshock, SHOOTER_HIGH);
-        shooterExHigh = new POVButton(dualshock, SHOOTER_EX_HIGH);
+        shooterReverse = new POVButton(dualshock, SHOOTER_REVERSE);
 
         // bind buttons to commands
         intakeIn.whileHeld(new IntakeSpin(robot));
@@ -123,7 +123,7 @@ public class Operator
         shooterLow.whileHeld(new ShooterSpin(robot, 0.4));
         shooterMed.whileHeld(new ShooterSpin(robot, 0.46));
         shooterHigh.whileHeld(new ShooterSpin(robot, 0.48));
-        shooterExHigh.whileHeld(new ShooterSpin(robot, -.3));
+        shooterReverse.whileHeld(new ShooterSpin(robot, -.3));
     }
        // METHODS
 
