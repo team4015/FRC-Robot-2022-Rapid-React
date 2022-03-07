@@ -2,16 +2,16 @@
  * Authors: Lucas Jacobs
  *
  * --------------------------------------------------
- * Description: Sets the Drivetrain to low speed
+ * Description: Sets the Drivetrain high speed
  * ================================================== */
 
-package frc.robot.commands.drivetrain;
+package frc.robot.commands.driver;
 
 import frc.robot.Robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class LowSpeed extends CommandBase
+public class HighSpeed extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
@@ -25,12 +25,12 @@ public class LowSpeed extends CommandBase
 
   // CONSTRUCTOR //
 
-  public LowSpeed(Robot robot)
+  public HighSpeed(Robot robot)
   {
     this.robot = robot;
 
     // subsystems that this command requires
-    addRequirements(robot.drivetrain);
+    // addRequirements(); none needed
   }
 
   // METHODS //
@@ -45,9 +45,7 @@ public class LowSpeed extends CommandBase
   @Override
   public void execute()
   {
-    robot.driver.MAX_THROTTLE_SPEED = 0.3;
-    robot.driver.MAX_STEER_SPEED = 0.2;
-    SmartDashboard.putString("Drive Speed", "LOW");
+    robot.driver.useHighSpeed();
   }
 
   // Called once the command ends or is interrupted.

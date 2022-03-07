@@ -75,6 +75,12 @@ public class Operator
     // CONSTANTS //
     public static final double SHOOTER_DEADZONE = 0.1;
 
+    public static final double SHOOTER_SPEED_LOW = .4;
+    public static final double SHOOTER_SPEED_MED = .44;
+    public static final double SHOOTER_SPEED_HIGH = .48;
+    public static final double SHOOTER_SPEED_REVERSE = -.3;
+
+
 
     public Operator(Robot robot)
     {
@@ -120,26 +126,13 @@ public class Operator
       
         visionAim.whileHeld(new VisionAim(robot));
         
-        shooterLow.whileHeld(new ShooterSpin(robot, 0.4));
-        shooterMed.whileHeld(new ShooterSpin(robot, 0.46));
-        shooterHigh.whileHeld(new ShooterSpin(robot, 0.48));
-        shooterReverse.whileHeld(new ShooterSpin(robot, -.3));
+        shooterLow.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_LOW));
+        shooterMed.whileHeld(new ShooterSpin(robot,SHOOTER_SPEED_MED));
+        shooterHigh.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_HIGH));
+        shooterReverse.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_REVERSE));
     }
        // METHODS
 
     // Add methods here which return values for various robot controls by reading the controllers.
-
-    /* Authors: Jason Wang & Lucas Jacobs*
-    * Desc: NOTNEEDED FOR HUMBER
-    * Returns the power given to the shooter by reading the left
-    * joystick of the controller*/
-
-    /*public double getShooterPower(){
-        double power = -dualshock.getY();
-
-        if (Math.abs(power) < SHOOTER_DEADZONE) power = 0;
-
-        return power;
-    }*/
 }
 

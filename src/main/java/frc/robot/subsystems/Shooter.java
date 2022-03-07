@@ -26,13 +26,10 @@ public class Shooter extends SubsystemBase
   // METHODS //
   // spins the motor for the shooter
   public void spin(double speed){
-    /*if(speed>1){
-      speed=1;
-    }else if(speed<0){
-      speed=0;
-    }*/
     motor.set(speed);
-  }//stops the motor for the shooter
+  }
+  
+  //stops the motor for the shooter
   
   public void stop(){
     motor.set(0);

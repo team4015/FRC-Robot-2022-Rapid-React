@@ -31,13 +31,13 @@ public class AutoDrive extends CommandBase
 
   // CONSTRUCTOR //
 
-  public AutoDrive(Robot robot, double speed, double turn, double t)
+  public AutoDrive(Robot robot, double speed, double turn, double duration)
   {
     this.robot = robot;
     timer = new Timer();
     this.speed = speed;
     this.turn = turn;
-    duration = t;
+    this.duration = duration;
     finished = false;
 
     // subsystems that this command requires
@@ -51,7 +51,7 @@ public class AutoDrive extends CommandBase
   public void initialize()
   {
     timer.start();
-    SmartDashboard.putString("Auto Mode:", "Drive");
+    SmartDashboard.putString("Robot Mode:", "Auto Drive");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -70,7 +70,7 @@ public class AutoDrive extends CommandBase
   @Override
   public void end(boolean interrupted)
   {
-
+    robot.drivetrain.stopMotors();
   }
 
   // Returns true when the command should end.

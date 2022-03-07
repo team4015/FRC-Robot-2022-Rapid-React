@@ -31,21 +31,9 @@ public class Match extends TimedRobot
   {
     // instantiate the robot
     robot = new Robot();
-    auto = new SequentialCommandGroup(
 
-      new AutoDrive(robot, -.5, 0, 2), // drive backwards
-      new AutoShoot(robot, 3, .4) //shoot
-
-      // Robot on right tarmac
-
-      //new AutoDrive(robot, 0, -.5, 1.2), //turn left
-      //new AutoDrive(robot, .5, 0, 1.5) //drive away
-
-      //Robot on left tarmac
-      
-      //new AutoDrive(robot, 0, .5, 1.2), //turn right
-      //new AutoDrive(robot, .7, 0, 1.2) //drive away
-    );
+    //COmmands run in autonomous
+    auto = new AutoGroup(robot);
   }
 
   /**
@@ -94,7 +82,7 @@ public class Match extends TimedRobot
   public void teleopInit()
   {
     auto.cancel();
-    SmartDashboard.putString("Auto Mode:", "TeleOp");
+    SmartDashboard.putString("Robot Mode:", "TeleOp");
   }
 
   /** This function is called periodically during operator control. */

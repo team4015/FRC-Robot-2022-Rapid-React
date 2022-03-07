@@ -152,6 +152,7 @@ public class Vision extends SubsystemBase {
           SmartDashboard.putNumber("Width", width);
           SmartDashboard.putBoolean("In Shooting Range", width >= 4 && width <= 9);
           SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);
+          autoShooterSpeed(); //Prints the speed needed to get the ball in to the dashboard
         }
       }
       vOut.putFrame(output);

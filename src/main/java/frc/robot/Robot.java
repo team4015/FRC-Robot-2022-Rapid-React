@@ -69,10 +69,11 @@ public class Robot
   private void initialize()
   {
     drivetrain.stopMotors();
+    driver.useHighSpeed();
     SmartDashboard.putString("Drive Speed", "HIGH");
 
     intake.stop();
-    intake.deploy(); // Deploy default for humber
+    intake.deploy(); // Deploy default for humber, (no piston yet)
 
     climber.stop();
     conveyor.stop();

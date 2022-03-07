@@ -24,19 +24,19 @@ public class AutoShoot extends CommandBase
   private double speed;
   private double timeToShot;
   boolean finished;
-  private final static double conveyorSpinTime = 1.5;
+  private final static double CONVEYOR_SPIN_TIME = 1.5;
 
   // CONSTANTS //
   final static double TURN_SPEED = 0.1; //CHANGE THIS ALONG WITH VISION PACKAGE
 
   // CONSTRUCTOR //
 
-  public AutoShoot(Robot robot, double t, double speed)
+  public AutoShoot(Robot robot, double timeToShot, double speed)
   {
     this.robot = robot;
     this.speed = speed;
     timer = new Timer();
-    timeToShot = t;
+    this.timeToShot = timeToShot;
     finished = false;
 
     // subsystems that this command requires
@@ -50,7 +50,7 @@ public class AutoShoot extends CommandBase
   public void initialize()
   {
     timer.start();
-    SmartDashboard.putString("Auto Mode:", "Shoot");
+    SmartDashboard.putString("Robot Mode:", "Auto Shoot");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -68,7 +68,7 @@ public class AutoShoot extends CommandBase
       // turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
 
       //robot.drivetrain.moveMotors(0, turn * TURN_SPEED);
-    } else if (timer.get() < timeToShot + conveyorSpinTime) {
+    } else if (timer.get() < timeToShot + CONVEYOR_SPIN_TIME) {
 
       robot.conveyor.feed();
     } else {
@@ -80,7 +80,8 @@ public class AutoShoot extends CommandBase
   @Override
   public void end(boolean interrupted)
   {
-
+    robot.shooter.stop();
+    robot.conveyor.stop();
   }
 
   // Returns true when the command should end.
