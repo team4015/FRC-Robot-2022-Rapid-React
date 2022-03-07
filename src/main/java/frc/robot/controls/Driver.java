@@ -37,7 +37,7 @@ public class Driver
 	// CONSTANTS //
     public static final double DEADZONE = 0.15; // Deadzone applied to joysticks to aid in adjusting sensitivity
     public double MAX_THROTTLE_SPEED = 0.8;
-    public double MAX_STEER_SPEED = 0.5;
+    public double MAX_STEER_SPEED = 1;
 
     public static final int LOW_SPEED = 5;
     public static final int HIGH_SPEED = 3;

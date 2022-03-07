@@ -46,7 +46,7 @@ public class HighSpeed extends CommandBase
   public void execute()
   {
     robot.driver.MAX_THROTTLE_SPEED = 0.8;
-    robot.driver.MAX_STEER_SPEED = 0.5;
+    robot.driver.MAX_STEER_SPEED = .5;
     SmartDashboard.putString("Drive Speed", "HIGH");
   }
 

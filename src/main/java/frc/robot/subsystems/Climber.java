@@ -26,8 +26,8 @@ public class Climber extends SubsystemBase
 
   public static final double SPOOL_SPEED = 0.1;
   public static final double SPOOL_REVERSE_SPEED = -0.1;
-  public static final double GEAR_SPEED = 0.1;
-  public static final double GEAR_REVERSE_SPEED = -0.1;
+  public static final double GEAR_SPEED = 0.8;
+  public static final double GEAR_REVERSE_SPEED = -0.8;
 
   public Climber()
   {
@@ -40,7 +40,7 @@ public class Climber extends SubsystemBase
   // METHODS //
   //unwind() winds out cable and strap to climb
 public void unwind(){
-    spoolmotor.set(SPOOL_REVERSE_SPEED);
+    spoolmotor.set(SPOOL_REVERSE_SPEED/2);
   }
   //extend() unwinds cable, and extends the extension rod
 public void extend(){

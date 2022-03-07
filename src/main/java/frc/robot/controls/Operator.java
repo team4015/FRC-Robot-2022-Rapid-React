@@ -121,9 +121,9 @@ public class Operator
         visionAim.whileHeld(new VisionAim(robot));
         
         shooterLow.whileHeld(new ShooterSpin(robot, 0.4));
-        shooterMed.whileHeld(new ShooterSpin(robot, 0.44));
+        shooterMed.whileHeld(new ShooterSpin(robot, 0.46));
         shooterHigh.whileHeld(new ShooterSpin(robot, 0.48));
-        shooterExHigh.whileHeld(new ShooterSpin(robot, 0.52));
+        shooterExHigh.whileHeld(new ShooterSpin(robot, -.3));
     }
        // METHODS
 
