@@ -103,7 +103,7 @@ public class Vision extends SubsystemBase {
 
           if (contour.width > biggest.width) biggest = contour;
 
-          //Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
+          Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
         }
         // --------------------------------------------- 
         LinkedList<Rect> checkThese = new LinkedList<Rect>();
@@ -113,7 +113,7 @@ public class Vision extends SubsystemBase {
         Rect targetRect = new Rect(biggest.x, biggest.y, biggest.width, biggest.height);
 
         //Biggest in red
-        //Imgproc.rectangle(output, biggest,  new Scalar(0, 0, 255, 255), 1);
+        Imgproc.rectangle(output, biggest,  new Scalar(0, 0, 255, 255), 1);
 
         while (checkThese.size() > 0) { // Go through rectangles in the taRGET
           Rect checked = checkThese.pop();
@@ -143,7 +143,7 @@ public class Vision extends SubsystemBase {
         //-----------------------------------------------------
 
         //Add target blue in red on screen
-        // Imgproc.rectangle(output, targetRect,  new Scalar(255, 0, 0, 255), 1);
+        Imgproc.rectangle(output, targetRect,  new Scalar(255, 0, 0, 255), 1);
 
 
         synchronized (imgLock) {
