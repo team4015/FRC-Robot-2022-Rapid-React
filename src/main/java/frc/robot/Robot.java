@@ -16,6 +16,7 @@ package frc.robot;
 
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.intake.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
 import frc.robot.commands.shooter.*;
@@ -68,9 +69,11 @@ public class Robot
   private void initialize()
   {
     drivetrain.stopMotors();
+    driver.useHighSpeed();
+    SmartDashboard.putString("Drive Speed", "HIGH");
 
     intake.stop();
-    intake.retract();
+    intake.deploy(); // Deploy default for humber, (no piston yet)
 
     climber.stop();
     conveyor.stop();
@@ -90,6 +93,6 @@ public class Robot
     climber.setDefaultCommand(new ClimberStop(this));
     drivetrain.setDefaultCommand(new Drive(this));
     conveyor.setDefaultCommand(new ConveyorStop(this));
-    shooter.setDefaultCommand(new ShooterSpin(this));
+    shooter.setDefaultCommand(new ShooterStop(this));
   }
 }
