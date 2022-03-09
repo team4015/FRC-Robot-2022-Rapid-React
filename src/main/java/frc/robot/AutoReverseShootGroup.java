@@ -2,7 +2,7 @@
  * Authors: Lucas Jacobs
  * --------------------------------------------------
  * Description:
- * This class caontinds the commands that are executed 
+ * This class contains the commands that are executed 
  * in autonomous mode at the start of the match
  * ================================================== */
 
@@ -11,8 +11,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.auto.*;
 
-public class AutoGroup extends SequentialCommandGroup {
-    public AutoGroup(Robot robot) {
+public class AutoReverseShootGroup extends SequentialCommandGroup {
+    public AutoReverseShootGroup(Robot robot) {
         super(
             new AutoDrive(robot, -.5, 0, 2), // drive backwards
             new AutoShoot(robot, 3, .4) //shoot
