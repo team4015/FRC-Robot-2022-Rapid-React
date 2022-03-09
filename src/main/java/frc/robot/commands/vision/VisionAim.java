@@ -20,7 +20,7 @@ public class VisionAim extends CommandBase
   private Robot robot;
 
   // CONSTANTS //
-  final static double TURN_SPEED = 0.0001;
+  final static double TURN_SPEED = 0.3;
 
   // CONSTRUCTOR //
 
@@ -29,7 +29,7 @@ public class VisionAim extends CommandBase
     this.robot = robot;
 
     // subsystems that this command requires
-    addRequirements(robot.vision, /*robot.drivetrain,*/ robot.shooter);
+    addRequirements(robot.vision, robot.drivetrain, robot.shooter);
   }
 
   // METHODS //
@@ -45,9 +45,13 @@ public class VisionAim extends CommandBase
   @Override
   public void execute()
   {
-    //double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
+    double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
 
-    //robot.drivetrain.moveMotors(0, 0);
+    if (turn > 0) {
+      robot.drivetrain.moveMotors(0, TURN_SPEED);
+    } else if (turn < 0) {
+      robot.drivetrain.moveMotors(0, -TURN_SPEED);
+    }
 
     double speed = robot.vision.autoShooterSpeed();
     robot.shooter.spin(speed);
@@ -64,6 +68,6 @@ public class VisionAim extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return true;
+    return false;
   }
 }

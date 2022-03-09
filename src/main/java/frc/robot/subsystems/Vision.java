@@ -39,7 +39,7 @@ public class Vision extends SubsystemBase {
   final static int IMG_WIDTH = 160;
   final static int FPS = 30;
 
-  final static int TURN_THRESHOLD = 20;
+  final static int TURN_THRESHOLD = 5;
 
   // VARIABLES //
   private VisionThread visionThread;
