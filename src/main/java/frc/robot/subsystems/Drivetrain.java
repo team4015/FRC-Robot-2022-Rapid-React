@@ -29,6 +29,7 @@ public class Drivetrain extends SubsystemBase
   public static final int LEFT_MOTOR = 0;
 
   // CONSTANTS //
+  public static final double AIM_TURN_SPEED = 0.4;
   
 
   // CONSTRUCTOR //

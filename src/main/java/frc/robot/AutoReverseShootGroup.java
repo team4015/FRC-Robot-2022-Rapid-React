@@ -15,7 +15,7 @@ public class AutoReverseShootGroup extends SequentialCommandGroup {
     public AutoReverseShootGroup(Robot robot) {
         super(
             new AutoDrive(robot, -.5, 0, 2), // drive backwards
-            new AutoShoot(robot, 3, .4) //shoot
+            new AutoShoot(robot, .4, 3) //shoot
 
             // Robot on right tarmac
 

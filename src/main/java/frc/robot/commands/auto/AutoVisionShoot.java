@@ -3,17 +3,18 @@
  *
  * --------------------------------------------------
  * Description:
- * Makes the robot shoot a ball at the target after a specified time
+ * Makes the robot aim at the target and shoot based on the speed from the vision
  * ================================================== */
 
 package frc.robot.commands.auto;
 
 import frc.robot.Robot;
+import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class AutoShoot extends CommandBase
+public class AutoVisionShoot extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
@@ -21,23 +22,22 @@ public class AutoShoot extends CommandBase
 
   private Robot robot;
   private Timer timer;
-  private double speed;
   private double timeToShot;
-  private final static double CONVEYOR_SPIN_TIME = .5;
+  private final static double CONVEYOR_SPIN_TIME = 1;
 
   // CONSTANTS //
+  final static double TURN_SPEED = 0.2;
 
   // CONSTRUCTOR //
 
-  public AutoShoot(Robot robot, double speed, double timeToShot)
+  public AutoVisionShoot(Robot robot, double timeToShot)
   {
     this.robot = robot;
-    this.speed = speed;
     this.timeToShot = timeToShot;
     timer = new Timer();
 
     // subsystems that this command requires
-    addRequirements(robot.shooter, robot.conveyor);
+    addRequirements(robot.vision, robot.drivetrain, robot.shooter, robot.conveyor);
   }
 
   // METHODS //
@@ -54,16 +54,38 @@ public class AutoShoot extends CommandBase
   @Override
   public void execute()
   {
-    //Spin shooter
+    SmartDashboard.putBoolean("ALIGNED", false);
+
+    //Aim and spin shooter
     while (timer.get() < timeToShot) {
-      robot.shooter.spin(speed);
+      double autoSpeed = robot.vision.autoShooterSpeed();
+      robot.shooter.spin(autoSpeed);
+
+      double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
+
+      if (turn > 0) {
+        robot.drivetrain.moveMotors(0, Drivetrain.AIM_TURN_SPEED);
+      } else if (turn < 0) {
+        robot.drivetrain.moveMotors(0, -Drivetrain.AIM_TURN_SPEED);
+      }
     }
 
     timer.reset();
+    
+    //Aim, spin and shoot
 
-    //Spin shooter and feed the conveyor
     while (timer.get() < CONVEYOR_SPIN_TIME) {
-      robot.shooter.spin(speed);
+      double autoSpeed = robot.vision.autoShooterSpeed();
+      robot.shooter.spin(autoSpeed);
+
+      double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
+
+      if (turn > 0) {
+        robot.drivetrain.moveMotors(0, Drivetrain.AIM_TURN_SPEED);
+      } else if (turn < 0) {
+        robot.drivetrain.moveMotors(0, -Drivetrain.AIM_TURN_SPEED);
+      }
+
       robot.conveyor.feed();
     }
   }
@@ -74,6 +96,7 @@ public class AutoShoot extends CommandBase
   {
     robot.shooter.stop();
     robot.conveyor.stop();
+    robot.drivetrain.stopMotors();
   }
 
   // Returns true when the command should end.

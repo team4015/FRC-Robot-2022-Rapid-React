@@ -9,6 +9,7 @@
 package frc.robot.commands.vision;
 
 import frc.robot.Robot;
+import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class VisionAim extends CommandBase
@@ -46,11 +47,11 @@ public class VisionAim extends CommandBase
   public void execute()
   {
     double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
-
+  
     if (turn > 0) {
-      robot.drivetrain.moveMotors(0, TURN_SPEED);
+      robot.drivetrain.moveMotors(0, Drivetrain.AIM_TURN_SPEED);
     } else if (turn < 0) {
-      robot.drivetrain.moveMotors(0, -TURN_SPEED);
+      robot.drivetrain.moveMotors(0, -Drivetrain.AIM_TURN_SPEED);
     }
 
     double speed = robot.vision.autoShooterSpeed();
