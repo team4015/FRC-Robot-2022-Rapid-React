@@ -1,0 +1,81 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="Shooter Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.SimpleDial">
+		<location x="1278" y="355"/>
+		<property name="Upper Limit" value="1.0"/>
+		<property name="Tick Interval" value="0.1"/>
+	</widget>
+	<widget field="Auto Mode:" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1052" y="56"/>
+		<height>40</height>
+	</widget>
+	<widget field="ALIGNED" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="1424" y="46"/>
+		<width>100</width>
+		<height>59</height>
+	</widget>
+	<widget field="Dist to Target" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1046" y="111"/>
+	</widget>
+	<widget field="greendown" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1293" y="274"/>
+		<height>26</height>
+	</widget>
+	<widget field="greenup" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1280" y="244"/>
+	</widget>
+	<widget field="blueup" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1282" y="182"/>
+	</widget>
+	<widget field="bluedown" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1281" y="211"/>
+	</widget>
+	<widget field="reddown" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1281" y="148"/>
+	</widget>
+	<widget field="redup" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1280" y="115"/>
+		<width>222</width>
+	</widget>
+	<widget field="Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="436" y="58"/>
+		<width>157</width>
+		<height>36</height>
+	</widget>
+	<widget field="Centre (0 to 1) " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.ProgressBar">
+		<location x="661" y="56"/>
+		<height>39</height>
+		<property name="Maximum" value="1.0"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="641" y="108"/>
+		<width>640</width>
+		<height>463</height>
+		<property name="Camera Choice" value="Target Video"/>
+	</static-widget>
+	<widget field="Targets Detected" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="15" y="54"/>
+		<width>358</width>
+		<height>32</height>
+		<property name="Background" value="153.153.255.255"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="-1" y="-1"/>
+		<width>1535</width>
+		<height>45</height>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="10" y="121"/>
+		<width>619</width>
+		<height>464</height>
+		<property name="Camera Choice" value="Filtered"/>
+		<property name="Selected Camera Path" value="/103path"/>
+	</static-widget>
+	<widget field="Drive Speed" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="876" y="53"/>
+		<height>41</height>
+	</widget>
+</dashboard>
+<live-window>
+</live-window>
+</xml>

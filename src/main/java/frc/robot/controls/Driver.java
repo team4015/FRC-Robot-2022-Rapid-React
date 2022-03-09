@@ -14,7 +14,12 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Robot;
+import frc.robot.commands.driver.HighSpeed;
+import frc.robot.commands.driver.LowSpeed;
+import frc.robot.commands.drivetrain.*;
 
 public class Driver
 {
@@ -27,13 +32,17 @@ public class Driver
 
 
     // BUTTONS //
-
+    private JoystickButton lowSpeed;
+    private JoystickButton highSpeed;
 
 
 	// CONSTANTS //
     public static final double DEADZONE = 0.15; // Deadzone applied to joysticks to aid in adjusting sensitivity
-    public static final double MAX_THROTTLE_SPEED = 0.30;
-    public static final double MAX_STEER_SPEED = 0.2;
+    public double throttleSpeed = 0.8;
+    public double steerSpeed = .7;
+
+    public static final int LOW_SPEED = 5;
+    public static final int HIGH_SPEED = 3;
 
 
     public Driver(Robot robot)
@@ -43,8 +52,12 @@ public class Driver
         steer = new Joystick(STEER);
 
         // bind button objects to physical buttons
+        lowSpeed = new JoystickButton(throttle, LOW_SPEED);
+        highSpeed = new JoystickButton(throttle, HIGH_SPEED);
 
         // bind buttons to commands
+        lowSpeed.whenPressed(new LowSpeed(robot));
+        highSpeed.whenPressed(new HighSpeed(robot));
     }
 
 	// METHODS //
@@ -66,7 +79,7 @@ public class Driver
         double throttleValue = -throttle.getY();
         if (Math.abs(throttleValue) < DEADZONE) return 0;
 
-        throttleValue *= MAX_THROTTLE_SPEED;
+        throttleValue *= throttleSpeed;
 
         return throttleValue;
     }
@@ -83,8 +96,20 @@ public class Driver
         double steerValue =  steer.getX();
         if (Math.abs(steerValue) < DEADZONE) return 0;
 
-        steerValue *= MAX_STEER_SPEED;
+        steerValue *= steerSpeed;
 
         return steerValue;
+    }
+
+    public void useLowSpeed() {
+        throttleSpeed = 0.3;
+        steerSpeed = 0.2;
+        SmartDashboard.putString("Drive Speed", "LOW");
+    }
+
+    public void useHighSpeed() {
+        throttleSpeed = 0.8;
+        steerSpeed = 0.7;
+        SmartDashboard.putString("Drive Speed", "HIGH");
     }
 }

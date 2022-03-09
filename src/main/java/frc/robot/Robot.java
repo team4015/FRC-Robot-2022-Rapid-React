@@ -16,6 +16,7 @@ package frc.robot;
 
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.intake.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
 import frc.robot.commands.shooter.*;
@@ -24,27 +25,32 @@ import frc.robot.subsystems.*;
 
 public class Robot
 {
-  // SUBSYSTEMS //
+  // CONTROLS //
+  public Driver driver;
+  public Operator operator;
 
+  // SUBSYSTEMS //
   public Climber climber;
   public Conveyor conveyor;
   public Drivetrain drivetrain;
   public Intake intake;
   public Shooter shooter;
-  public Driver driver;
-  public Operator operator;
+  public Vision vision;
 
 
   // CONSTRUCTOR //
 
   public Robot()
   {
-    // instantiate subsystems
+    // Instantiate Subsystems
     climber = new Climber();
     conveyor = new Conveyor();
     drivetrain = new Drivetrain();
     intake = new Intake();
     shooter = new Shooter();
+    vision = new Vision();
+
+    // Instantiate Controls
     driver = new Driver(this);
     operator = new Operator(this);
 
@@ -63,12 +69,16 @@ public class Robot
   private void initialize()
   {
     drivetrain.stopMotors();
+    driver.useHighSpeed();
+    SmartDashboard.putString("Drive Speed", "HIGH");
 
     intake.stop();
-    intake.retract();
+    intake.deploy(); // Deploy default for humber, (no piston yet)
 
     climber.stop();
     conveyor.stop();
+
+    vision.initCamera();
     shooter.stop();
   }
 

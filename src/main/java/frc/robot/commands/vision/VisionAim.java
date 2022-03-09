@@ -1,17 +1,17 @@
 /* ==================================================
- * Authors: Fawaaz Kamali Siddiqui, Lucas Jacobs
+ * Authors: Lucas Jacobs
  *
  * --------------------------------------------------
- * Description: This class contains code to stop the 
- * conveyor.
+ * Description:
+ * Makes the robot turn towards the target if it is in view
  * ================================================== */
 
-package frc.robot.commands.conveyor;
+package frc.robot.commands.vision;
 
 import frc.robot.Robot;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ConveyorStop extends CommandBase
+public class VisionAim extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
@@ -20,17 +20,16 @@ public class ConveyorStop extends CommandBase
   private Robot robot;
 
   // CONSTANTS //
-
-
+  final static double TURN_SPEED = 0.0001;
 
   // CONSTRUCTOR //
 
-  public ConveyorStop(Robot robot)
+  public VisionAim(Robot robot)
   {
     this.robot = robot;
 
     // subsystems that this command requires
-    addRequirements(robot.conveyor);
+    addRequirements(robot.vision, /*robot.drivetrain,*/ robot.shooter);
   }
 
   // METHODS //
@@ -46,7 +45,12 @@ public class ConveyorStop extends CommandBase
   @Override
   public void execute()
   {
-    robot.conveyor.stop();
+    //double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
+
+    //robot.drivetrain.moveMotors(0, 0);
+
+    double speed = robot.vision.autoShooterSpeed();
+    robot.shooter.spin(speed);
   }
 
   // Called once the command ends or is interrupted.
@@ -60,6 +64,6 @@ public class ConveyorStop extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return false;
+    return true;
   }
 }

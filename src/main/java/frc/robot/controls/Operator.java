@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
+import frc.robot.commands.vision.*;
 import frc.robot.commands.shooter.*;
 import frc.robot.Robot;
 
@@ -40,9 +41,15 @@ public class Operator
     private JoystickButton climberExtend;
     private JoystickButton climberRetract;
 
-    private JoystickButton shooterSpin;
+    private JoystickButton visionAim;
 
-	// CONSTANTS //
+    private POVButton shooterLow;
+    private POVButton shooterMed;
+    private POVButton shooterHigh;
+    private POVButton shooterReverse;
+
+	  // PORTS //
+
     public static final int DUALSHOCK = 2;
 
     public static final int INTAKE_IN = 8;
@@ -58,7 +65,21 @@ public class Operator
     public static final int CLIMBER_EXTEND = 3;
     public static final int CLIMBER_RETRACT = 2;
 
-    public static final int SHOOTER_SPIN = 9;
+    public static final int VISION_AIM = 9;
+
+    public static final int SHOOTER_LOW = 90;
+    public static final int SHOOTER_MED = 180;
+    public static final int SHOOTER_HIGH = 270;
+    public static final int SHOOTER_REVERSE = 0;
+  
+    // CONSTANTS //
+    public static final double SHOOTER_DEADZONE = 0.1;
+
+    public static final double SHOOTER_SPEED_LOW = .4;
+    public static final double SHOOTER_SPEED_MED = .44;
+    public static final double SHOOTER_SPEED_HIGH = .48;
+    public static final double SHOOTER_SPEED_REVERSE = -.3;
+
 
 
     public Operator(Robot robot)
@@ -70,7 +91,7 @@ public class Operator
         intakeIn = new JoystickButton(dualshock, INTAKE_IN);
         intakeOut = new JoystickButton(dualshock, INTAKE_OUT);
 
-        intakeFlip = new JoystickButton(dualshock, INTAKE_FLIP);
+        //intakeFlip = new JoystickButton(dualshock, INTAKE_FLIP);
 
         conveyorFeed = new JoystickButton(dualshock, CONVEYOR_FEED);
         conveyorReverse = new JoystickButton(dualshock, CONVEYOR_REVERSE);
@@ -80,29 +101,38 @@ public class Operator
         climberExtend = new JoystickButton(dualshock, CLIMBER_EXTEND);
         climberRetract = new JoystickButton(dualshock, CLIMBER_RETRACT);
 
-        shooterSpin = new JoystickButton(dualshock, SHOOTER_SPIN);
+        visionAim = new JoystickButton(dualshock, VISION_AIM);
+
+        shooterLow = new POVButton(dualshock, SHOOTER_LOW);
+        shooterMed = new POVButton(dualshock, SHOOTER_MED);
+        shooterHigh = new POVButton(dualshock, SHOOTER_HIGH);
+        shooterReverse = new POVButton(dualshock, SHOOTER_REVERSE);
 
         // bind buttons to commands
-        intakeIn.whenHeld(new IntakeSpin(robot));
-        intakeOut.whenHeld(new IntakeReverse(robot));
+        intakeIn.whileHeld(new IntakeSpin(robot));
+        intakeOut.whileHeld(new IntakeReverse(robot));
 
-        intakeFlip.whenPressed(new IntakeFlip(robot));
+        //DONT ACCIDENTALLY FLIP AT HUMBER
 
-        conveyorFeed.whenHeld(new ConveyorFeed(robot));
-        conveyorReverse.whenHeld(new ConveyorReverse(robot));
+        // intakeFlip.whenPressed(new IntakeFlip(robot));
 
-        climberClimb.whenHeld(new ClimberClimb(robot));
-        climberUnwind.whenHeld(new ClimberUnwind(robot));
-        climberExtend.whenHeld(new ClimberExtend(robot));
-        climberRetract.whenHeld(new ClimberRetract(robot));
+        conveyorFeed.whileHeld(new ConveyorFeed(robot));
+        conveyorReverse.whileHeld(new ConveyorReverse(robot));
 
-        shooterSpin.whenHeld(new ShooterSpin(robot));
+        climberClimb.whileHeld(new ClimberClimb(robot));
+        climberUnwind.whileHeld(new ClimberUnwind(robot));
+        climberExtend.whileHeld(new ClimberExtend(robot));
+        climberRetract.whileHeld(new ClimberRetract(robot));
+      
+        visionAim.whileHeld(new VisionAim(robot));
+        
+        shooterLow.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_LOW));
+        shooterMed.whileHeld(new ShooterSpin(robot,SHOOTER_SPEED_MED));
+        shooterHigh.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_HIGH));
+        shooterReverse.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_REVERSE));
     }
        // METHODS
 
     // Add methods here which return values for various robot controls by reading the controllers.
-    public double getShooterPower(){
-        return dualshock.getThrottle();
-    }
 }
 
