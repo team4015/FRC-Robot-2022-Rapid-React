@@ -31,9 +31,6 @@ public class VisionAim extends CommandBase
     // subsystems that this command requires
     addRequirements(robot.vision, robot.drivetrain, robot.shooter);
   }
-
-  // METHODS //
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize()
@@ -45,7 +42,7 @@ public class VisionAim extends CommandBase
   @Override
   public void execute()
   {
-    double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
+    //double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
 
     if (turn > 0) {
       robot.drivetrain.moveMotors(0, TURN_SPEED);
