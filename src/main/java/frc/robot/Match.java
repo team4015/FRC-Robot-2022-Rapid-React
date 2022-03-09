@@ -33,7 +33,7 @@ public class Match extends TimedRobot
     robot = new Robot();
 
     //COmmands run in autonomous
-    auto = new AutoGroup(robot);
+    auto = new AutoReverseShootGroup(robot);
   }
 
   /**

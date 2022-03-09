@@ -38,11 +38,16 @@ public class Driver
 
 	// CONSTANTS //
     public static final double DEADZONE = 0.15; // Deadzone applied to joysticks to aid in adjusting sensitivity
-    public double throttleSpeed = 0.8;
-    public double steerSpeed = .7;
+    public static final double THROTTLE_LOW_SPEED = 0.3;
+    public static final double STEER_LOW_SPEED = 0.2;
+    public static final double THROTTLE_HIGH_SPEED = 0.8;
+    public static final double STEER_HIGH_SPEED = 0.7;
 
     public static final int LOW_SPEED = 5;
     public static final int HIGH_SPEED = 3;
+
+    public double throttleSpeed = 0.8;
+    public double steerSpeed = .7;
 
 
     public Driver(Robot robot)
@@ -101,15 +106,20 @@ public class Driver
         return steerValue;
     }
 
+    /* Author: Lucas Jacobs
+    *  Desc: Sets the drivetrain to high speed */
+
     public void useLowSpeed() {
-        throttleSpeed = 0.3;
-        steerSpeed = 0.2;
+        throttleSpeed = THROTTLE_LOW_SPEED;
+        steerSpeed = STEER_LOW_SPEED;
         SmartDashboard.putString("Drive Speed", "LOW");
     }
 
+    /* Author: Lucas Jacobs
+    *  Desc: Sets the drivetrain to low speed */
     public void useHighSpeed() {
-        throttleSpeed = 0.8;
-        steerSpeed = 0.7;
+        throttleSpeed = THROTTLE_HIGH_SPEED;
+        steerSpeed = STEER_HIGH_SPEED;
         SmartDashboard.putString("Drive Speed", "HIGH");
     }
 }
