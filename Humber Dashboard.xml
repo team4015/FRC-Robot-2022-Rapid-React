@@ -1,5 +1,8 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Robot Mode:" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="87"/>
+	</widget>
 	<widget field="Shooter Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.SimpleDial">
 		<location x="1278" y="355"/>
 		<property name="Upper Limit" value="1.0"/>
@@ -75,7 +78,53 @@
 		<location x="876" y="53"/>
 		<height>41</height>
 	</widget>
+	<widget field="In Shooting Range" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="60"/>
+	</widget>
 </dashboard>
 <live-window>
+	<widget field="Shooter" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="132"/>
+	</widget>
+	<widget field="Drivetrain" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="110"/>
+	</widget>
+	<widget field="Intake" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="88"/>
+	</widget>
+	<widget field="Ungrouped" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<widget field="DoubleSolenoid[0,1]" type="Double Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
+			<location x="6" y="15"/>
+			<height>19</height>
+			<width>176</width>
+		</widget>
+		<widget field="Solenoid[0,2]" type="Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
+			<location x="34" y="34"/>
+			<height>21</height>
+			<width>121</width>
+		</widget>
+		<widget field="Solenoid[0,0]" type="Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
+			<location x="34" y="55"/>
+			<height>21</height>
+			<width>121</width>
+		</widget>
+		<widget field="DoubleSolenoid[0,4]" type="Double Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
+			<location x="6" y="76"/>
+			<height>19</height>
+			<width>176</width>
+		</widget>
+		<location x="0" y="66"/>
+		<width>188</width>
+		<height>101</height>
+	</widget>
+	<widget field="Vision" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="44"/>
+	</widget>
+	<widget field="Conveyor" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="22"/>
+	</widget>
+	<widget field="Climber" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="0"/>
+	</widget>
 </live-window>
 </xml>
