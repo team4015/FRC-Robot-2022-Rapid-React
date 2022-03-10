@@ -20,6 +20,7 @@ import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
 import frc.robot.commands.vision.*;
 import frc.robot.commands.shooter.*;
+import frc.robot.commands.auto.*;
 import frc.robot.Robot;
 
 public class Operator
@@ -127,7 +128,7 @@ public class Operator
         visionAim.whileHeld(new VisionAim(robot));
         
         shooterLow.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_LOW));
-        shooterMed.whileHeld(new ShooterSpin(robot,SHOOTER_SPEED_MED));
+        shooterMed.whenPressed(new AutoWallShoot(robot));
         shooterHigh.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_HIGH));
         shooterReverse.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_REVERSE));
     }

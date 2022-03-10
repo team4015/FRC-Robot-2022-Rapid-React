@@ -15,7 +15,7 @@ import frc.robot.Robot;
 public class AutoWallShoot extends ParallelCommandGroup {
     public AutoWallShoot(Robot robot) {
         super(
-            new AutoShoot(robot, 1.2, .4) //shoot
+            new AutoShoot(robot, .43, 1) //shoot
         );
     }
 }

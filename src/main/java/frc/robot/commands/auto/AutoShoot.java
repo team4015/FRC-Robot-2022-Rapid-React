@@ -47,6 +47,7 @@ public class AutoShoot extends CommandBase
   public void initialize()
   {
     timer.start();
+    timer.reset();
     SmartDashboard.putString("Robot Mode:", "Auto Shoot");
   }
 

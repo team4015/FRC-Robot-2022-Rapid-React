@@ -12,13 +12,14 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 
-public class AutoHubShoot extends ParallelCommandGroup {
+public class AutoHubShoot extends SequentialCommandGroup {
     public AutoHubShoot(Robot robot) {
         super(
-            new AutoDrive(robot, -.8, 0, 1), // drive backwards
-            new AutoShoot(robot, 1.2, .4) //shoot
+            new AutoDrive(robot, -.8, 0, .6), // drive backwards
+            new AutoShoot(robot, .38, .8) //shoot
         );
     }
 }
