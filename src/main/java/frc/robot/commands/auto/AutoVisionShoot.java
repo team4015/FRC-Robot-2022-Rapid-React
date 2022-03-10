@@ -37,7 +37,7 @@ public class AutoVisionShoot extends CommandBase
     timer = new Timer();
 
     // subsystems that this command requires
-    addRequirements(robot.vision, robot.drivetrain, robot.shooter, robot.conveyor);
+    addRequirements(robot.drivetrain, robot.shooter, robot.conveyor);
   }
 
   // METHODS //
