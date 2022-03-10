@@ -1,16 +1,18 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="In Shooting Range" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="1293" y="52"/>
+		<width>124</width>
+		<height>48</height>
+	</widget>
 	<widget field="Robot Mode:" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="87"/>
+		<location x="1007" y="56"/>
+		<height>38</height>
 	</widget>
 	<widget field="Shooter Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.SimpleDial">
 		<location x="1278" y="355"/>
 		<property name="Upper Limit" value="1.0"/>
 		<property name="Tick Interval" value="0.1"/>
-	</widget>
-	<widget field="Auto Mode:" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1052" y="56"/>
-		<height>40</height>
 	</widget>
 	<widget field="ALIGNED" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
 		<location x="1424" y="46"/>
@@ -18,26 +20,28 @@
 		<height>59</height>
 	</widget>
 	<widget field="Dist to Target" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1046" y="111"/>
+		<location x="1316" y="131"/>
+		<height>47</height>
 	</widget>
 	<widget field="greendown" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1293" y="274"/>
+		<location x="1085" y="690"/>
 		<height>26</height>
 	</widget>
 	<widget field="greenup" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1280" y="244"/>
+		<location x="884" y="686"/>
 	</widget>
 	<widget field="blueup" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1282" y="182"/>
+		<location x="511" y="672"/>
 	</widget>
 	<widget field="bluedown" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1281" y="211"/>
+		<location x="715" y="676"/>
 	</widget>
 	<widget field="reddown" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1281" y="148"/>
+		<location x="365" y="695"/>
+		<height>23</height>
 	</widget>
 	<widget field="redup" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1280" y="115"/>
+		<location x="88" y="678"/>
 		<width>222</width>
 	</widget>
 	<widget field="Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
@@ -51,13 +55,13 @@
 		<property name="Maximum" value="1.0"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
-		<location x="641" y="108"/>
+		<location x="636" y="120"/>
 		<width>640</width>
 		<height>463</height>
 		<property name="Camera Choice" value="Target Video"/>
 	</static-widget>
 	<widget field="Targets Detected" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="15" y="54"/>
+		<location x="6" y="67"/>
 		<width>358</width>
 		<height>32</height>
 		<property name="Background" value="153.153.255.255"/>
@@ -68,54 +72,26 @@
 		<height>45</height>
 	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
-		<location x="10" y="121"/>
+		<location x="11" y="122"/>
 		<width>619</width>
 		<height>464</height>
 		<property name="Camera Choice" value="Filtered"/>
 		<property name="Selected Camera Path" value="/103path"/>
 	</static-widget>
 	<widget field="Drive Speed" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="876" y="53"/>
+		<location x="845" y="57"/>
 		<height>41</height>
-	</widget>
-	<widget field="In Shooting Range" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="60"/>
 	</widget>
 </dashboard>
 <live-window>
 	<widget field="Shooter" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<location x="0" y="132"/>
+		<location x="0" y="212"/>
 	</widget>
 	<widget field="Drivetrain" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<location x="0" y="110"/>
+		<location x="0" y="190"/>
 	</widget>
 	<widget field="Intake" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<location x="0" y="88"/>
-	</widget>
-	<widget field="Ungrouped" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<widget field="DoubleSolenoid[0,1]" type="Double Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
-			<location x="6" y="15"/>
-			<height>19</height>
-			<width>176</width>
-		</widget>
-		<widget field="Solenoid[0,2]" type="Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
-			<location x="34" y="34"/>
-			<height>21</height>
-			<width>121</width>
-		</widget>
-		<widget field="Solenoid[0,0]" type="Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
-			<location x="34" y="55"/>
-			<height>21</height>
-			<width>121</width>
-		</widget>
-		<widget field="DoubleSolenoid[0,4]" type="Double Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
-			<location x="6" y="76"/>
-			<height>19</height>
-			<width>176</width>
-		</widget>
-		<location x="0" y="66"/>
-		<width>188</width>
-		<height>101</height>
+		<location x="0" y="168"/>
 	</widget>
 	<widget field="Vision" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
 		<location x="0" y="44"/>
@@ -126,5 +102,51 @@
 	<widget field="Climber" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
 		<location x="0" y="0"/>
 	</widget>
+	<widget field="Ungrouped" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<widget field="DoubleSolenoid[0,1]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<widget field="DoubleSolenoid[0,1]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<widget field="Solenoid[0,2]" type="Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<widget field="Solenoid[0,2]" type="Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<widget field="Solenoid[0,0]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<widget field="Solenoid[0,0]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<widget field="DoubleSolenoid[0,4]" type="Double Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<widget field="DoubleSolenoid[0,4]" type="Double Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<location x="0" y="66"/>
+		<width>188</width>
+		<height>101</height>
+	</widget>
 </live-window>
+	<hidden field="Auto Mode:"/>
 </xml>
