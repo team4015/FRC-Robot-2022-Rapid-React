@@ -118,25 +118,31 @@ public class Vision extends SubsystemBase {
         while (checkThese.size() > 0) { // Go through rectangles in the taRGET
           Rect checked = checkThese.pop();
 
-          for (int i = 0; i < targets.size(); i++) { //go THROUGH RECTANGLES NOT YET IN TARGET
+          for (int i = 0; i < targets.size(); i++) { //Go through triangle not yet in target
             Rect potential = targets.get(i);
 
             //if potential rect is in target
-            if (Math.abs(potential.x - checked.x) < 13 && Math.abs(potential.y - checked.y) < 7) {
+            if (Math.abs(potential.x - checked.x) < 30 && Math.abs(potential.y - checked.y) < 15) {
               checkThese.add(potential);
               targets.remove(i);
               i--;
 
               //*********Add potential to target Rect***************
+
+              int x = targetRect.x;
+              int y = targetRect.y;
+              int width = targetRect.width;
+              int height = targetRect.height;
+
               //set left
 
-              targetRect.x = Math.min(targetRect.x, potential.x);
+              targetRect.x = Math.min(x, potential.x);
               //set top
-              targetRect.y = Math.min(targetRect.y, potential.y);
+              targetRect.y = Math.min(y, potential.y);
               //set right
-              targetRect.width = Math.max(targetRect.x + targetRect.width, potential.x + potential.width) - targetRect.x;
+              targetRect.width = Math.max(x + width, potential.x + potential.width) - x;
               //set bott
-              targetRect.height = Math.max(targetRect.y + targetRect.height, potential.y + potential.height) - targetRect.y;
+              targetRect.height = Math.max(y + height, potential.y + potential.height) - y;
             }
           }
         }
@@ -156,7 +162,7 @@ public class Vision extends SubsystemBase {
         }
       }
       vOut.putFrame(output);
-      vOutFilter.putFrame(pipeline.rgbThresholdOutput());
+      vOutFilter.putFrame(pipeline.hsvThresholdOutput());
     });
 
     visionThread.start();
