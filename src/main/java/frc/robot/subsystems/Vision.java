@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Vision extends SubsystemBase {
   // HARDWARE //
   Solenoid light;
-
+  
   // PORTS //
   private final static int LIGHT_PORT = 2;
 
@@ -75,6 +75,8 @@ public class Vision extends SubsystemBase {
 
     cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
     cam.setFPS(FPS);
+    //cam.setExposureAuto();
+    cam.setExposureManual(25);
 
     CvSink vIn = CameraServer.getVideo();
     CvSource vOut = CameraServer.putVideo("Target Video", IMG_WIDTH, IMG_HEIGHT);
@@ -107,7 +109,7 @@ public class Vision extends SubsystemBase {
 
           //if (pipeline.rgbThresholdOutput().get((int) contourCentre.x, (int) contourCentre.y) == )
 
-          if (contour.width > biggest.width) biggest = contour;
+          if (contour.area() > biggest.area()) biggest = contour;
 
           Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
         }
@@ -121,28 +123,34 @@ public class Vision extends SubsystemBase {
         //Biggest in red
         Imgproc.rectangle(output, biggest,  new Scalar(0, 0, 255, 255), 1);
 
-        while (checkThese.size() > 0) { // Go through rectangles in the taRGET
+        while (checkThese.size() > 0) { // Go through rectangles in the target
           Rect checked = checkThese.pop();
 
-          for (int i = 0; i < targets.size(); i++) { //go THROUGH RECTANGLES NOT YET IN TARGET
+          for (int i = 0; i < targets.size(); i++) { //Go through triangle not yet in target
             Rect potential = targets.get(i);
 
             //if potential rect is in target
-            if (Math.abs(potential.x - checked.x) < 13 && Math.abs(potential.y - checked.y) < 7) {
+            if (Math.abs(potential.x - checked.x) < 40 && Math.abs(potential.y - checked.y) < 20) {
               checkThese.add(potential);
               targets.remove(i);
               i--;
 
               //*********Add potential to target Rect***************
+
+              int x = targetRect.x;
+              int y = targetRect.y;
+              int width = targetRect.width;
+              int height = targetRect.height;
+
               //set left
 
-              targetRect.x = Math.min(targetRect.x, potential.x);
+              targetRect.x = Math.min(x, potential.x);
               //set top
-              targetRect.y = Math.min(targetRect.y, potential.y);
+              targetRect.y = Math.min(y, potential.y);
               //set right
-              targetRect.width = Math.max(targetRect.x + targetRect.width, potential.x + potential.width) - targetRect.x;
+              targetRect.width = Math.max(x + width, potential.x + potential.width) - targetRect.x;
               //set bott
-              targetRect.height = Math.max(targetRect.y + targetRect.height, potential.y + potential.height) - targetRect.y;
+              targetRect.height = Math.max(y + height, potential.y + potential.height) - targetRect.y;
             }
           }
         }
@@ -154,7 +162,7 @@ public class Vision extends SubsystemBase {
 
         synchronized (imgLock) {
           xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
-          width = biggest.width;
+          width = targetRect.width;
           SmartDashboard.putNumber("Width", width);
           SmartDashboard.putBoolean("In Shooting Range", width >= 4 && width <= 9);
           SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);

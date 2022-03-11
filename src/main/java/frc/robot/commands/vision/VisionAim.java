@@ -20,7 +20,7 @@ public class VisionAim extends CommandBase
   private Robot robot;
 
   // CONSTANTS //
-  final static double TURN_SPEED = 0.3;
+  final static double TURN_SPEED = 0.4;
 
   // CONSTRUCTOR //
 
