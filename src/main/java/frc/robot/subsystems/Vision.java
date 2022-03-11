@@ -24,13 +24,17 @@ import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.vision.VisionThread;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
   // HARDWARE //
+  Solenoid light;
 
   // PORTS //
+  private final static int LIGHT_PORT = 2;
 
   // CONSTANTS //
   final static int CAM_HEIGHT = 480;
@@ -52,6 +56,8 @@ public class Vision extends SubsystemBase {
     xCentre = IMG_WIDTH/2.0;
     width = IMG_WIDTH/2.0;
     imgLock = new Object();
+    light = new Solenoid(PneumaticsModuleType.CTREPCM, LIGHT_PORT);
+    light.set(false); // turn light off
   }
 
   // METHODS //
@@ -209,5 +215,21 @@ public class Vision extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Speed", speed);
 
     return speed; // return difference between the target and where the robot is pointed
+  }
+
+  /* ==========================
+  * Author: Lucas Jacobs
+  * Desc: Enables the ring light 
+  * ===========================*/
+  public void enableLight() {
+    light.set(true);
+  }
+
+  /* ==========================
+  * Author: Lucas Jacobs
+  * Desc: Disables the ring light 
+  * ===========================*/
+  public void disableLight() {
+    light.set(false);
   }
 }
