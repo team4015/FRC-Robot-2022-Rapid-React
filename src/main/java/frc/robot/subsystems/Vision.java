@@ -115,14 +115,14 @@ public class Vision extends SubsystemBase {
         //Biggest in red
         Imgproc.rectangle(output, biggest,  new Scalar(0, 0, 255, 255), 1);
 
-        while (checkThese.size() > 0) { // Go through rectangles in the taRGET
+        while (checkThese.size() > 0) { // Go through rectangles in the target
           Rect checked = checkThese.pop();
 
           for (int i = 0; i < targets.size(); i++) { //Go through triangle not yet in target
             Rect potential = targets.get(i);
 
             //if potential rect is in target
-            if (Math.abs(potential.x - checked.x) < 30 && Math.abs(potential.y - checked.y) < 15) {
+            if (Math.abs(potential.x - checked.x) < 40 && Math.abs(potential.y - checked.y) < 20) {
               checkThese.add(potential);
               targets.remove(i);
               i--;
@@ -140,9 +140,9 @@ public class Vision extends SubsystemBase {
               //set top
               targetRect.y = Math.min(y, potential.y);
               //set right
-              targetRect.width = Math.max(x + width, potential.x + potential.width) - x;
+              targetRect.width = Math.max(x + width, potential.x + potential.width) - targetRect.x;
               //set bott
-              targetRect.height = Math.max(y + height, potential.y + potential.height) - y;
+              targetRect.height = Math.max(y + height, potential.y + potential.height) - targetRect.y;
             }
           }
         }
