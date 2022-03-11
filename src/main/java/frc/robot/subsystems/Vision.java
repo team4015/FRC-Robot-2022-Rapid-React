@@ -31,8 +31,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
   // HARDWARE //
-
   Solenoid light;
+  
   // PORTS //
   private final static int LIGHT_PORT = 2;
 
@@ -57,7 +57,7 @@ public class Vision extends SubsystemBase {
     width = IMG_WIDTH/2.0;
     imgLock = new Object();
     light = new Solenoid(PneumaticsModuleType.CTREPCM, LIGHT_PORT);
-    light.set(false);
+    light.set(false); // turn light off
   }
 
   // METHODS //
@@ -225,11 +225,19 @@ public class Vision extends SubsystemBase {
     return speed; // return difference between the target and where the robot is pointed
   }
 
-  public void enable() {
+  /* ==========================
+  * Author: Lucas Jacobs
+  * Desc: Enables the ring light 
+  * ===========================*/
+  public void enableLight() {
     light.set(true);
   }
 
-  public void disable() {
+  /* ==========================
+  * Author: Lucas Jacobs
+  * Desc: Disables the ring light 
+  * ===========================*/
+  public void disableLight() {
     light.set(false);
   }
 }
