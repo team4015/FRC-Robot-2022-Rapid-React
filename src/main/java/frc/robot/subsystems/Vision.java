@@ -24,13 +24,17 @@ import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.vision.VisionThread;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
   // HARDWARE //
 
+  Solenoid light;
   // PORTS //
+  private final static int LIGHT_PORT = 2;
 
   // CONSTANTS //
   final static int CAM_HEIGHT = 480;
@@ -52,6 +56,8 @@ public class Vision extends SubsystemBase {
     xCentre = IMG_WIDTH/2.0;
     width = IMG_WIDTH/2.0;
     imgLock = new Object();
+    light = new Solenoid(PneumaticsModuleType.CTREPCM, LIGHT_PORT);
+    light.set(false);
   }
 
   // METHODS //
@@ -69,6 +75,8 @@ public class Vision extends SubsystemBase {
 
     cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
     cam.setFPS(FPS);
+    //cam.setExposureAuto();
+    cam.setExposureManual(25);
 
     CvSink vIn = CameraServer.getVideo();
     CvSource vOut = CameraServer.putVideo("Target Video", IMG_WIDTH, IMG_HEIGHT);
@@ -101,7 +109,7 @@ public class Vision extends SubsystemBase {
 
           //if (pipeline.rgbThresholdOutput().get((int) contourCentre.x, (int) contourCentre.y) == )
 
-          if (contour.width > biggest.width) biggest = contour;
+          if (contour.area() > biggest.area()) biggest = contour;
 
           Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
         }
@@ -154,7 +162,7 @@ public class Vision extends SubsystemBase {
 
         synchronized (imgLock) {
           xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
-          width = biggest.width;
+          width = targetRect.width;
           SmartDashboard.putNumber("Width", width);
           SmartDashboard.putBoolean("In Shooting Range", width >= 4 && width <= 9);
           SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);
@@ -162,7 +170,7 @@ public class Vision extends SubsystemBase {
         }
       }
       vOut.putFrame(output);
-      vOutFilter.putFrame(pipeline.hsvThresholdOutput());
+      vOutFilter.putFrame(pipeline.rgbThresholdOutput());
     });
 
     visionThread.start();
@@ -215,5 +223,13 @@ public class Vision extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Speed", speed);
 
     return speed; // return difference between the target and where the robot is pointed
+  }
+
+  public void enable() {
+    light.set(true);
+  }
+
+  public void disable() {
+    light.set(false);
   }
 }
