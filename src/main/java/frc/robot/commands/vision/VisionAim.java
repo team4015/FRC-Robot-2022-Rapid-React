@@ -38,7 +38,7 @@ public class VisionAim extends CommandBase
   @Override
   public void initialize()
   {
-    robot.vision.enableLight();
+   robot.vision.enableAimingLight();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -61,7 +61,7 @@ public class VisionAim extends CommandBase
   @Override
   public void end(boolean interrupted)
   {
-    robot.vision.disableLight();
+    robot.vision.disableAimingLight();
   }
 
   // Returns true when the command should end.
