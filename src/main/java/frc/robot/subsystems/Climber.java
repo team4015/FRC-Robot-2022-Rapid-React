@@ -24,9 +24,9 @@ public class Climber extends SubsystemBase
 
   // CONSTANTS //
 
-  public static final double SPOOL_SPEED = 1;
-  public static final double SPOOL_REVERSE_SPEED = -0.05;
-  public static final double GEAR_SPEED = .8;
+  public static final double SPOOL_SPEED = -1;
+  public static final double SPOOL_REVERSE_SPEED = .5 ;
+  public static final double GEAR_SPEED = 0.8;
   public static final double GEAR_REVERSE_SPEED = -0.8;
 
   public Climber()
@@ -44,7 +44,6 @@ public void unwind(){
   }
   //extend() unwinds cable, and extends the extension rod
 public void extend(){
-  unwind();
   gearmotor.set(GEAR_SPEED);
 }
 //retract() retracts the rod, after the cable has been unwinded.
