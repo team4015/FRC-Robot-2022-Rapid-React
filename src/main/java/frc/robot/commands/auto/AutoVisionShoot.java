@@ -26,7 +26,6 @@ public class AutoVisionShoot extends CommandBase
   private final static double CONVEYOR_SPIN_TIME = 1;
 
   // CONSTANTS //
-  final static double TURN_SPEED = 0.2;
 
   // CONSTRUCTOR //
 
@@ -37,7 +36,7 @@ public class AutoVisionShoot extends CommandBase
     timer = new Timer();
 
     // subsystems that this command requires
-    addRequirements(robot.drivetrain, robot.shooter, robot.conveyor);
+    addRequirements(robot.shooter, robot.conveyor);
   }
 
   // METHODS //
@@ -46,7 +45,11 @@ public class AutoVisionShoot extends CommandBase
   @Override
   public void initialize()
   {
+    robot.vision.enableShootingLight();
+
     timer.start();
+    timer.reset();
+
     SmartDashboard.putString("Robot Mode:", "Auto Shoot");
   }
 
@@ -54,38 +57,19 @@ public class AutoVisionShoot extends CommandBase
   @Override
   public void execute()
   {
-    SmartDashboard.putBoolean("ALIGNED", false);
-
-    //Aim and spin shooter
+    //Spin shooter at auto speed
     while (timer.get() < timeToShot) {
       double autoSpeed = robot.vision.autoShooterSpeed();
       robot.shooter.spin(autoSpeed);
-
-      double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
-
-      if (turn > 0) {
-        robot.drivetrain.moveMotors(0, Drivetrain.AIM_TURN_SPEED);
-      } else if (turn < 0) {
-        robot.drivetrain.moveMotors(0, -Drivetrain.AIM_TURN_SPEED);
-      }
     }
 
     timer.reset();
     
-    //Aim, spin and shoot
+    //Spin and Shoot
 
     while (timer.get() < CONVEYOR_SPIN_TIME) {
       double autoSpeed = robot.vision.autoShooterSpeed();
       robot.shooter.spin(autoSpeed);
-
-      double turn = robot.vision.aimAtTarget(); //Get the turn speed from the camera
-
-      if (turn > 0) {
-        robot.drivetrain.moveMotors(0, Drivetrain.AIM_TURN_SPEED);
-      } else if (turn < 0) {
-        robot.drivetrain.moveMotors(0, -Drivetrain.AIM_TURN_SPEED);
-      }
-
       robot.conveyor.feed();
     }
   }
@@ -94,9 +78,10 @@ public class AutoVisionShoot extends CommandBase
   @Override
   public void end(boolean interrupted)
   {
+    robot.vision.disableShootingLight();
+
     robot.shooter.stop();
     robot.conveyor.stop();
-    robot.drivetrain.stopMotors();
   }
 
   // Returns true when the command should end.

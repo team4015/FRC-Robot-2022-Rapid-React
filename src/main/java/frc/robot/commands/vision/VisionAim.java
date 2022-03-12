@@ -30,7 +30,7 @@ public class VisionAim extends CommandBase
     this.robot = robot;
 
     // subsystems that this command requires
-    addRequirements(robot.drivetrain, robot.shooter);
+    addRequirements(robot.drivetrain);
   }
 
   // METHODS //
@@ -53,9 +53,6 @@ public class VisionAim extends CommandBase
     } else if (turn < 0) {
       robot.drivetrain.moveMotors(0, -Drivetrain.AIM_TURN_SPEED);
     }
-
-    double speed = robot.vision.autoShooterSpeed();
-    robot.shooter.spin(speed);
   }
 
   // Called once the command ends or is interrupted.

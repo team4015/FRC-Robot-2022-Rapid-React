@@ -42,11 +42,11 @@ public class Operator
     private JoystickButton climberExtend;
     private JoystickButton climberRetract;
 
-    private JoystickButton visionAim;
+    private JoystickButton autoShoot;
 
-    private POVButton shooterLow;
-    private POVButton shooterMed;
-    private POVButton shooterHigh;
+    private POVButton shooterHub;
+    private POVButton shooterSpin;
+    private POVButton shooterWall;
     private POVButton shooterReverse;
 
 	  // PORTS //
@@ -66,19 +66,19 @@ public class Operator
     public static final int CLIMBER_EXTEND = 3;
     public static final int CLIMBER_RETRACT = 2;
 
-    public static final int VISION_AIM = 9;
+    public static final int AUTO_SHOOT = 9;
 
-    public static final int SHOOTER_LOW = 90;
-    public static final int SHOOTER_MED = 180;
-    public static final int SHOOTER_HIGH = 270;
+    public static final int SHOOTER_HUB = 90;
+    public static final int SHOOTER_SPIN = 180;
+    public static final int SHOOTER_WALL = 270;
     public static final int SHOOTER_REVERSE = 0;
   
     // CONSTANTS //
     public static final double SHOOTER_DEADZONE = 0.1;
 
-    public static final double SHOOTER_SPEED_LOW = .4;
-    public static final double SHOOTER_SPEED_MED = .44;
-    public static final double SHOOTER_SPEED_HIGH = .48;
+    //public static final double SHOOTER_SPEED_LOW = .4;
+    public static final double SHOOTER_SPEED_SPIN = .44;
+    //public static final double SHOOTER_SPEED_HIGH = .48;
     public static final double SHOOTER_SPEED_REVERSE = -.3;
 
 
@@ -102,11 +102,11 @@ public class Operator
         climberExtend = new JoystickButton(dualshock, CLIMBER_EXTEND);
         climberRetract = new JoystickButton(dualshock, CLIMBER_RETRACT);
 
-        visionAim = new JoystickButton(dualshock, VISION_AIM);
+        autoShoot = new JoystickButton(dualshock, AUTO_SHOOT);
 
-        shooterLow = new POVButton(dualshock, SHOOTER_LOW);
-        shooterMed = new POVButton(dualshock, SHOOTER_MED);
-        shooterHigh = new POVButton(dualshock, SHOOTER_HIGH);
+        shooterHub = new POVButton(dualshock, SHOOTER_HUB);
+        shooterSpin = new POVButton(dualshock, SHOOTER_SPIN);
+        shooterWall = new POVButton(dualshock, SHOOTER_WALL);
         shooterReverse = new POVButton(dualshock, SHOOTER_REVERSE);
 
         // bind buttons to commands
@@ -125,11 +125,11 @@ public class Operator
         climberExtend.whileHeld(new ClimberExtend(robot));
         climberRetract.whileHeld(new ClimberRetract(robot));
       
-        visionAim.whileHeld(new VisionAim(robot));
+        autoShoot.whileHeld(new AutoVisionShoot(robot, 1));
         
-        shooterLow.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_LOW));
-        shooterMed.whenPressed(new AutoWallShoot(robot));
-        shooterHigh.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_HIGH));
+        shooterHub.whenPressed(new AutoHubShoot(robot));
+        shooterSpin.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_SPIN));
+        shooterWall.whenPressed(new AutoWallShoot(robot));
         shooterReverse.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_REVERSE));
     }
        // METHODS

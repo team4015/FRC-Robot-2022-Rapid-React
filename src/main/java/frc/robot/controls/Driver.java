@@ -20,6 +20,7 @@ import frc.robot.Robot;
 import frc.robot.commands.driver.HighSpeed;
 import frc.robot.commands.driver.LowSpeed;
 import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.vision.VisionAim;
 
 public class Driver
 {
@@ -34,6 +35,7 @@ public class Driver
     // BUTTONS //
     private JoystickButton lowSpeed;
     private JoystickButton highSpeed;
+    private JoystickButton aim;
 
 
 	// CONSTANTS //
@@ -45,6 +47,7 @@ public class Driver
 
     public static final int LOW_SPEED = 5;
     public static final int HIGH_SPEED = 3;
+    public static final int AIM = 3;
 
     public double throttleSpeed = 0.8;
     public double steerSpeed = .7;
@@ -59,10 +62,12 @@ public class Driver
         // bind button objects to physical buttons
         lowSpeed = new JoystickButton(throttle, LOW_SPEED);
         highSpeed = new JoystickButton(throttle, HIGH_SPEED);
+        aim = new JoystickButton(steer, AIM);
 
         // bind buttons to commands
         lowSpeed.whenPressed(new LowSpeed(robot));
         highSpeed.whenPressed(new HighSpeed(robot));
+        aim.whileHeld(new VisionAim(robot));
     }
 
 	// METHODS //
