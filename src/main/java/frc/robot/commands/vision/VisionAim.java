@@ -20,7 +20,7 @@ public class VisionAim extends CommandBase
   private Robot robot;
 
   // CONSTANTS //
-  final static double TURN_SPEED = 0.4;
+  static final double TURN_SPEED = 0.4;
 
   // CONSTRUCTOR //
 
@@ -38,7 +38,7 @@ public class VisionAim extends CommandBase
   @Override
   public void initialize()
   {
-    robot.vision.enableLight();
+   robot.vision.enableAimingLight();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -61,11 +61,8 @@ public class VisionAim extends CommandBase
   @Override
   public void end(boolean interrupted)
   {
-    robot.vision.disableLight();
+    robot.vision.disableAimingLight();
   }
-
-  // Returns true when the command should end.
-  @Override
   public boolean isFinished()
   {
     return false;

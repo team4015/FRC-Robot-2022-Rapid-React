@@ -32,7 +32,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Vision extends SubsystemBase {
   // HARDWARE //
   Solenoid light;
-  
   // PORTS //
   private final static int LIGHT_PORT = 2;
 
@@ -51,6 +50,9 @@ public class Vision extends SubsystemBase {
   private double width;
   private Object imgLock;
 
+  private boolean aimingLight;
+  private boolean shootingLight;
+
 
   public Vision() {
     xCentre = IMG_WIDTH/2.0;
@@ -58,6 +60,9 @@ public class Vision extends SubsystemBase {
     imgLock = new Object();
     light = new Solenoid(PneumaticsModuleType.CTREPCM, LIGHT_PORT);
     light.set(false); // turn light off
+
+    aimingLight = false;
+    shootingLight = false;
   }
 
   // METHODS //
@@ -228,16 +233,40 @@ public class Vision extends SubsystemBase {
   /* ==========================
   * Author: Lucas Jacobs
   * Desc: Enables the ring light 
+  * for aiming
   * ===========================*/
-  public void enableLight() {
+  public void enableAimingLight() {
+    aimingLight = true;
     light.set(true);
   }
 
   /* ==========================
   * Author: Lucas Jacobs
   * Desc: Disables the ring light 
+  * as long as shooting doesn't need it
   * ===========================*/
-  public void disableLight() {
-    light.set(false);
+  public void disableAimingLight() {
+    aimingLight = false;
+    light.set(aimingLight || shootingLight);
+  }
+
+  /* ==========================
+  * Author: Lucas Jacobs
+  * Desc: Enables the ring light 
+  * for shooting
+  * ===========================*/
+  public void enableShootingLight() {
+    shootingLight = true;
+    light.set(true);
+  }
+
+  /* ==========================
+  * Author: Lucas Jacobs
+  * Desc: Disables the ring light
+  * as long as aiming doesn't need it 
+  * ===========================*/
+  public void disableShootingLight() {
+    shootingLight = false;
+    light.set(aimingLight || shootingLight);
   }
 }
