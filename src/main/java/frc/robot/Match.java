@@ -32,6 +32,9 @@ public class Match extends TimedRobot
     // instantiate the robot
     robot = new Robot();
 
+    //Put Scheduler on Dashboard
+    SmartDashboard.putData(CommandScheduler.getInstance());
+
     //COmmands run in autonomous
     auto = new AutoMatchStart(robot);
   }

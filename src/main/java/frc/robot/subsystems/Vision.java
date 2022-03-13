@@ -26,8 +26,11 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.vision.VisionPipeline;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.pipelines.*;
 
 public class Vision extends SubsystemBase {
   // HARDWARE //
@@ -50,6 +53,9 @@ public class Vision extends SubsystemBase {
   private double width;
   private Object imgLock;
 
+  private SendableChooser<PipelineTemplate> visionPipelines;
+  private SendableChooser<Boolean> showRectangles;
+
   private boolean aimingLight;
   private boolean shootingLight;
 
@@ -60,6 +66,15 @@ public class Vision extends SubsystemBase {
     imgLock = new Object();
     light = new Solenoid(PneumaticsModuleType.CTREPCM, LIGHT_PORT);
     light.set(false); // turn light off
+
+    visionPipelines = new SendableChooser<>();
+    visionPipelines.setDefaultOption("School Vision", new SchoolPipeline());
+    SmartDashboard.putData(visionPipelines);
+
+    showRectangles = new SendableChooser<>();
+    showRectangles.setDefaultOption("Show Rectangles", true);
+    showRectangles.addOption("Don't Show Rectangles", false);
+    SmartDashboard.putData(showRectangles);
 
     aimingLight = false;
     shootingLight = false;
@@ -75,6 +90,7 @@ public class Vision extends SubsystemBase {
   thread so that frames from the camera can be accessed
   ===================================== */
   public void initCamera() {
+
     // initalize camera
     UsbCamera cam = CameraServer.startAutomaticCapture();
 
@@ -88,8 +104,11 @@ public class Vision extends SubsystemBase {
     CvSource vOutFilter = CameraServer.putVideo("Filtered", IMG_WIDTH, IMG_HEIGHT);
 
     // initalize vision thread
-    visionThread = new VisionThread(cam, new GripPipeline(), pipeline -> {
+    visionThread = new VisionThread(cam, visionPipelines.getSelected(), pipeline -> {
       
+      // Set to be the currently selected Pipeline
+      synchronized (imgLock) {pipeline = visionPipelines.getSelected();}
+
       //Create output frames which will have rectangles drawn on them
       Mat output = new Mat();
       vIn.grabFrame(output);
@@ -116,7 +135,11 @@ public class Vision extends SubsystemBase {
 
           if (contour.area() > biggest.area()) biggest = contour;
 
-          Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
+          synchronized (imgLock) {
+            if (showRectangles.getSelected()) {
+              Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
+            }
+          }
         }
         // --------------------------------------------- 
         LinkedList<Rect> checkThese = new LinkedList<Rect>();
@@ -126,7 +149,11 @@ public class Vision extends SubsystemBase {
         Rect targetRect = new Rect(biggest.x, biggest.y, biggest.width, biggest.height);
 
         //Biggest in red
-        Imgproc.rectangle(output, biggest,  new Scalar(0, 0, 255, 255), 1);
+        synchronized (imgLock) {
+          if (showRectangles.getSelected()) {
+            Imgproc.rectangle(output, biggest,  new Scalar(0, 0, 255, 255), 1);
+          }
+        }
 
         while (checkThese.size() > 0) { // Go through rectangles in the target
           Rect checked = checkThese.pop();
@@ -162,7 +189,11 @@ public class Vision extends SubsystemBase {
         //-----------------------------------------------------
 
         //Add target blue in red on screen
-        Imgproc.rectangle(output, targetRect,  new Scalar(255, 0, 0, 255), 1);
+        synchronized (imgLock) {
+          if (showRectangles.getSelected()) {
+            Imgproc.rectangle(output, targetRect,  new Scalar(255, 0, 0, 255), 1);
+          }
+        }
 
 
         synchronized (imgLock) {
@@ -175,7 +206,13 @@ public class Vision extends SubsystemBase {
         }
       }
       vOut.putFrame(output);
-      vOutFilter.putFrame(pipeline.rgbThresholdOutput());
+
+      //Put out rbg or hsv filter output depending on pipeline settings
+      if (pipeline.isRGB) {
+        vOutFilter.putFrame(pipeline.rgbThresholdOutput());
+      } else {
+        vOutFilter.putFrame(pipeline.hsvThresholdOutput());
+      }
     });
 
     visionThread.start();
