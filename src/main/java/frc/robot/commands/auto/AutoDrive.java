@@ -24,10 +24,8 @@ public class AutoDrive extends CommandBase
   private double duration;
   private double speed;
   private double turn;
-  boolean finished;
 
   // CONSTANTS //
-  final static double TURN_SPEED = 0.1; //CHANGE THIS ALONG WITH VISION PACKAGE
 
   // CONSTRUCTOR //
 
@@ -38,7 +36,6 @@ public class AutoDrive extends CommandBase
     this.speed = speed;
     this.turn = turn;
     this.duration = duration;
-    finished = false;
 
     // subsystems that this command requires
     addRequirements(robot.drivetrain);
@@ -51,6 +48,7 @@ public class AutoDrive extends CommandBase
   public void initialize()
   {
     timer.start();
+    timer.reset();
     SmartDashboard.putString("Robot Mode:", "Auto Drive");
   }
 
@@ -59,10 +57,8 @@ public class AutoDrive extends CommandBase
   public void execute()
   {
 
-    if (timer.get() < duration) {
+    while (timer.get() < duration) {
       robot.drivetrain.moveMotors(speed, turn);
-    } else {
-      finished = true;
     }
   }
 
@@ -77,6 +73,6 @@ public class AutoDrive extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return finished;
+    return true;
   }
 }
