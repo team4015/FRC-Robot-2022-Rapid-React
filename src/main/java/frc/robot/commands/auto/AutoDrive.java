@@ -67,7 +67,6 @@ public class AutoDrive extends CommandBase
   public void end(boolean interrupted)
   {
     robot.drivetrain.stopMotors();
-    System.out.println("Drivetrain ended at" + timer.get());
   }
 
   // Returns true when the command should end.

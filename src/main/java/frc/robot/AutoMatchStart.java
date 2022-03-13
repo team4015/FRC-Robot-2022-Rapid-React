@@ -4,6 +4,8 @@
  * Description:
  * This class contains the commands that are executed 
  * in autonomous mode at the start of the match
+ * 
+ * ***Runs in the Autonomous Period Only***
  * ================================================== */
 
 package frc.robot;
@@ -11,8 +13,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.auto.*;
 
-public class AutoReverseShootGroup extends SequentialCommandGroup {
-    public AutoReverseShootGroup(Robot robot) {
+public class AutoMatchStart extends SequentialCommandGroup {
+    public AutoMatchStart(Robot robot) {
         super(
             new AutoDrive(robot, -.5, 0, 2), // drive backwards
             new AutoShoot(robot, .4, 3) //shoot
