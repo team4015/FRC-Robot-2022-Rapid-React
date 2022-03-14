@@ -8,13 +8,14 @@
  * ***Runs in the Autonomous Period Only***
  * ================================================== */
 
-package frc.robot;
+package frc.robot.commands.auto.startmatch;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Robot;
 import frc.robot.commands.auto.*;
 
-public class AutoMatchStart extends SequentialCommandGroup {
-    public AutoMatchStart(Robot robot) {
+public class BackUpAndShoot extends SequentialCommandGroup {
+    public BackUpAndShoot(Robot robot) {
         super(
             new AutoDrive(robot, -.5, 0, 2), // drive backwards
             new AutoShoot(robot, .4, 3) //shoot

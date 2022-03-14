@@ -1,0 +1,192 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="Exposure" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="887" y="535"/>
+	</widget>
+	<widget field="SendableChooser[1]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1335" y="281"/>
+	</widget>
+	<widget field="SendableChooser[2]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1334" y="364"/>
+	</widget>
+	<widget field="Scheduler" type="Scheduler" class="edu.wpi.first.smartdashboard.gui.elements.Scheduler">
+		<location x="1023" y="117"/>
+		<width>167</width>
+		<height>295</height>
+	</widget>
+	<widget field="SendableChooser[0]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1334" y="453"/>
+	</widget>
+	<widget field="Lower Hue" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="477" y="487"/>
+	</widget>
+	<widget field="Upper Solidity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="514" y="522"/>
+	</widget>
+	<widget field="Upper Saturation" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="629" y="461"/>
+	</widget>
+	<widget field="Upper Blue" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="160" y="463"/>
+	</widget>
+	<widget field="Lower Blue" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="159" y="485"/>
+	</widget>
+	<widget field="Lower Green" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="309" y="486"/>
+	</widget>
+	<widget field="Lower Value" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="812" y="485"/>
+	</widget>
+	<widget field="Min Ratio" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="716" y="546"/>
+	</widget>
+	<widget field="Lower Saturation" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="629" y="486"/>
+	</widget>
+	<widget field="Upper Hue" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="479" y="463"/>
+	</widget>
+	<widget field="Min Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="164" y="550"/>
+	</widget>
+	<widget field="Lower Red" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="10" y="487"/>
+	</widget>
+	<widget field="Lower Solidity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="514" y="545"/>
+		<height>19</height>
+	</widget>
+	<widget field="Min Height" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="329" y="547"/>
+	</widget>
+	<widget field="Max Ratio" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="713" y="523"/>
+		<height>19</height>
+	</widget>
+	<widget field="Upper Green" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="309" y="463"/>
+	</widget>
+	<widget field="Upper Value" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="810" y="462"/>
+	</widget>
+	<widget field="Upper Red" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="12" y="462"/>
+	</widget>
+	<widget field="Max Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="163" y="526"/>
+	</widget>
+	<widget field="Max Height" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="330" y="524"/>
+	</widget>
+	<widget field="Min Area" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="8" y="526"/>
+	</widget>
+	<widget field="Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="436" y="58"/>
+		<height>36</height>
+	</widget>
+	<widget field="Drive Speed" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="858" y="54"/>
+		<height>44</height>
+	</widget>
+	<widget field="In Shooting Range" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="1274" y="160"/>
+		<width>245</width>
+		<height>48</height>
+	</widget>
+	<widget field="Robot Mode:" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1061" y="60"/>
+		<height>38</height>
+	</widget>
+	<widget field="Shooter Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.SimpleDial">
+		<location x="997" y="419"/>
+		<property name="Upper Limit" value="1.0"/>
+		<property name="Tick Interval" value="0.1"/>
+	</widget>
+	<widget field="ALIGNED" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="1286" y="216"/>
+		<width>230</width>
+		<height>62</height>
+	</widget>
+	<widget field="Dist to Target" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1293" y="73"/>
+		<width>213</width>
+		<height>65</height>
+	</widget>
+	<widget field="Centre (0 to 1) " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.ProgressBar">
+		<location x="661" y="56"/>
+		<height>39</height>
+		<property name="Maximum" value="1.0"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="488" y="109"/>
+		<width>469</width>
+		<height>344</height>
+		<property name="Camera Choice" value="Target Video"/>
+	</static-widget>
+	<widget field="Targets Detected" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="6" y="59"/>
+		<width>358</width>
+		<height>32</height>
+		<property name="Background" value="153.153.255.255"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="-1" y="2"/>
+		<width>1535</width>
+		<height>45</height>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="9" y="110"/>
+		<width>458</width>
+		<height>344</height>
+		<property name="Camera Choice" value="Filtered"/>
+		<property name="Selected Camera Path" value="/103path"/>
+	</static-widget>
+</dashboard>
+<live-window>
+	<widget field="Drivetrain" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="151"/>
+	</widget>
+	<widget field="Intake" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="129"/>
+	</widget>
+	<widget field="Vision" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="107"/>
+	</widget>
+	<widget field="Conveyor" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="85"/>
+	</widget>
+	<widget field="Shooter" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="63"/>
+	</widget>
+	<widget field="Climber" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="41"/>
+	</widget>
+	<widget field="Ungrouped" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<widget field="Solenoid[0,2]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<widget field="Solenoid[0,2]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<widget field="DoubleSolenoid[0,1]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<widget field="DoubleSolenoid[0,1]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<location x="0" y="0"/>
+		<width>188</width>
+		<height>40</height>
+	</widget>
+</live-window>
+</xml>

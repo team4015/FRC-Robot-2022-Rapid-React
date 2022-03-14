@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
@@ -26,12 +25,14 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.pipelines.*;
 
 public class Vision extends SubsystemBase {
   // HARDWARE //
-  Solenoid light;
+  private Solenoid light;
   // PORTS //
   private final static int LIGHT_PORT = 2;
 
@@ -50,6 +51,9 @@ public class Vision extends SubsystemBase {
   private double width;
   private Object imgLock;
 
+  private SendableChooser<PipelineTemplate> visionPipelines;
+  private SendableChooser<Boolean> showRectangles;
+
   private boolean aimingLight;
   private boolean shootingLight;
 
@@ -60,6 +64,17 @@ public class Vision extends SubsystemBase {
     imgLock = new Object();
     light = new Solenoid(PneumaticsModuleType.CTREPCM, LIGHT_PORT);
     light.set(false); // turn light off
+
+    visionPipelines = new SendableChooser<>();
+    visionPipelines.setDefaultOption("School Vision", new SchoolPipeline());
+    visionPipelines.addOption("Humber Vision", new HumberPipeline());
+    visionPipelines.addOption("Test Vision", new TestPipeline());
+    SmartDashboard.putData(visionPipelines);
+
+    showRectangles = new SendableChooser<>();
+    showRectangles.setDefaultOption("Show Boxes", true);
+    showRectangles.addOption("Don't Show Boxes", false);
+    SmartDashboard.putData(showRectangles);
 
     aimingLight = false;
     shootingLight = false;
@@ -75,21 +90,37 @@ public class Vision extends SubsystemBase {
   thread so that frames from the camera can be accessed
   ===================================== */
   public void initCamera() {
+
     // initalize camera
     UsbCamera cam = CameraServer.startAutomaticCapture();
 
     cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
     cam.setFPS(FPS);
-    //cam.setExposureAuto();
-    cam.setExposureManual(25);
+    
+    setExposure(cam, visionPipelines.getSelected());
 
     CvSink vIn = CameraServer.getVideo();
     CvSource vOut = CameraServer.putVideo("Target Video", IMG_WIDTH, IMG_HEIGHT);
     CvSource vOutFilter = CameraServer.putVideo("Filtered", IMG_WIDTH, IMG_HEIGHT);
 
+    // initialize pipeline filter settings
+    outputFilterSettings(visionPipelines.getSelected());
+
     // initalize vision thread
-    visionThread = new VisionThread(cam, new GripPipeline(), pipeline -> {
+    visionThread = new VisionThread(cam, visionPipelines.getSelected(), pipeline -> {
       
+      // Set to be the currently selected Pipeline
+      synchronized (imgLock) {
+        if (pipeline != visionPipelines.getSelected()) {
+          pipeline = visionPipelines.getSelected();
+          outputFilterSettings(pipeline);
+          setExposure(cam, pipeline);
+        }
+
+        // Retrieve new filter settings each time the thread runs
+        retrieveFilterSettings(pipeline);
+      }
+
       //Create output frames which will have rectangles drawn on them
       Mat output = new Mat();
       vIn.grabFrame(output);
@@ -109,33 +140,41 @@ public class Vision extends SubsystemBase {
 
           targets.add(contour);
 
-          //Paritial code to exclude contours around dark
-          //Point contourCentre = new Point(contour.y + contour.height/2, contour.x+contour.width/2);
-
-          //if (pipeline.rgbThresholdOutput().get((int) contourCentre.x, (int) contourCentre.y) == )
-
           if (contour.area() > biggest.area()) biggest = contour;
 
-          Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1); // Add rectangle to the output
+          // Show contours in green
+          synchronized (imgLock) {
+            if (showRectangles.getSelected()) {
+              Imgproc.rectangle(output, contour,  new Scalar(0, 255, 0, 255), 1);
+            }
+          }
         }
         // --------------------------------------------- 
         LinkedList<Rect> checkThese = new LinkedList<Rect>();
 
         checkThese.add(biggest);
 
-        Rect targetRect = new Rect(biggest.x, biggest.y, biggest.width, biggest.height);
+        Rect targetRect = biggest.clone();
 
-        //Biggest in red
-        Imgproc.rectangle(output, biggest,  new Scalar(0, 0, 255, 255), 1);
+        //Show biggest contour in red
+        synchronized (imgLock) {
+          if (showRectangles.getSelected()) {
+            Imgproc.rectangle(output, biggest,  new Scalar(0, 0, 255, 255), 1);
+          }
+        }
 
         while (checkThese.size() > 0) { // Go through rectangles in the target
           Rect checked = checkThese.pop();
 
+          Point checkedCentre = new Point(checked.x + checked.width/2, checked.y + checked.height/2);
+
           for (int i = 0; i < targets.size(); i++) { //Go through triangle not yet in target
             Rect potential = targets.get(i);
 
+            Point potentialCentre = new Point(potential.x + potential.width/2, potential.y + potential.height/2);
+
             //if potential rect is in target
-            if (Math.abs(potential.x - checked.x) < 40 && Math.abs(potential.y - checked.y) < 20) {
+            if (Math.abs(potentialCentre.x - checkedCentre.x) < 40 && Math.abs(potentialCentre.y - checkedCentre.y) < 20) {
               checkThese.add(potential);
               targets.remove(i);
               i--;
@@ -161,8 +200,12 @@ public class Vision extends SubsystemBase {
         }
         //-----------------------------------------------------
 
-        //Add target blue in red on screen
-        Imgproc.rectangle(output, targetRect,  new Scalar(255, 0, 0, 255), 1);
+        //Add target in blue on screen
+        synchronized (imgLock) {
+          if (showRectangles.getSelected()) {
+            Imgproc.rectangle(output, targetRect,  new Scalar(255, 0, 0, 255), 1);
+          }
+        }
 
 
         synchronized (imgLock) {
@@ -175,7 +218,13 @@ public class Vision extends SubsystemBase {
         }
       }
       vOut.putFrame(output);
-      vOutFilter.putFrame(pipeline.rgbThresholdOutput());
+
+      //Put out rbg or hsv filter output depending on pipeline settings
+      if (pipeline.isRGB) {
+        vOutFilter.putFrame(pipeline.rgbThresholdOutput());
+      } else {
+        vOutFilter.putFrame(pipeline.hsvThresholdOutput());
+      }
     });
 
     visionThread.start();
@@ -268,5 +317,115 @@ public class Vision extends SubsystemBase {
   public void disableShootingLight() {
     shootingLight = false;
     light.set(aimingLight || shootingLight);
+  }
+
+  /* ===================================================
+  * Author: Lucas Jacobs
+  *
+  * Desc: Writes the RGB/HSV filter and contour filter
+  * settings of the given pipeline to the SmartDashboard 
+  * ====================================================*/
+
+  private void outputFilterSettings(PipelineTemplate pipeline) {
+    // Write RGB/HSV filter values to dashboard
+    if (pipeline.isRGB) {
+      SmartDashboard.putNumber("Upper Red", pipeline.rgbThresholdRed[1]);
+      SmartDashboard.putNumber("Lower Red", pipeline.rgbThresholdRed[0]);
+      SmartDashboard.putNumber("Upper Green", pipeline.rgbThresholdGreen[1]);
+      SmartDashboard.putNumber("Lower Green", pipeline.rgbThresholdGreen[0]);
+      SmartDashboard.putNumber("Upper Blue", pipeline.rgbThresholdBlue[1]);
+      SmartDashboard.putNumber("Lower Blue", pipeline.rgbThresholdBlue[0]);
+
+      SmartDashboard.putNumber("Upper Hue", -1);
+      SmartDashboard.putNumber("Lower Hue", -1);
+      SmartDashboard.putNumber("Upper Saturation", -1);
+      SmartDashboard.putNumber("Lower Saturation", -1);
+      SmartDashboard.putNumber("Upper Value", -1);
+      SmartDashboard.putNumber("Lower Value", -1);
+    } else {
+      SmartDashboard.putNumber("Upper Red", -1);
+      SmartDashboard.putNumber("Lower Red", -1);
+      SmartDashboard.putNumber("Upper Green", -1);
+      SmartDashboard.putNumber("Lower Green", -1);
+      SmartDashboard.putNumber("Upper Blue", -1);
+      SmartDashboard.putNumber("Lower Blue", -1);
+
+      SmartDashboard.putNumber("Upper Hue", pipeline.hsvThresholdHue[1]);
+      SmartDashboard.putNumber("Lower Hue", pipeline.hsvThresholdHue[0]);
+      SmartDashboard.putNumber("Upper Saturation", pipeline.hsvThresholdSaturation[1]);
+      SmartDashboard.putNumber("Lower Saturation", pipeline.hsvThresholdSaturation[0]);
+      SmartDashboard.putNumber("Upper Value", pipeline.hsvThresholdValue[1]);
+      SmartDashboard.putNumber("Lower Value", pipeline.hsvThresholdValue[0]);
+    }
+
+    //Write Contour filter values to dashboard
+    SmartDashboard.putNumber("Min Area", pipeline.filterContoursMinArea);
+    SmartDashboard.putNumber("Min Width", pipeline.filterContoursMinWidth);
+    SmartDashboard.putNumber("Max Width", pipeline.filterContoursMaxWidth);
+    SmartDashboard.putNumber("Min Height", pipeline.filterContoursMinHeight);
+    SmartDashboard.putNumber("Max Height", pipeline.filterContoursMaxHeight);
+    SmartDashboard.putNumber("Upper Solidity", pipeline.filterContoursSolidity[1]);
+    SmartDashboard.putNumber("Lower Solidity", pipeline.filterContoursSolidity[0]);
+    SmartDashboard.putNumber("Min Ratio", pipeline.filterContoursMinRatio);
+    SmartDashboard.putNumber("Max Ratio", pipeline.filterContoursMaxRatio);
+
+    SmartDashboard.putNumber("Exposure", pipeline.cameraExposure);
+  }
+
+  /* ===================================================
+  * Author: Lucas Jacobs
+  *
+  * Desc: Gets the RGB/HSV filter and contour filter
+  * settings from the dashboard and writes them to the pipeline.
+  * This gives a much faster way of changing the pipeline settings
+  * than changing them in the code directly and redeploying
+  * ====================================================*/
+
+  private void retrieveFilterSettings(PipelineTemplate pipeline) {
+    if (pipeline.isRGB) {
+      pipeline.rgbThresholdRed[1] = SmartDashboard.getNumber("Upper Red", pipeline.rgbThresholdRed[1]);
+      pipeline.rgbThresholdRed[0] = SmartDashboard.getNumber("Lower Red", pipeline.rgbThresholdRed[0]);
+      pipeline.rgbThresholdGreen[1] = SmartDashboard.getNumber("Upper Green", pipeline.rgbThresholdGreen[1]);
+      pipeline.rgbThresholdGreen[0] = SmartDashboard.getNumber("Lower Green", pipeline.rgbThresholdGreen[0]);
+      pipeline.rgbThresholdBlue[1] = SmartDashboard.getNumber("Upper Blue", pipeline.rgbThresholdBlue[1]);
+      pipeline.rgbThresholdBlue[0] = SmartDashboard.getNumber("Lower Blue", pipeline.rgbThresholdBlue[0]);
+    } else {
+      pipeline.hsvThresholdHue[1] = SmartDashboard.getNumber("Upper Hue", pipeline.hsvThresholdHue[1]);
+      pipeline.hsvThresholdHue[0] = SmartDashboard.getNumber("Lower Hue", pipeline.hsvThresholdHue[0]);
+      pipeline.hsvThresholdSaturation[1] = SmartDashboard.getNumber("Upper Saturation", pipeline.hsvThresholdSaturation[1]);
+      pipeline.hsvThresholdSaturation[0] = SmartDashboard.getNumber("Lower Saturation", pipeline.hsvThresholdSaturation[0]);
+      pipeline.hsvThresholdValue[1] = SmartDashboard.getNumber("Upper Value", pipeline.hsvThresholdValue[1]);
+      pipeline.hsvThresholdValue[0] = SmartDashboard.getNumber("Lower Value", pipeline.hsvThresholdValue[0]);
+    }
+
+    pipeline.filterContoursMinArea = SmartDashboard.getNumber("Min Area", pipeline.filterContoursMinArea);
+    pipeline.filterContoursMinWidth = SmartDashboard.getNumber("Min Width", pipeline.filterContoursMinWidth);
+    pipeline.filterContoursMaxWidth = SmartDashboard.getNumber("Max Width", pipeline.filterContoursMaxWidth);
+    pipeline.filterContoursMinHeight = SmartDashboard.getNumber("Min Height", pipeline.filterContoursMinHeight);
+    pipeline.filterContoursMaxHeight = SmartDashboard.getNumber("Max Height", pipeline.filterContoursMaxHeight);
+    pipeline.filterContoursSolidity[1] = SmartDashboard.getNumber("Upper Solidity", pipeline.filterContoursSolidity[1]);
+    pipeline.filterContoursSolidity[0] = SmartDashboard.getNumber("Lower Solidity", pipeline.filterContoursSolidity[0]);
+    pipeline.filterContoursMinRatio = SmartDashboard.getNumber("Min Ratio", pipeline.filterContoursMinRatio);
+    pipeline.filterContoursMaxRatio = SmartDashboard.getNumber("Max Ratio", pipeline.filterContoursMaxRatio);
+
+    pipeline.cameraExposure = (int) SmartDashboard.getNumber("Exposure", pipeline.cameraExposure);
+  }
+
+  /* ===================================================
+  * Author: Lucas Jacobs
+  *
+  * Desc:Sets the camera's exposure based on the given value
+  * from the pipeline. If the exposure is out of range, it
+  * sets the exposure to be auto.
+  * ====================================================*/
+
+  private void setExposure(UsbCamera cam, PipelineTemplate pipeline) {
+    int exposure = pipeline.cameraExposure;
+
+    if (exposure >= 0 && exposure <= 100) {
+      cam.setExposureManual(exposure);
+    } else {
+      cam.setExposureAuto();
+    }
   }
 }

@@ -9,7 +9,6 @@
 package frc.robot.commands.auto;
 
 import frc.robot.Robot;
-import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;

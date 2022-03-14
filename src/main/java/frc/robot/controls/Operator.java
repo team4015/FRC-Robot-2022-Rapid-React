@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
-import frc.robot.commands.vision.*;
 import frc.robot.commands.shooter.*;
 import frc.robot.commands.auto.*;
 import frc.robot.Robot;
