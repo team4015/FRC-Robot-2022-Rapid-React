@@ -8,7 +8,7 @@
  * ***Runs in the Autonomous Period Only***
  * ================================================== */
 
-package frc.robot.commands.auto.startMatch;
+package frc.robot.commands.auto.startmatch;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;

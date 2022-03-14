@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.auto.startMatch.BackUpAndShoot;
+import frc.robot.commands.auto.startmatch.BackUpAndShoot;
 
 public class Match extends TimedRobot
 {

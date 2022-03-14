@@ -116,7 +116,7 @@ public class Vision extends SubsystemBase {
           outputFilterSettings(pipeline);
         }
 
-        // Retirieve new filter settings each time the thread runs
+        // Retrieve new filter settings each time the thread runs
         retrieveFilterSettings(pipeline);
       }
 
