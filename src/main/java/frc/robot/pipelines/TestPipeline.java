@@ -41,25 +41,34 @@ public class TestPipeline extends PipelineTemplate {
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 
-	public double[] rgbThresholdRed = {0, 146};
-	public double[] rgbThresholdGreen = {147, 255.0};
-	public double[] rgbThresholdBlue = {138, 255.0};
-
-	public double filterContoursMinArea = 1.0;
-	public double filterContoursMinPerimeter = 0.0;
-	public double filterContoursMinWidth = 0.0;
-	public double filterContoursMaxWidth = 1000.0;
-	public double filterContoursMinHeight = 0.0;
-	public double filterContoursMaxHeight = 100.0;
-	public double[] filterContoursSolidity = {0.0, 100};
-	public double filterContoursMaxVertices = 1000000.0;
-	public double filterContoursMinVertices = 0.0;
-
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}
 
-	public TestPipeline() {isRGB = true;}
+	public TestPipeline() {
+		isRGB = true;
+		cameraExposure = 25;
+
+		rgbThresholdRed[0] = 0;
+		rgbThresholdRed[1] = 146;
+		rgbThresholdGreen[0] = 147;
+		rgbThresholdGreen[1] = 255;
+		rgbThresholdBlue[0] = 138;
+		rgbThresholdBlue[1] = 255;
+
+		filterContoursMinArea = 1.0;
+		filterContoursMinPerimeter = 0.0;
+		filterContoursMinWidth = 0.0;
+		filterContoursMaxWidth = 1000.0;
+		filterContoursMinHeight = 0.0;
+		filterContoursMaxHeight = 100.0;
+		filterContoursSolidity[0] = 0;
+		filterContoursSolidity[1] = 100;
+		filterContoursMaxVertices = 1000000.0;
+		filterContoursMinVertices = 0.0;
+		filterContoursMinRatio = 1.1;
+		filterContoursMaxRatio = 4;
+	}
 	
 	/**
 	 * This is the primary method that runs the entire pipeline and updates the outputs.

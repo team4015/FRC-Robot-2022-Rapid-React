@@ -72,8 +72,8 @@ public class Vision extends SubsystemBase {
     SmartDashboard.putData(visionPipelines);
 
     showRectangles = new SendableChooser<>();
-    showRectangles.setDefaultOption("Show Rectangles", true);
-    showRectangles.addOption("Don't Show Rectangles", false);
+    showRectangles.setDefaultOption("Show Boxes", true);
+    showRectangles.addOption("Don't Show Boxes", false);
     SmartDashboard.putData(showRectangles);
 
     aimingLight = false;
@@ -96,8 +96,8 @@ public class Vision extends SubsystemBase {
 
     cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
     cam.setFPS(FPS);
-    //cam.setExposureAuto();
-    cam.setExposureManual(25);
+    
+    setExposure(cam, visionPipelines.getSelected());
 
     CvSink vIn = CameraServer.getVideo();
     CvSource vOut = CameraServer.putVideo("Target Video", IMG_WIDTH, IMG_HEIGHT);
@@ -114,6 +114,7 @@ public class Vision extends SubsystemBase {
         if (pipeline != visionPipelines.getSelected()) {
           pipeline = visionPipelines.getSelected();
           outputFilterSettings(pipeline);
+          setExposure(cam, pipeline);
         }
 
         // Retrieve new filter settings each time the thread runs
@@ -367,6 +368,8 @@ public class Vision extends SubsystemBase {
     SmartDashboard.putNumber("Lower Solidity", pipeline.filterContoursSolidity[0]);
     SmartDashboard.putNumber("Min Ratio", pipeline.filterContoursMinRatio);
     SmartDashboard.putNumber("Max Ratio", pipeline.filterContoursMaxRatio);
+
+    SmartDashboard.putNumber("Exposure", pipeline.cameraExposure);
   }
 
   /* ===================================================
@@ -404,5 +407,25 @@ public class Vision extends SubsystemBase {
     pipeline.filterContoursSolidity[0] = SmartDashboard.getNumber("Lower Solidity", pipeline.filterContoursSolidity[0]);
     pipeline.filterContoursMinRatio = SmartDashboard.getNumber("Min Ratio", pipeline.filterContoursMinRatio);
     pipeline.filterContoursMaxRatio = SmartDashboard.getNumber("Max Ratio", pipeline.filterContoursMaxRatio);
+
+    pipeline.cameraExposure = (int) SmartDashboard.getNumber("Exposure", pipeline.cameraExposure);
+  }
+
+  /* ===================================================
+  * Author: Lucas Jacobs
+  *
+  * Desc:Sets the camera's exposure based on the given value
+  * from the pipeline. If the exposure is out of range, it
+  * sets the exposure to be auto.
+  * ====================================================*/
+
+  private void setExposure(UsbCamera cam, PipelineTemplate pipeline) {
+    int exposure = pipeline.cameraExposure;
+
+    if (exposure >= 0 && exposure <= 100) {
+      cam.setExposureManual(exposure);
+    } else {
+      cam.setExposureAuto();
+    }
   }
 }
