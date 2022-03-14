@@ -13,14 +13,16 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.auto.*;
+import frc.robot.commands.auto.startMatch.BackUpAndShoot;
 
 public class Match extends TimedRobot
 {
   private Robot robot;
-  private SequentialCommandGroup auto;
+  private SendableChooser<CommandBase> autoMode;
+  private CommandBase auto; 
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -35,8 +37,11 @@ public class Match extends TimedRobot
     //Put Scheduler on Dashboard
     SmartDashboard.putData(CommandScheduler.getInstance());
 
-    //COmmands run in autonomous
-    auto = new AutoMatchStart(robot);
+    //Create menu for commands that run in autonomous
+    autoMode = new SendableChooser<>();
+    autoMode.setDefaultOption("Back Up and Shoot", new BackUpAndShoot(robot));
+    autoMode.addOption("Do nothing", null);
+    SmartDashboard.putData(autoMode);
   }
 
   /**
@@ -71,7 +76,11 @@ public class Match extends TimedRobot
   public void autonomousInit()
   {
     //Start Autonomous Commands
-    auto.schedule();
+    auto = autoMode.getSelected();
+
+    if (auto != null) {
+      auto.schedule();
+    }
   }
 
   /** This function is called periodically during autonomous. */
@@ -84,7 +93,10 @@ public class Match extends TimedRobot
   @Override
   public void teleopInit()
   {
-    auto.cancel();
+    if (auto != null) {
+      auto.cancel();
+    }
+    
     SmartDashboard.putString("Robot Mode:", "TeleOp");
   }
 
