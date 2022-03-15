@@ -20,7 +20,6 @@ import frc.robot.commands.auto.startmatch.BackUpAndShoot;
 
 public class Match extends TimedRobot
 {
-  
   private Robot robot;
   private SendableChooser<CommandBase> autoMode;
   private CommandBase auto; 
