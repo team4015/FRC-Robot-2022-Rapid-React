@@ -96,6 +96,7 @@ public class Match extends TimedRobot
 
     //--- Update Robot Position based on the Accelerator ---
     double xAccel = xAccelFilter.calculate(accel.getX());
+    xAccel *= 9.8; // convert accel from g's into m/s^2
 
     // Compensate for turning acceleration
     double rate = gyro.getRate();
@@ -108,8 +109,6 @@ public class Match extends TimedRobot
     if (xAccel < ACCEL_DEADZONE) xAccel = 0;
     double averageAccel = (xAccel + previousXAccel)/2;
     previousXAccel = xAccel; // set the previous accel to the the current accel for next loop
-
-    averageAccel *= 9.8; // convert accel from g's into m/s^2
 
     double velocityChange = averageAccel * .02; // loop time is .02s
     
