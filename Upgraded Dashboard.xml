@@ -1,13 +1,32 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Dist from Start" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1319" y="499"/>
+	</widget>
+	<widget field="Total Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1320" y="550"/>
+	</widget>
+	<widget field="Dist from Hub" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1323" y="525"/>
+	</widget>
+	<widget field="Acceleration" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1332" y="448"/>
+		<width>144</width>
+	</widget>
+	<widget field="Rotational Acceleration" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1283" y="424"/>
+	</widget>
+	<widget field="Velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1352" y="474"/>
+	</widget>
 	<widget field="Exposure" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="887" y="535"/>
 	</widget>
 	<widget field="SendableChooser[1]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="1335" y="281"/>
+		<location x="1400" y="346"/>
 	</widget>
 	<widget field="SendableChooser[2]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="1334" y="364"/>
+		<location x="1401" y="279"/>
 	</widget>
 	<widget field="Scheduler" type="Scheduler" class="edu.wpi.first.smartdashboard.gui.elements.Scheduler">
 		<location x="1023" y="117"/>
@@ -15,7 +34,7 @@
 		<height>295</height>
 	</widget>
 	<widget field="SendableChooser[0]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="1334" y="453"/>
+		<location x="1277" y="284"/>
 	</widget>
 	<widget field="Lower Hue" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="477" y="487"/>
@@ -132,7 +151,7 @@
 		<property name="Background" value="153.153.255.255"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
-		<location x="-1" y="2"/>
+		<location x="7" y="0"/>
 		<width>1535</width>
 		<height>45</height>
 	</static-widget>
@@ -154,26 +173,16 @@
 	<widget field="Vision" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
 		<location x="0" y="107"/>
 	</widget>
-	<widget field="Conveyor" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+	<widget field="Shooter" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
 		<location x="0" y="85"/>
 	</widget>
-	<widget field="Shooter" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+	<widget field="Climber" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
 		<location x="0" y="63"/>
 	</widget>
-	<widget field="Climber" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+	<widget field="Conveyor" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
 		<location x="0" y="41"/>
 	</widget>
 	<widget field="Ungrouped" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<widget field="Solenoid[0,2]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
-		</widget>
-		<widget field="Solenoid[0,2]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
-		</widget>
 		<widget field="DoubleSolenoid[0,1]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
 			<location x="0" y="0"/>
 			<height>0</height>
@@ -183,10 +192,15 @@
 			<location x="0" y="0"/>
 			<height>0</height>
 			<width>0</width>
+		</widget>
+		<widget field="Solenoid[0,2]" type="Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
+			<location x="6" y="15"/>
+			<height>21</height>
+			<width>121</width>
 		</widget>
 		<location x="0" y="0"/>
-		<width>188</width>
-		<height>40</height>
+		<width>133</width>
+		<height>42</height>
 	</widget>
 </live-window>
 </xml>
