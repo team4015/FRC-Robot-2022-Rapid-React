@@ -61,6 +61,10 @@ public class Match extends TimedRobot
     accel = new ADXL362(Accelerometer.Range.k8G); // Measure in the range -8g to +8g
     xAccelFilter = LinearFilter.movingAverage(ACCEL_SAMPLES);
     previousXAccel = 0;
+    previousVelocity = 0;
+    totalDistance = 0;
+    posX = 0;
+    posY = 0;
 
     // instantiate the robot
     robot = new Robot();
