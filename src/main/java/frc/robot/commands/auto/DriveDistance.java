@@ -44,7 +44,7 @@ public class DriveDistance extends CommandBase
   @Override
   public void initialize()
   {
-    targetDistance = SmartDashboard.getNumber("Total Distance", 0) + distance;
+    targetDistance = robot.sensors.getTotalDistance() + distance;
 
     SmartDashboard.putString("Robot Mode:", "Turn Angle");
   }
@@ -53,7 +53,7 @@ public class DriveDistance extends CommandBase
   @Override
   public void execute()
   {
-    double currentDistance = Math.abs(SmartDashboard.getNumber("Total Distance", 0));
+    double currentDistance = Math.abs(robot.sensors.getTotalDistance());
     double error = targetDistance - currentDistance;
 
     while (error > 0) {
@@ -61,7 +61,7 @@ public class DriveDistance extends CommandBase
 
       robot.drivetrain.moveMotors(driveSpeed, 0);
 
-      currentDistance = Math.abs(SmartDashboard.getNumber("Total Distance", 0));
+      currentDistance = Math.abs(robot.sensors.getTotalDistance());
       error = targetDistance - currentDistance;
     }
   }

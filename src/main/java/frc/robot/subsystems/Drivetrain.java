@@ -12,7 +12,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drivetrain extends SubsystemBase
 {
@@ -23,6 +22,8 @@ public class Drivetrain extends SubsystemBase
   private Talon rightMotor;
   private Talon leftMotor;
   private DifferentialDrive drive;
+
+  private Sensors sensors;
 
   private boolean goingStraight;
   private double straightDirection;
@@ -39,13 +40,15 @@ public class Drivetrain extends SubsystemBase
 
   // CONSTRUCTOR //
 
-  public Drivetrain()
+  public Drivetrain(Sensors sensors)
   {
     // instantiate hardware
     rightMotor = new Talon (RIGHT_MOTOR);
     leftMotor = new Talon(LEFT_MOTOR);
 
     drive = new DifferentialDrive(leftMotor, rightMotor);
+
+    this.sensors = sensors;
 
     goingStraight = false;
     straightDirection = 0;
@@ -56,7 +59,7 @@ public class Drivetrain extends SubsystemBase
   public void moveMotors (double speed, double turn) {
 
     double adjustedTurn = turn;
-    double currentAngle = SmartDashboard.getNumber("Gyro Angle", 0);
+    double currentAngle = sensors.gyroAngle();
 
     // Adjust to make the robot point straight as long as there is no value from the turn joystick
     if (goingStraight && speed != 0) {

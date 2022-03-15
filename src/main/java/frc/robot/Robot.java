@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
 import frc.robot.commands.shooter.*;
+import frc.robot.commands.sensors.*;
 import frc.robot.controls.*;
 import frc.robot.subsystems.*;
 
@@ -30,6 +31,7 @@ public class Robot
   public Operator operator;
 
   // SUBSYSTEMS //
+  public Sensors sensors;
   public Climber climber;
   public Conveyor conveyor;
   public Drivetrain drivetrain;
@@ -43,9 +45,10 @@ public class Robot
   public Robot()
   {
     // Instantiate Subsystems
+    sensors = new Sensors();
     climber = new Climber();
     conveyor = new Conveyor();
-    drivetrain = new Drivetrain();
+    drivetrain = new Drivetrain(sensors);
     intake = new Intake();
     shooter = new Shooter();
     vision = new Vision();
@@ -94,5 +97,6 @@ public class Robot
     drivetrain.setDefaultCommand(new Drive(this));
     conveyor.setDefaultCommand(new ConveyorStop(this));
     shooter.setDefaultCommand(new ShooterStop(this));
+    sensors.setDefaultCommand(new UpdateAccel(this));
   }
 }
