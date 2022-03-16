@@ -31,7 +31,7 @@ public class Operator
     private JoystickButton intakeIn;
     private JoystickButton intakeOut;
 
-    private JoystickButton intakeFlip;
+    //private JoystickButton intakeFlip;
 
     private JoystickButton conveyorFeed;
     private JoystickButton conveyorReverse;
