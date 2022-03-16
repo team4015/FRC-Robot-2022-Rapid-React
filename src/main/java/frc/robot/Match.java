@@ -56,6 +56,8 @@ public class Match extends TimedRobot
   {
     // run the command scheduler
     CommandScheduler.getInstance().run();
+
+    SmartDashboard.putBoolean("Has Pressure", !robot.compressor.getPressureSwitchValue());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
