@@ -16,6 +16,8 @@ package frc.robot;
 
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.intake.*;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
@@ -30,6 +32,7 @@ public class Robot
   public Operator operator;
 
   // SUBSYSTEMS //
+  public Compressor compressor;
   public Climber climber;
   public Conveyor conveyor;
   public Drivetrain drivetrain;
@@ -43,6 +46,7 @@ public class Robot
   public Robot()
   {
     // Instantiate Subsystems
+    compressor = new Compressor(PneumaticsModuleType.CTREPCM);
     climber = new Climber();
     conveyor = new Conveyor();
     drivetrain = new Drivetrain();
@@ -68,6 +72,8 @@ public class Robot
    * ------------------------------------- */
   private void initialize()
   {
+    compressor.enableDigital();
+
     drivetrain.stopMotors();
     driver.useHighSpeed();
     SmartDashboard.putString("Drive Speed", "HIGH");
