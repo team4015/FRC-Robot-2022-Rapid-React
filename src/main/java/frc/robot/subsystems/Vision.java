@@ -43,15 +43,17 @@ public class Vision extends SubsystemBase {
   final static int IMG_WIDTH = 160;
   final static int FPS = 30;
 
-  final static int TURN_THRESHOLD = 5;
+  final static int TURN_THRESHOLD = 12;
 
   // VARIABLES //
   private VisionThread visionThread;
+  private PipelineSettings settings;
   private double xCentre;
   private double width;
   private Object imgLock;
+  private double shooterSpeed;
 
-  private SendableChooser<PipelineTemplate> visionPipelines;
+  private SendableChooser<PipelineSettings> visionPipelines;
   private SendableChooser<Boolean> showRectangles;
 
   private boolean aimingLight;
@@ -59,16 +61,19 @@ public class Vision extends SubsystemBase {
 
 
   public Vision() {
+    shooterSpeed = .5;
+    SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
     xCentre = IMG_WIDTH/2.0;
     width = IMG_WIDTH/2.0;
     imgLock = new Object();
     light = new Solenoid(PneumaticsModuleType.CTREPCM, LIGHT_PORT);
-    light.set(false); // turn light off
+    light.set(true); // turn light off
 
     visionPipelines = new SendableChooser<>();
-    visionPipelines.setDefaultOption("School Vision", new SchoolPipeline());
-    visionPipelines.addOption("Humber Vision", new HumberPipeline());
-    visionPipelines.addOption("Test Vision", new TestPipeline());
+    visionPipelines.setDefaultOption("School Vision", new SchoolSettings());
+    visionPipelines.addOption("Long School Vision", new LongSettings());
+    visionPipelines.addOption("Humber Vision", new HumberSettings());
+    visionPipelines.addOption("Test Vision", new TestSettings());
     SmartDashboard.putData(visionPipelines);
 
     showRectangles = new SendableChooser<>();
@@ -97,28 +102,33 @@ public class Vision extends SubsystemBase {
     cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
     cam.setFPS(FPS);
     
-    setExposure(cam, visionPipelines.getSelected());
+    StandardPipeline standardPipeline = new StandardPipeline();
+    settings = visionPipelines.getSelected();
+    standardPipeline.set(settings);
+
+    setExposure(cam, standardPipeline);
 
     CvSink vIn = CameraServer.getVideo();
     CvSource vOut = CameraServer.putVideo("Target Video", IMG_WIDTH, IMG_HEIGHT);
     CvSource vOutFilter = CameraServer.putVideo("Filtered", IMG_WIDTH, IMG_HEIGHT);
 
     // initialize pipeline filter settings
-    outputFilterSettings(visionPipelines.getSelected());
+    outputFilterSettings(standardPipeline);
 
     // initalize vision thread
-    visionThread = new VisionThread(cam, visionPipelines.getSelected(), pipeline -> {
-      
+
+    visionThread = new VisionThread(cam, standardPipeline, pipeline -> {
       // Set to be the currently selected Pipeline
       synchronized (imgLock) {
-        if (pipeline != visionPipelines.getSelected()) {
-          pipeline = visionPipelines.getSelected();
+        if (settings != visionPipelines.getSelected()) {
+          settings = visionPipelines.getSelected();
+          pipeline.set(settings);
           outputFilterSettings(pipeline);
-          setExposure(cam, pipeline);
         }
 
         // Retrieve new filter settings each time the thread runs
         retrieveFilterSettings(pipeline);
+        setExposure(cam, pipeline);
       }
 
       //Create output frames which will have rectangles drawn on them
@@ -223,7 +233,7 @@ public class Vision extends SubsystemBase {
       if (pipeline.isRGB) {
         vOutFilter.putFrame(pipeline.rgbThresholdOutput());
       } else {
-        vOutFilter.putFrame(pipeline.hsvThresholdOutput());
+       vOutFilter.putFrame(pipeline.hsvThresholdOutput());
       }
     });
 
@@ -271,12 +281,12 @@ public class Vision extends SubsystemBase {
 
     double speed = 0; // PUT SOME FUNCTION INVOLVING WIDTH HERE
 
-    if (width == 4) speed = 0.48;
-    else if (width >= 5 && width <=  9) speed = -0.01333*width + 0.50666; //Experimentally Determined
+    //if (width == 4) speed = 0.48;
+    //else if (width >= 5 && width <=  9) speed = -0.01333*width + 0.50666; //Experimentally Determined
 
-    SmartDashboard.putNumber("Shooter Speed", speed);
+    shooterSpeed = SmartDashboard.getNumber("Shooter Speed", speed);
 
-    return speed; // return difference between the target and where the robot is pointed
+    return shooterSpeed; // return difference between the target and where the robot is pointed
   }
 
   /* ==========================
@@ -326,9 +336,8 @@ public class Vision extends SubsystemBase {
   * settings of the given pipeline to the SmartDashboard 
   * ====================================================*/
 
-  private void outputFilterSettings(PipelineTemplate pipeline) {
+  private void outputFilterSettings(StandardPipeline pipeline) {
     // Write RGB/HSV filter values to dashboard
-    if (pipeline.isRGB) {
       SmartDashboard.putNumber("Upper Red", pipeline.rgbThresholdRed[1]);
       SmartDashboard.putNumber("Lower Red", pipeline.rgbThresholdRed[0]);
       SmartDashboard.putNumber("Upper Green", pipeline.rgbThresholdGreen[1]);
@@ -336,27 +345,12 @@ public class Vision extends SubsystemBase {
       SmartDashboard.putNumber("Upper Blue", pipeline.rgbThresholdBlue[1]);
       SmartDashboard.putNumber("Lower Blue", pipeline.rgbThresholdBlue[0]);
 
-      SmartDashboard.putNumber("Upper Hue", -1);
-      SmartDashboard.putNumber("Lower Hue", -1);
-      SmartDashboard.putNumber("Upper Saturation", -1);
-      SmartDashboard.putNumber("Lower Saturation", -1);
-      SmartDashboard.putNumber("Upper Value", -1);
-      SmartDashboard.putNumber("Lower Value", -1);
-    } else {
-      SmartDashboard.putNumber("Upper Red", -1);
-      SmartDashboard.putNumber("Lower Red", -1);
-      SmartDashboard.putNumber("Upper Green", -1);
-      SmartDashboard.putNumber("Lower Green", -1);
-      SmartDashboard.putNumber("Upper Blue", -1);
-      SmartDashboard.putNumber("Lower Blue", -1);
-
       SmartDashboard.putNumber("Upper Hue", pipeline.hsvThresholdHue[1]);
       SmartDashboard.putNumber("Lower Hue", pipeline.hsvThresholdHue[0]);
       SmartDashboard.putNumber("Upper Saturation", pipeline.hsvThresholdSaturation[1]);
       SmartDashboard.putNumber("Lower Saturation", pipeline.hsvThresholdSaturation[0]);
       SmartDashboard.putNumber("Upper Value", pipeline.hsvThresholdValue[1]);
       SmartDashboard.putNumber("Lower Value", pipeline.hsvThresholdValue[0]);
-    }
 
     //Write Contour filter values to dashboard
     SmartDashboard.putNumber("Min Area", pipeline.filterContoursMinArea);
@@ -381,22 +375,20 @@ public class Vision extends SubsystemBase {
   * than changing them in the code directly and redeploying
   * ====================================================*/
 
-  private void retrieveFilterSettings(PipelineTemplate pipeline) {
-    if (pipeline.isRGB) {
+  private void retrieveFilterSettings(StandardPipeline pipeline) {
       pipeline.rgbThresholdRed[1] = SmartDashboard.getNumber("Upper Red", pipeline.rgbThresholdRed[1]);
       pipeline.rgbThresholdRed[0] = SmartDashboard.getNumber("Lower Red", pipeline.rgbThresholdRed[0]);
       pipeline.rgbThresholdGreen[1] = SmartDashboard.getNumber("Upper Green", pipeline.rgbThresholdGreen[1]);
       pipeline.rgbThresholdGreen[0] = SmartDashboard.getNumber("Lower Green", pipeline.rgbThresholdGreen[0]);
       pipeline.rgbThresholdBlue[1] = SmartDashboard.getNumber("Upper Blue", pipeline.rgbThresholdBlue[1]);
       pipeline.rgbThresholdBlue[0] = SmartDashboard.getNumber("Lower Blue", pipeline.rgbThresholdBlue[0]);
-    } else {
+
       pipeline.hsvThresholdHue[1] = SmartDashboard.getNumber("Upper Hue", pipeline.hsvThresholdHue[1]);
       pipeline.hsvThresholdHue[0] = SmartDashboard.getNumber("Lower Hue", pipeline.hsvThresholdHue[0]);
       pipeline.hsvThresholdSaturation[1] = SmartDashboard.getNumber("Upper Saturation", pipeline.hsvThresholdSaturation[1]);
       pipeline.hsvThresholdSaturation[0] = SmartDashboard.getNumber("Lower Saturation", pipeline.hsvThresholdSaturation[0]);
       pipeline.hsvThresholdValue[1] = SmartDashboard.getNumber("Upper Value", pipeline.hsvThresholdValue[1]);
       pipeline.hsvThresholdValue[0] = SmartDashboard.getNumber("Lower Value", pipeline.hsvThresholdValue[0]);
-    }
 
     pipeline.filterContoursMinArea = SmartDashboard.getNumber("Min Area", pipeline.filterContoursMinArea);
     pipeline.filterContoursMinWidth = SmartDashboard.getNumber("Min Width", pipeline.filterContoursMinWidth);
@@ -419,7 +411,7 @@ public class Vision extends SubsystemBase {
   * sets the exposure to be auto.
   * ====================================================*/
 
-  private void setExposure(UsbCamera cam, PipelineTemplate pipeline) {
+  private void setExposure(UsbCamera cam, StandardPipeline pipeline) {
     int exposure = pipeline.cameraExposure;
 
     if (exposure >= 0 && exposure <= 100) {

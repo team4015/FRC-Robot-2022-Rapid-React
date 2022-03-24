@@ -57,7 +57,7 @@ public class Match extends TimedRobot
     // run the command scheduler
     CommandScheduler.getInstance().run();
 
-    SmartDashboard.putBoolean("Has Pressure", !robot.compressor.getPressureSwitchValue());
+    SmartDashboard.putBoolean("Has Pressure", robot.compressor.getPressureSwitchValue());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -77,6 +77,9 @@ public class Match extends TimedRobot
   @Override
   public void autonomousInit()
   {
+    //Put Scheduler on Dashboard agian in case of reboot
+    SmartDashboard.putData(CommandScheduler.getInstance());
+
     //Start Autonomous Commands
     auto = autoMode.getSelected();
 
@@ -95,6 +98,9 @@ public class Match extends TimedRobot
   @Override
   public void teleopInit()
   {
+    //Put Scheduler on Dashboard agian in case of reboot
+    SmartDashboard.putData(CommandScheduler.getInstance());
+    
     if (auto != null) {
       auto.cancel();
     }

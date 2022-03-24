@@ -2,27 +2,22 @@
  * Author: Lucas Jacobs
  * ------------------------------
  * Desc: Template class for all the 
- * different vision pipelines
+ * different vision pipeline setting classes
  * ===================================*/
 
 package frc.robot.pipelines;
 
-import java.util.ArrayList;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import edu.wpi.first.vision.VisionPipeline;
-
-public abstract class PipelineTemplate implements VisionPipeline {
+public abstract class PipelineSettings {
     public boolean isRGB; // true - uses rgb filter, false - uses hsv filter
     public int cameraExposure;
 
-    public double[] rgbThresholdRed = new double[2];
-	public double[] rgbThresholdGreen = new double[2];
-	public double[] rgbThresholdBlue = new double[2];
+    public double[] rgbThresholdRed = {0, 255};
+	public double[] rgbThresholdGreen = {0, 255};
+	public double[] rgbThresholdBlue = {0, 255};
 
-    public double[] hsvThresholdHue = new double[2];
-	public double[] hsvThresholdSaturation = new double[2];
-	public double[] hsvThresholdValue = new double[2];
+    public double[] hsvThresholdHue = {0, 255};
+	public double[] hsvThresholdSaturation = {0, 255};
+	public double[] hsvThresholdValue = {0, 255};
 
     public double filterContoursMinArea = 0;
     public double filterContoursMinPerimeter = 0;
@@ -35,8 +30,4 @@ public abstract class PipelineTemplate implements VisionPipeline {
 	public double filterContoursMinVertices = 0.0;
     public double filterContoursMinRatio = 0;
 	public double filterContoursMaxRatio = 0;
-
-    public abstract ArrayList<MatOfPoint> filterContoursOutput();
-    public abstract Mat rgbThresholdOutput();
-    public abstract Mat hsvThresholdOutput();
 }
