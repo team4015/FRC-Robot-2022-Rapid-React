@@ -43,8 +43,8 @@ public class Vision extends SubsystemBase {
   final static int IMG_WIDTH = 160;
   final static int FPS = 30;
 
-  final static int TURN_THRESHOLD = 12;
-
+  final static int TURN_THRESHOLD = 8;
+  final static double SPEED_ADJUST = 1;
   // VARIABLES //
   private VisionThread visionThread;
   private PipelineSettings settings;
@@ -55,6 +55,7 @@ public class Vision extends SubsystemBase {
 
   private SendableChooser<PipelineSettings> visionPipelines;
   private SendableChooser<Boolean> showRectangles;
+  private SendableChooser<VisionType> visionType;
 
   private boolean aimingLight;
   private boolean shootingLight;
@@ -70,7 +71,8 @@ public class Vision extends SubsystemBase {
     light.set(true); // turn light off
 
     visionPipelines = new SendableChooser<>();
-    visionPipelines.setDefaultOption("School Vision", new SchoolSettings());
+    visionPipelines.setDefaultOption("Atrium Vision", new AtriumSettings());
+    visionPipelines.addOption("School Vision", new SchoolSettings());
     visionPipelines.addOption("Long School Vision", new LongSettings());
     visionPipelines.addOption("Humber Vision", new HumberSettings());
     visionPipelines.addOption("Test Vision", new TestSettings());
@@ -80,6 +82,14 @@ public class Vision extends SubsystemBase {
     showRectangles.setDefaultOption("Show Boxes", true);
     showRectangles.addOption("Don't Show Boxes", false);
     SmartDashboard.putData(showRectangles);
+
+    visionType = new SendableChooser<>();
+    visionType.setDefaultOption("Long", VisionType.LONG);
+    visionType.addOption("Pieces", VisionType.PIECES);
+    visionType.addOption("Biggest Piece", VisionType.BIGGEST);
+    visionType.addOption("Full Target", VisionType.FULL);
+    visionType.addOption("Nothing", VisionType.NOTHING);
+    SmartDashboard.putData(visionType);
 
     aimingLight = false;
     shootingLight = false;
@@ -119,7 +129,7 @@ public class Vision extends SubsystemBase {
 
     visionThread = new VisionThread(cam, standardPipeline, pipeline -> {
       // Set to be the currently selected Pipeline
-      synchronized (imgLock) {
+      /*synchronized (imgLock) {
         if (settings != visionPipelines.getSelected()) {
           settings = visionPipelines.getSelected();
           pipeline.set(settings);
@@ -129,7 +139,7 @@ public class Vision extends SubsystemBase {
         // Retrieve new filter settings each time the thread runs
         retrieveFilterSettings(pipeline);
         setExposure(cam, pipeline);
-      }
+      }*/
 
       //Create output frames which will have rectangles drawn on them
       Mat output = new Mat();
@@ -219,9 +229,10 @@ public class Vision extends SubsystemBase {
 
 
         synchronized (imgLock) {
-          xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
-          width = targetRect.width;
-          SmartDashboard.putNumber("Width", width);
+          this.xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
+          this.width = targetRect.width;
+          SmartDashboard.putNumber("Width", biggest.width);
+          SmartDashboard.putNumber("Target Width", width);
           SmartDashboard.putBoolean("In Shooting Range", width >= 4 && width <= 9);
           SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);
           autoShooterSpeed(); //Prints the speed needed to get the ball in to the dashboard
@@ -256,14 +267,6 @@ public class Vision extends SubsystemBase {
     double turn = xCentre - (IMG_WIDTH/ 2.0);
     SmartDashboard.putNumber("Dist to Target", turn);
 
-    // If the robot is within the turn threshold of pointing straight at the target, it wil stop turning
-    if (Math.abs(turn) < TURN_THRESHOLD) {
-      turn = 0;
-      SmartDashboard.putBoolean("ALIGNED", true);
-    } else {
-      SmartDashboard.putBoolean("ALIGNED", false);
-    }
-
     return turn; // return difference between the target and where the robot is pointed
   }
 
@@ -274,19 +277,36 @@ public class Vision extends SubsystemBase {
   This method returns the speed the shooter should spin to get in the target
   ===================================== */
   public double autoShooterSpeed() {
-    double width;
+    double x;
     synchronized (imgLock) {
-      width = this.width;
+      x = this.width;
     }
 
     double speed = 0; // PUT SOME FUNCTION INVOLVING WIDTH HERE
 
+    VisionType function = visionType.getSelected();
+
+    if (function == VisionType.LONG) {
+      //speed = -0.000000149209973043796000000000*Math.pow(x,5) + 0.000030514434712358700000000000*Math.pow(x,4) - 0.002456571701941360000000000000*Math.pow(x,3) + 0.097238797730824400000000000000*Math.pow(x,2) - 1.894926271401340000000000000000*x + 15.000000000000000000000000000000;
+      speed = -0.00490319384099398*x + 0.6;
+    } else if (function == VisionType.PIECES) {
+      speed = -0.0051*x + 0.5657;
+    } else if (function == VisionType.FULL) {
+      x /= 1.5;
+      speed = -0.00490319384099398*x + 0.6;
+      //speed = -0.000000149209973043796000000000*Math.pow(x,5) + 0.000030514434712358700000000000*Math.pow(x,4) - 0.002456571701941360000000000000*Math.pow(x,3) + 0.097238797730824400000000000000*Math.pow(x,2) - 1.894926271401340000000000000000*x + 15.000000000000000000000000000000;
+    } else if (function == VisionType.BIGGEST) {
+      speed = -0.015*x + 0.488;
+    }
+
     //if (width == 4) speed = 0.48;
     //else if (width >= 5 && width <=  9) speed = -0.01333*width + 0.50666; //Experimentally Determined
 
-    shooterSpeed = SmartDashboard.getNumber("Shooter Speed", speed);
+    //shooterSpeed = SmartDashboard.getNumber("Shooter Speed", speed);
+    speed *= SPEED_ADJUST;
+    SmartDashboard.putNumber("Shooter Speed", speed);
 
-    return shooterSpeed; // return difference between the target and where the robot is pointed
+    return speed; // return difference between the target and where the robot is pointed
   }
 
   /* ==========================
@@ -376,6 +396,11 @@ public class Vision extends SubsystemBase {
   * ====================================================*/
 
   private void retrieveFilterSettings(StandardPipeline pipeline) {
+
+    SmartDashboard.putData(visionPipelines);
+    SmartDashboard.putData(visionType);
+
+    SmartDashboard.putData(showRectangles);
       pipeline.rgbThresholdRed[1] = SmartDashboard.getNumber("Upper Red", pipeline.rgbThresholdRed[1]);
       pipeline.rgbThresholdRed[0] = SmartDashboard.getNumber("Lower Red", pipeline.rgbThresholdRed[0]);
       pipeline.rgbThresholdGreen[1] = SmartDashboard.getNumber("Upper Green", pipeline.rgbThresholdGreen[1]);
@@ -420,4 +445,12 @@ public class Vision extends SubsystemBase {
       cam.setExposureAuto();
     }
   }
+}
+
+enum VisionType {
+  LONG,
+  PIECES,
+  BIGGEST,
+  FULL,
+  NOTHING;
 }

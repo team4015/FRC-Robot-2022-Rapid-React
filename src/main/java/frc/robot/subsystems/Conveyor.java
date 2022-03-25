@@ -21,8 +21,8 @@ public class Conveyor extends SubsystemBase
   // CONSTANTS //
   final static int CONVEYOR_PORT = 3;
 
-  final static double CONVEYOR_SPEED = 0.8;
-  final static double CONVEYOR_REVERSE_SPEED = -0.8;
+  final static double CONVEYOR_SPEED = 0.5;
+  final static double CONVEYOR_REVERSE_SPEED = -0.5;
 
   // CONSTRUCTOR //
 

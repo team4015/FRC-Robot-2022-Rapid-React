@@ -1,5 +1,11 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="SendableChooser[3]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1405" y="234"/>
+	</widget>
+	<widget field="Target Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="511" y="70"/>
+	</widget>
 	<widget field="Shooter Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="1015" y="481"/>
 	</widget>
@@ -184,85 +190,65 @@
 		<property name="Camera Choice" value="Filtered"/>
 		<property name="Selected Camera Path" value="/103path"/>
 	</static-widget>
-</dashboard>
-<live-window>
-	<widget field="Drivetrain" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<location x="0" y="416"/>
-	</widget>
-	<widget field="Climber" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<location x="0" y="394"/>
-	</widget>
-	<widget field="Vision" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<location x="0" y="372"/>
-	</widget>
-	<widget field="Conveyor" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<location x="0" y="350"/>
-	</widget>
 	<widget field="Shooter" type="Subsystem" class="edu.wpi.first.smartdashboard.gui.elements.Subsystem">
-		<location x="0" y="330"/>
+		<location x="1065" y="168"/>
 	</widget>
 	<widget field="Intake" type="Subsystem" class="edu.wpi.first.smartdashboard.gui.elements.Subsystem">
-		<location x="0" y="310"/>
+		<location x="1033" y="126"/>
+		<width>125</width>
+	</widget>
+	<widget field="Angle Error" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="269" y="20"/>
+	</widget>
+</dashboard>
+<live-window>
+	<widget field="Shooter" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="12" y="20"/>
+	</widget>
+	<widget field="Drivetrain" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="26" y="1"/>
+	</widget>
+	<widget field="Intake" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="25" y="21"/>
+	</widget>
+	<widget field="Conveyor" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="27" y="30"/>
+	</widget>
+	<widget field="Vision" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="7" y="23"/>
+	</widget>
+	<widget field="Climber" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="20" y="16"/>
 	</widget>
 	<widget field="Ungrouped" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<widget field="Compressor[0]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
+		<widget field="Compressor[0]" type="Compressor" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
+			<location x="66" y="15"/>
+			<height>21</height>
+			<width>131</width>
 		</widget>
-		<widget field="Compressor[0]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
+		<widget field="BuiltInAccel[0]" type="3AxisAccelerometer" class="edu.wpi.first.smartdashboard.livewindow.elements.ThreeAxisAccelerometer">
+			<location x="6" y="36"/>
+			<height>71</height>
+			<width>250</width>
 		</widget>
-		<widget field="BuiltInAccel[0]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.ThreeAxisAccelerometer">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
+		<widget field="ADXRS450_Gyro[0]" type="Gyro" class="edu.wpi.first.smartdashboard.gui.elements.Compass">
+			<location x="6" y="107"/>
+			<height>150</height>
+			<width>250</width>
 		</widget>
-		<widget field="BuiltInAccel[0]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.ThreeAxisAccelerometer">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
-		</widget>
-		<widget field="ADXRS450_Gyro[0]" type="Table" class="edu.wpi.first.smartdashboard.gui.elements.Compass">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
-		</widget>
-		<widget field="ADXRS450_Gyro[0]" type="Table" class="edu.wpi.first.smartdashboard.gui.elements.Compass">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
-		</widget>
-		<widget field="Solenoid[0,2]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
-		</widget>
-		<widget field="Solenoid[0,2]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
-		</widget>
-		<widget field="DoubleSolenoid[0,1]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
-		</widget>
-		<widget field="DoubleSolenoid[0,1]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
+		<widget field="Solenoid[0,2]" type="Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
+			<location x="71" y="257"/>
+			<height>21</height>
+			<width>121</width>
 		</widget>
 		<widget field="DoubleSolenoid[0,4]" type="Double Solenoid" class="edu.wpi.first.smartdashboard.livewindow.elements.RelayController">
-			<location x="6" y="15"/>
+			<location x="6" y="278"/>
 			<height>19</height>
-			<width>176</width>
+			<width>250</width>
 		</widget>
-		<location x="2" y="6"/>
-		<width>188</width>
-		<height>40</height>
+		<location x="14" y="13"/>
+		<width>262</width>
+		<height>303</height>
 	</widget>
 </live-window>
 </xml>

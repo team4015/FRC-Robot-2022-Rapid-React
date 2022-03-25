@@ -22,7 +22,7 @@ public class AutoVisionShoot extends CommandBase
   private Robot robot;
   private Timer timer;
   private double timeToShot;
-  private final static double CONVEYOR_SPIN_TIME = 1;
+  private final static double CONVEYOR_SPIN_TIME = .6;
 
   // CONSTANTS //
 

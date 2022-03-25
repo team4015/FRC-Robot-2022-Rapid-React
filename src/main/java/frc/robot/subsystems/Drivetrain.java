@@ -56,7 +56,7 @@ public class Drivetrain extends SubsystemBase
   public static final int LEFT_MOTOR = 1;
 
   // CONSTANTS //
-  public static final double AIM_TURN_SPEED = 0.4;
+  public static final double AIM_TURN_SPEED = 0.03;
   public static final double GYRO_CORRECT_SPEED = 0.05;
 
   //  ****ALL OF THESE CONSTANTS NEED TO BE TUNED BY TESTING****
@@ -101,7 +101,7 @@ public class Drivetrain extends SubsystemBase
     double currentAngle = gyroAngle();
 
     // Adjust to make the robot point straight as long as there is no value from the turn joystick
-    /*if (goingStraight && speed != 0) { // Adjust the robot if it's moving forward
+    if (goingStraight && speed != 0) { // Adjust the robot if it's moving forward
       if (turn == 0) {
         error = (currentAngle - straightDirection) * GYRO_CORRECT_SPEED;
       } else {
@@ -112,7 +112,7 @@ public class Drivetrain extends SubsystemBase
       straightDirection = currentAngle;
     } else { // The robot isn't going straight if neither of the above run
       goingStraight = false;
-    }*/
+    }
 
     drive.arcadeDrive(speed, turn + error);
   }

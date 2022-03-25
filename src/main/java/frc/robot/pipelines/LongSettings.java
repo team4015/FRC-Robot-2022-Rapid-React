@@ -16,10 +16,10 @@ public class LongSettings extends PipelineSettings {
 		cameraExposure = 25;
 
 		rgbThresholdRed[0] = 0;
-		rgbThresholdRed[1] = 146;
-		rgbThresholdGreen[0] = 147;
+		rgbThresholdRed[1] = 150;
+		rgbThresholdGreen[0] = 130;
 		rgbThresholdGreen[1] = 255;
-		rgbThresholdBlue[0] = 138;
+		rgbThresholdBlue[0] = 20;
 		rgbThresholdBlue[1] = 255;
 
 		filterContoursMinArea = 1.0;
@@ -28,11 +28,12 @@ public class LongSettings extends PipelineSettings {
 		filterContoursMaxWidth = 1000.0;
 		filterContoursMinHeight = 0.0;
 		filterContoursMaxHeight = 100.0;
-		filterContoursSolidity[0] = 60;
-		filterContoursSolidity[1] = 100;
+		filterContoursSolidity[0] = 20;
+		filterContoursSolidity[1] = 50;
 		filterContoursMaxVertices = 1000000.0;
 		filterContoursMinVertices = 0.0;
-		filterContoursMinRatio = 1.1;
-		filterContoursMaxRatio = 30;
+		filterContoursMinRatio = 2;
+		filterContoursMaxRatio = 100
+		;
 	}
 }
