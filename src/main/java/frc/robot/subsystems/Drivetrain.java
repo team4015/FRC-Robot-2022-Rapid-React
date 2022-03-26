@@ -108,7 +108,7 @@ public class Drivetrain extends SubsystemBase
 
   public void moveMotors (double speed, double turn) {
 
-    if (speed == 0 && turn == 0) {
+    /*if (speed == 0 && turn == 0) {
       drive.stopMotor();
       stopped = true;
     } else {
@@ -125,10 +125,10 @@ public class Drivetrain extends SubsystemBase
       double error = targetAngle - currentAngle;
 
       double turnSpeed = error*REG_TURN_SPEED;
-      if (Math.abs(turnSpeed)<MIN_TURN_SPEED) turnSpeed = Math.copySign(MIN_TURN_SPEED, turnSpeed);
+      if (Math.abs(turnSpeed)<MIN_TURN_SPEED) turnSpeed = Math.copySign(MIN_TURN_SPEED, turnSpeed);*/
 
-      drive.arcadeDrive(speed, turnSpeed);
-    }
+      drive.arcadeDrive(speed, turn);
+    //}
   }
 
   public void stopMotors() {

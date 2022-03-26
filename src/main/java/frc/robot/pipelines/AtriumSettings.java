@@ -13,25 +13,25 @@ public class AtriumSettings extends PipelineSettings {
 
 	public AtriumSettings() {
 		isRGB = true;
-		cameraExposure = 25;
+		cameraExposure = 22;
 
-		rgbThresholdRed[0] = 0;
-		rgbThresholdRed[1] = 150;
-		rgbThresholdGreen[0] = 100;
+		rgbThresholdRed[0] = 100;
+		rgbThresholdRed[1] = 240;
+		rgbThresholdGreen[0] = 120;
 		rgbThresholdGreen[1] = 255;
-		rgbThresholdBlue[0] = 60;
-		rgbThresholdBlue[1] = 255;
+		rgbThresholdBlue[0] = 100;
+		rgbThresholdBlue[1] = 180;
 
 		hsvThresholdHue[0] = 0;
-		hsvThresholdHue[1] = 90;
-		hsvThresholdSaturation[0] = 100;
+		hsvThresholdHue[1] = 255;
+		hsvThresholdSaturation[0] = 0;
 		hsvThresholdSaturation[1] = 255;
 		hsvThresholdValue[0] = 0;
 		hsvThresholdValue[1] = 255.0;
 
-		filterContoursMinArea = 1.0;
+		filterContoursMinArea = 25.0;
 		filterContoursMinPerimeter = 0.0;
-		filterContoursMinWidth = 0.0;
+		filterContoursMinWidth = 25.0;
 		filterContoursMaxWidth = 1000.0;
 		filterContoursMinHeight = 0.0;
 		filterContoursMaxHeight = 100.0;

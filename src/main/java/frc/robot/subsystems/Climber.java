@@ -24,10 +24,10 @@ public class Climber extends SubsystemBase
 
   // CONSTANTS //
 
-  public static final double SPOOL_SPEED = .3;
+  public static final double SPOOL_SPEED = .4;
   public static final double SPOOL_REVERSE_SPEED = -.2 ;
-  public static final double GEAR_SPEED = 0.8;
-  public static final double GEAR_REVERSE_SPEED = -0.8;
+  public static final double GEAR_SPEED = 1;
+  public static final double GEAR_REVERSE_SPEED = -1;
 
   public Climber()
   {

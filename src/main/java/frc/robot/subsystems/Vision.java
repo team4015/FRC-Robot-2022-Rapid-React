@@ -71,7 +71,7 @@ public class Vision extends SubsystemBase {
     light.set(true); // turn light off
 
     visionPipelines = new SendableChooser<>();
-    visionPipelines.setDefaultOption("Atrium Vision", new AtriumSettings());
+    visionPipelines.setDefaultOption("Waterloo Vision", new AtriumSettings());
     visionPipelines.addOption("School Vision", new SchoolSettings());
     visionPipelines.addOption("Long School Vision", new LongSettings());
     visionPipelines.addOption("Humber Vision", new HumberSettings());
@@ -129,17 +129,17 @@ public class Vision extends SubsystemBase {
 
     visionThread = new VisionThread(cam, standardPipeline, pipeline -> {
       // Set to be the currently selected Pipeline
-      /*synchronized (imgLock) {
-        if (settings != visionPipelines.getSelected()) {
-          settings = visionPipelines.getSelected();
-          pipeline.set(settings);
-          outputFilterSettings(pipeline);
-        }
+      synchronized (imgLock) {
+        //if (settings != visionPipelines.getSelected()) {
+        //  settings = visionPipelines.getSelected();
+      //    pipeline.set(settings);
+       //   outputFilterSettings(pipeline);
+      //  }
 
         // Retrieve new filter settings each time the thread runs
         retrieveFilterSettings(pipeline);
         setExposure(cam, pipeline);
-      }*/
+      }
 
       //Create output frames which will have rectangles drawn on them
       Mat output = new Mat();
@@ -241,11 +241,7 @@ public class Vision extends SubsystemBase {
       vOut.putFrame(output);
 
       //Put out rbg or hsv filter output depending on pipeline settings
-      if (pipeline.isRGB) {
-        vOutFilter.putFrame(pipeline.rgbThresholdOutput());
-      } else {
-       vOutFilter.putFrame(pipeline.hsvThresholdOutput());
-      }
+       vOutFilter.putFrame(pipeline.maskOutput());
     });
 
     visionThread.start();
