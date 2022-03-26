@@ -98,6 +98,9 @@ public class Match extends TimedRobot
   @Override
   public void teleopInit()
   {
+
+    robot.operator.disableUnwind();
+
     //Put Scheduler on Dashboard agian in case of reboot
     SmartDashboard.putData(CommandScheduler.getInstance());
     
@@ -120,6 +123,8 @@ public class Match extends TimedRobot
   {
     // cancel all running commands
     CommandScheduler.getInstance().cancelAll();
+
+    robot.operator.enableUnwind();
   }
 
   /** This function is called periodically during test mode. */
