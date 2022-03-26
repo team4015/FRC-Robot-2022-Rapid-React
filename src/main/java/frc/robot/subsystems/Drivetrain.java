@@ -40,6 +40,9 @@ public class Drivetrain extends SubsystemBase
 
   private boolean goingStraight;
   private double straightDirection;
+  private double targetAngle;
+  private boolean stopped;
+  private double referenceAngle;
 
   private LinearFilter xAccelFilter;
   private LinearFilter gyroFilter;
@@ -58,6 +61,11 @@ public class Drivetrain extends SubsystemBase
   // CONSTANTS //
   public static final double AIM_TURN_SPEED = 0.03;
   public static final double GYRO_CORRECT_SPEED = 0.05;
+
+  public static final double MIN_TURN_SPEED = 0.35
+  ;
+  public static final double POWER_TO_DEGREES = 3.6;
+  public static final double REG_TURN_SPEED = .3;
 
   //  ****ALL OF THESE CONSTANTS NEED TO BE TUNED BY TESTING****
   private final static int SAMPLES = 10; // Num of samples of accelration in the moving average
@@ -78,6 +86,9 @@ public class Drivetrain extends SubsystemBase
     rightMotor = new Talon (RIGHT_MOTOR);
     leftMotor = new Talon(LEFT_MOTOR);
     leftMotor.setInverted(true);
+    stopped = true;
+    targetAngle = 0;
+    referenceAngle = 0;
 
     drive = new DifferentialDrive(rightMotor, leftMotor);
 
@@ -97,24 +108,27 @@ public class Drivetrain extends SubsystemBase
 
   public void moveMotors (double speed, double turn) {
 
-    double error = 0;
-    double currentAngle = gyroAngle();
-
-    // Adjust to make the robot point straight as long as there is no value from the turn joystick
-    if (goingStraight && speed != 0) { // Adjust the robot if it's moving forward
-      if (turn == 0) {
-        error = (currentAngle - straightDirection) * GYRO_CORRECT_SPEED;
-      } else {
-        goingStraight = false;
+    if (speed == 0 && turn == 0) {
+      drive.stopMotor();
+      stopped = true;
+    } else {
+      if (stopped) {
+        stopped = false;
+        referenceAngle = gyroAngle();
+        targetAngle = gyroAngle();
       }
-    } else if (turn == 0 && speed != 0) { // Turn on the turn adjustment if the robot moving without turning
-      goingStraight = true;
-      straightDirection = currentAngle;
-    } else { // The robot isn't going straight if neither of the above run
-      goingStraight = false;
-    }
 
-    drive.arcadeDrive(speed, turn + error);
+      double currentAngle = gyroAngle() - referenceAngle;
+
+      targetAngle += turn*POWER_TO_DEGREES;
+
+      double error = targetAngle - currentAngle;
+
+      double turnSpeed = error*REG_TURN_SPEED;
+      if (Math.abs(turnSpeed)<MIN_TURN_SPEED) turnSpeed = Math.copySign(MIN_TURN_SPEED, turnSpeed);
+
+      drive.arcadeDrive(speed, turnSpeed);
+    }
   }
 
   public void stopMotors() {
