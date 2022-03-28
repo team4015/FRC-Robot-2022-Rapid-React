@@ -129,7 +129,7 @@ public class Vision extends SubsystemBase {
 
     visionThread = new VisionThread(cam, standardPipeline, pipeline -> {
       // Set to be the currently selected Pipeline
-      synchronized (imgLock) {
+      //synchronized (imgLock) {
         //if (settings != visionPipelines.getSelected()) {
         //  settings = visionPipelines.getSelected();
       //    pipeline.set(settings);
@@ -137,9 +137,9 @@ public class Vision extends SubsystemBase {
       //  }
 
         // Retrieve new filter settings each time the thread runs
-        retrieveFilterSettings(pipeline);
-        setExposure(cam, pipeline);
-      }
+       // retrieveFilterSettings(pipeline);
+       // setExposure(cam, pipeline);
+   //   }
 
       //Create output frames which will have rectangles drawn on them
       Mat output = new Mat();

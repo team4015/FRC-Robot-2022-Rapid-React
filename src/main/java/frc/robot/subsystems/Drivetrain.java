@@ -127,8 +127,27 @@ public class Drivetrain extends SubsystemBase
       double turnSpeed = error*REG_TURN_SPEED;
       if (Math.abs(turnSpeed)<MIN_TURN_SPEED) turnSpeed = Math.copySign(MIN_TURN_SPEED, turnSpeed);*/
 
-      drive.arcadeDrive(speed, turn);
+    //  drive.arcadeDrive(speed, turn);
     //}
+/*
+    double error = 0;
+    double currentAngle = gyroAngle();
+
+    // Adjust to make the robot point straight as long as there is no value from the turn joystick
+    if (goingStraight && speed != 0) { // Adjust the robot if it's moving forward
+      if (turn == 0) {
+        error = (currentAngle - straightDirection) * GYRO_CORRECT_SPEED;
+      } else {
+        goingStraight = false;
+      }
+    } else if (turn == 0 && speed != 0) { // Turn on the turn adjustment if the robot moving without turning
+      goingStraight = true;
+      straightDirection = currentAngle;
+    } else { // The robot isn't going straight if neither of the above run
+      goingStraight = false;
+    }*/
+
+    drive.arcadeDrive(speed, turn);
   }
 
   public void stopMotors() {
