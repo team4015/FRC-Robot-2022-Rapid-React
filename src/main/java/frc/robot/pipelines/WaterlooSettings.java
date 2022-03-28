@@ -3,15 +3,14 @@
  *
  * --------------------------------------------------
  * Description:
- * Tuned for use with the prop hub we have in the atrium
- * with separate pieces of tape.
+ * Tuned for use with the hub at the Waterloo Comp
  * ================================================== */
 
 package frc.robot.pipelines;
 
-public class AtriumSettings extends PipelineSettings {
+public class WaterlooSettings extends PipelineSettings {
 
-	public AtriumSettings() {
+	public WaterlooSettings() {
 		isRGB = true;
 		cameraExposure = 25;
 

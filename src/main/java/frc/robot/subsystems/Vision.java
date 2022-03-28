@@ -71,7 +71,7 @@ public class Vision extends SubsystemBase {
     light.set(true); // turn light off
 
     visionPipelines = new SendableChooser<>();
-    visionPipelines.setDefaultOption("Waterloo Vision", new AtriumSettings());
+    visionPipelines.setDefaultOption("Waterloo Vision", new WaterlooSettings());
     visionPipelines.addOption("School Vision", new SchoolSettings());
     visionPipelines.addOption("Long School Vision", new LongSettings());
     visionPipelines.addOption("Humber Vision", new HumberSettings());
