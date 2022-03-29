@@ -62,10 +62,10 @@ public class Drivetrain extends SubsystemBase
   public static final double AIM_TURN_SPEED = 0.03;
   public static final double GYRO_CORRECT_SPEED = 0.05;
 
-  public static final double MIN_TURN_SPEED = 0.35
-  ;
-  public static final double POWER_TO_DEGREES = 3.6;
-  public static final double REG_TURN_SPEED = .3;
+  public static final double MAX_TURN_SPEED = 0.5;
+  public static final double MAX_RATE = 0.1; // test dis
+  public static final double POWER_TO_DEGREES = 1;
+  public static final double REG_TURN_SPEED = .1;
 
   //  ****ALL OF THESE CONSTANTS NEED TO BE TUNED BY TESTING****
   private final static int SAMPLES = 10; // Num of samples of accelration in the moving average
@@ -108,46 +108,37 @@ public class Drivetrain extends SubsystemBase
 
   public void moveMotors (double speed, double turn) {
 
-    /*if (speed == 0 && turn == 0) {
+    if (speed == 0 && turn == 0) {
       drive.stopMotor();
       stopped = true;
-    } else {
+    } else if (turn == 0) {
       if (stopped) {
         stopped = false;
         referenceAngle = gyroAngle();
-        targetAngle = gyroAngle();
+        targetAngle = 0;
       }
 
       double currentAngle = gyroAngle() - referenceAngle;
 
-      targetAngle += turn*POWER_TO_DEGREES;
+      //targetAngle += turn*POWER_TO_DEGREES;
+      SmartDashboard.putNumber("Target Angle", targetAngle);
 
       double error = targetAngle - currentAngle;
 
+      SmartDashboard.putNumber("Error", error);
+
       double turnSpeed = error*REG_TURN_SPEED;
-      if (Math.abs(turnSpeed)<MIN_TURN_SPEED) turnSpeed = Math.copySign(MIN_TURN_SPEED, turnSpeed);*/
+      SmartDashboard.putNumber("Turn Speed", turnSpeed);
 
-    //  drive.arcadeDrive(speed, turn);
-    //}
-/*
-    double error = 0;
-    double currentAngle = gyroAngle();
+      if (Math.abs(turnSpeed) > MAX_TURN_SPEED) turnSpeed = Math.copySign(MAX_TURN_SPEED, turnSpeed);
 
-    // Adjust to make the robot point straight as long as there is no value from the turn joystick
-    if (goingStraight && speed != 0) { // Adjust the robot if it's moving forward
-      if (turn == 0) {
-        error = (currentAngle - straightDirection) * GYRO_CORRECT_SPEED;
-      } else {
-        goingStraight = false;
-      }
-    } else if (turn == 0 && speed != 0) { // Turn on the turn adjustment if the robot moving without turning
-      goingStraight = true;
-      straightDirection = currentAngle;
-    } else { // The robot isn't going straight if neither of the above run
-      goingStraight = false;
-    }*/
+      if (Math.abs(gyro.getRate()) > MAX_RATE) turnSpeed = turn; 
 
-    drive.arcadeDrive(speed, turn);
+      drive.arcadeDrive(speed, turnSpeed);
+    } else {
+      stopped = true;
+      drive.arcadeDrive(speed, turn);
+    }
   }
 
   public void stopMotors() {
