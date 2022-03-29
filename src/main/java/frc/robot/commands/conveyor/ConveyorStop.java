@@ -9,6 +9,7 @@
 package frc.robot.commands.conveyor;
 
 import frc.robot.Robot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ConveyorStop extends CommandBase
@@ -39,7 +40,7 @@ public class ConveyorStop extends CommandBase
   @Override
   public void initialize()
   {
-
+    SmartDashboard.putNumber("Shooter Speed", 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

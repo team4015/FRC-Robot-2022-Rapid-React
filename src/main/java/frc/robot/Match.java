@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.auto.startmatch.BackUpAndShoot;
+import frc.robot.commands.auto.startMatch.BackUpAndShoot;
 
 public class Match extends TimedRobot
 {
@@ -57,7 +57,7 @@ public class Match extends TimedRobot
     // run the command scheduler
     CommandScheduler.getInstance().run();
 
-    SmartDashboard.putBoolean("Has Pressure", !robot.compressor.getPressureSwitchValue());
+    SmartDashboard.putBoolean("Has Pressure", robot.compressor.getPressureSwitchValue());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -77,6 +77,9 @@ public class Match extends TimedRobot
   @Override
   public void autonomousInit()
   {
+    //Put Scheduler on Dashboard agian in case of reboot
+    SmartDashboard.putData(CommandScheduler.getInstance());
+
     //Start Autonomous Commands
     auto = autoMode.getSelected();
 
@@ -95,6 +98,12 @@ public class Match extends TimedRobot
   @Override
   public void teleopInit()
   {
+
+    robot.operator.disableUnwind();
+
+    //Put Scheduler on Dashboard agian in case of reboot
+    SmartDashboard.putData(CommandScheduler.getInstance());
+    
     if (auto != null) {
       auto.cancel();
     }
@@ -114,6 +123,8 @@ public class Match extends TimedRobot
   {
     // cancel all running commands
     CommandScheduler.getInstance().cancelAll();
+
+    robot.operator.enableUnwind();
   }
 
   /** This function is called periodically during test mode. */

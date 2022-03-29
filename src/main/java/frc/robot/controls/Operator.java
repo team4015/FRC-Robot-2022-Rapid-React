@@ -24,6 +24,8 @@ import frc.robot.Robot;
 
 public class Operator
 {
+    Robot robot;
+
     // JOYSTICKS / CONTROLLERS //
     private Joystick dualshock;
 
@@ -31,7 +33,7 @@ public class Operator
     private JoystickButton intakeIn;
     private JoystickButton intakeOut;
 
-    //private JoystickButton intakeFlip;
+    private JoystickButton intakeFlip;
 
     private JoystickButton conveyorFeed;
     private JoystickButton conveyorReverse;
@@ -84,6 +86,7 @@ public class Operator
 
     public Operator(Robot robot)
     {
+        this.robot=robot;
 		// instantiate joysticks / controllers
         dualshock = new Joystick(DUALSHOCK);
 
@@ -91,13 +94,12 @@ public class Operator
         intakeIn = new JoystickButton(dualshock, INTAKE_IN);
         intakeOut = new JoystickButton(dualshock, INTAKE_OUT);
 
-        //intakeFlip = new JoystickButton(dualshock, INTAKE_FLIP);
+        intakeFlip = new JoystickButton(dualshock, INTAKE_FLIP);
 
         conveyorFeed = new JoystickButton(dualshock, CONVEYOR_FEED);
         conveyorReverse = new JoystickButton(dualshock, CONVEYOR_REVERSE);
 
         climberClimb = new JoystickButton(dualshock, CLIMBER_CLIMB);
-        climberUnwind = new JoystickButton(dualshock, CLIMBER_UNWIND);
         climberExtend = new JoystickButton(dualshock, CLIMBER_EXTEND);
         climberRetract = new JoystickButton(dualshock, CLIMBER_RETRACT);
 
@@ -114,13 +116,12 @@ public class Operator
 
         //DONT ACCIDENTALLY FLIP AT HUMBER
 
-        // intakeFlip.whenPressed(new IntakeFlip(robot));
+        intakeFlip.whenPressed(new IntakeFlip(robot));
 
         conveyorFeed.whileHeld(new ConveyorFeed(robot));
         conveyorReverse.whileHeld(new ConveyorReverse(robot));
 
         climberClimb.whileHeld(new ClimberClimb(robot));
-        climberUnwind.whileHeld(new ClimberUnwind(robot));
         climberExtend.whileHeld(new ClimberExtend(robot));
         climberRetract.whileHeld(new ClimberRetract(robot));
       
@@ -134,5 +135,13 @@ public class Operator
        // METHODS
 
     // Add methods here which return values for various robot controls by reading the controllers.
+
+public void enableUnwind() {
+    climberUnwind = new JoystickButton(dualshock, CLIMBER_UNWIND);
+    climberUnwind.whileHeld(new ClimberUnwind(robot));
 }
 
+public void disableUnwind() {
+    climberUnwind = null;
+}
+}
