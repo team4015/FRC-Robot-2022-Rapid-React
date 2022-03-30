@@ -22,6 +22,7 @@ public class Conveyor extends SubsystemBase
   final static int CONVEYOR_PORT = 3;
 
   final static double CONVEYOR_SPEED = 0.4;
+  final static double SLOW_CONVEYOR_SPEED = 0.2;
   final static double CONVEYOR_REVERSE_SPEED = -0.3;
 
   // CONSTRUCTOR //
@@ -37,6 +38,11 @@ public class Conveyor extends SubsystemBase
   // This method will intake balls into the bay. 
   public void feed() {
     conveyorMotor.set(CONVEYOR_SPEED);
+  }
+
+  // This method will intake balls into the bay. 
+  public void feedSlow() {
+    conveyorMotor.set(SLOW_CONVEYOR_SPEED);
   }
 
   // This function will reverse the conveyor to outtake balls.
