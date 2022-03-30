@@ -39,10 +39,8 @@ public class Drivetrain extends SubsystemBase
   // VARIABLES //
 
   private boolean goingStraight;
-  private double straightDirection;
   private double targetAngle;
-  private boolean stopped;
-  private double referenceAngle;
+  private boolean coasting;
 
   private LinearFilter xAccelFilter;
   private LinearFilter gyroFilter;
@@ -62,10 +60,10 @@ public class Drivetrain extends SubsystemBase
   public static final double AIM_TURN_SPEED = 0.03;
   public static final double GYRO_CORRECT_SPEED = 0.05;
 
-  public static final double MIN_TURN_SPEED = 0.35
-  ;
-  public static final double POWER_TO_DEGREES = 3.6;
-  public static final double REG_TURN_SPEED = .3;
+  public static final double MAX_TURN_SPEED = 0.5;
+  public static final double MAX_RATE = 10; // test dis
+  //public static final double POWER_TO_DEGREES = 1;
+  public static final double ERROR_CORRECT = .07;
 
   //  ****ALL OF THESE CONSTANTS NEED TO BE TUNED BY TESTING****
   private final static int SAMPLES = 10; // Num of samples of accelration in the moving average
@@ -86,9 +84,9 @@ public class Drivetrain extends SubsystemBase
     rightMotor = new Talon (RIGHT_MOTOR);
     leftMotor = new Talon(LEFT_MOTOR);
     leftMotor.setInverted(true);
-    stopped = true;
     targetAngle = 0;
-    referenceAngle = 0;
+    goingStraight = false;
+    coasting = false;
 
     drive = new DifferentialDrive(rightMotor, leftMotor);
 
@@ -97,9 +95,6 @@ public class Drivetrain extends SubsystemBase
 
     accel = new BuiltInAccelerometer(); // Measure in the range -4g to +4g
     resetAccelerometer();
-
-    goingStraight = false;
-    straightDirection = 0;
   }
 
   // METHODS // 
@@ -107,47 +102,46 @@ public class Drivetrain extends SubsystemBase
   // -----------Motor Methods --------
 
   public void moveMotors (double speed, double turn) {
+    SmartDashboard.putNumber("Rate", gyro.getRate());
 
-    /*if (speed == 0 && turn == 0) {
+    /*if (speed == 0 && turn == 0) { // **** Robot is stopped
       drive.stopMotor();
-      stopped = true;
-    } else {
-      if (stopped) {
-        stopped = false;
-        referenceAngle = gyroAngle();
-        targetAngle = gyroAngle();
-      }
-
-      double currentAngle = gyroAngle() - referenceAngle;
-
-      targetAngle += turn*POWER_TO_DEGREES;
-
-      double error = targetAngle - currentAngle;
-
-      double turnSpeed = error*REG_TURN_SPEED;
-      if (Math.abs(turnSpeed)<MIN_TURN_SPEED) turnSpeed = Math.copySign(MIN_TURN_SPEED, turnSpeed);*/
-
-    //  drive.arcadeDrive(speed, turn);
-    //}
-/*
-    double error = 0;
-    double currentAngle = gyroAngle();
-
-    // Adjust to make the robot point straight as long as there is no value from the turn joystick
-    if (goingStraight && speed != 0) { // Adjust the robot if it's moving forward
-      if (turn == 0) {
-        error = (currentAngle - straightDirection) * GYRO_CORRECT_SPEED;
-      } else {
-        goingStraight = false;
-      }
-    } else if (turn == 0 && speed != 0) { // Turn on the turn adjustment if the robot moving without turning
-      goingStraight = true;
-      straightDirection = currentAngle;
-    } else { // The robot isn't going straight if neither of the above run
       goingStraight = false;
-    }*/
 
-    drive.arcadeDrive(speed, turn);
+    } else*/ if (turn == 0) { // **** Robot is moving straight
+
+      if (!goingStraight) {
+        goingStraight = true;
+        coasting = true;
+      }
+
+      if (coasting) {
+        drive.arcadeDrive(speed, 0);
+        if (Math.abs(gyro.getRate()) < MAX_RATE) {
+          coasting = false;
+          targetAngle = gyroAngle();
+          SmartDashboard.putNumber("Target Angle", targetAngle);
+        }
+      } else {
+        double currentAngle = gyroAngle();
+
+        //targetAngle += turn*POWER_TO_DEGREES;
+
+        double error = targetAngle - currentAngle;
+        SmartDashboard.putNumber("Error", error);
+
+        double turnSpeed = error*ERROR_CORRECT;
+        SmartDashboard.putNumber("Turn Speed", turnSpeed);
+
+        if (Math.abs(turnSpeed) > MAX_TURN_SPEED) turnSpeed = Math.copySign(MAX_TURN_SPEED, turnSpeed); 
+
+        drive.arcadeDrive(speed, turnSpeed);
+      }
+
+    } else { // **** Robot is turning
+      goingStraight = false;
+      drive.arcadeDrive(speed, turn);
+    }
   }
 
   public void stopMotors() {
