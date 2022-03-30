@@ -1,5 +1,8 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Rate" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1246" y="147"/>
+	</widget>
 	<widget field="Turn Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="1210" y="433"/>
 	</widget>
