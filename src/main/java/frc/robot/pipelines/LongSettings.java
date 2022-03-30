@@ -17,10 +17,17 @@ public class LongSettings extends PipelineSettings {
 
 		rgbThresholdRed[0] = 0;
 		rgbThresholdRed[1] = 150;
-		rgbThresholdGreen[0] = 130;
+		rgbThresholdGreen[0] = 100;
 		rgbThresholdGreen[1] = 255;
-		rgbThresholdBlue[0] = 20;
+		rgbThresholdBlue[0] = 60;
 		rgbThresholdBlue[1] = 255;
+
+		hsvThresholdHue[0] = 0;
+		hsvThresholdHue[1] = 90;
+		hsvThresholdSaturation[0] = 100;
+		hsvThresholdSaturation[1] = 255;
+		hsvThresholdValue[0] = 0;
+		hsvThresholdValue[1] = 255.0;
 
 		filterContoursMinArea = 1.0;
 		filterContoursMinPerimeter = 0.0;
@@ -29,11 +36,10 @@ public class LongSettings extends PipelineSettings {
 		filterContoursMinHeight = 0.0;
 		filterContoursMaxHeight = 100.0;
 		filterContoursSolidity[0] = 20;
-		filterContoursSolidity[1] = 50;
+		filterContoursSolidity[1] = 100;
 		filterContoursMaxVertices = 1000000.0;
 		filterContoursMinVertices = 0.0;
-		filterContoursMinRatio = 2;
-		filterContoursMaxRatio = 100
-		;
+		filterContoursMinRatio = 1.1;
+		filterContoursMaxRatio = 30;
 	}
 }
