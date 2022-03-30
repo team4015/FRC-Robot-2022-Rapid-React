@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Robot;
 import frc.robot.commands.driver.HighSpeed;
 import frc.robot.commands.driver.LowSpeed;
-import frc.robot.commands.drivetrain.*;
+import frc.robot.commands.vision.VisionAim;
 
 public class Driver
 {
@@ -34,15 +34,22 @@ public class Driver
     // BUTTONS //
     private JoystickButton lowSpeed;
     private JoystickButton highSpeed;
+    private JoystickButton aim;
 
 
 	// CONSTANTS //
     public static final double DEADZONE = 0.15; // Deadzone applied to joysticks to aid in adjusting sensitivity
-    public double throttleSpeed = 0.8;
-    public double steerSpeed = .7;
+    public static final double THROTTLE_LOW_SPEED = 0.5;
+    public static final double STEER_LOW_SPEED = 0.4;
+    public static final double THROTTLE_HIGH_SPEED = .8;
+    public static final double STEER_HIGH_SPEED = .8;
 
     public static final int LOW_SPEED = 5;
     public static final int HIGH_SPEED = 3;
+    public static final int AIM = 2;
+
+    public double throttleSpeed = 0.8;
+    public double steerSpeed = .7;
 
 
     public Driver(Robot robot)
@@ -54,10 +61,12 @@ public class Driver
         // bind button objects to physical buttons
         lowSpeed = new JoystickButton(throttle, LOW_SPEED);
         highSpeed = new JoystickButton(throttle, HIGH_SPEED);
+        aim = new JoystickButton(steer, AIM);
 
         // bind buttons to commands
         lowSpeed.whenPressed(new LowSpeed(robot));
         highSpeed.whenPressed(new HighSpeed(robot));
+        aim.whileHeld(new VisionAim(robot));
     }
 
 	// METHODS //
@@ -101,15 +110,20 @@ public class Driver
         return steerValue;
     }
 
+    /* Author: Lucas Jacobs
+    *  Desc: Sets the drivetrain to high speed */
+
     public void useLowSpeed() {
-        throttleSpeed = 0.3;
-        steerSpeed = 0.2;
+        throttleSpeed = THROTTLE_LOW_SPEED;
+        steerSpeed = STEER_LOW_SPEED;
         SmartDashboard.putString("Drive Speed", "LOW");
     }
 
+    /* Author: Lucas Jacobs
+    *  Desc: Sets the drivetrain to low speed */
     public void useHighSpeed() {
-        throttleSpeed = 0.8;
-        steerSpeed = 0.7;
+        throttleSpeed = THROTTLE_HIGH_SPEED;
+        steerSpeed = STEER_HIGH_SPEED;
         SmartDashboard.putString("Drive Speed", "HIGH");
     }
 }

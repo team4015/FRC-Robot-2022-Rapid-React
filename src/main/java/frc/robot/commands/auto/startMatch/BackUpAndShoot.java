@@ -2,20 +2,23 @@
  * Authors: Lucas Jacobs
  * --------------------------------------------------
  * Description:
- * This class caontinds the commands that are executed 
+ * This class contains the commands that are executed 
  * in autonomous mode at the start of the match
+ * 
+ * ***Runs in the Autonomous Period Only***
  * ================================================== */
 
-package frc.robot;
+package frc.robot.commands.auto.startMatch;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Robot;
 import frc.robot.commands.auto.*;
 
-public class AutoGroup extends SequentialCommandGroup {
-    public AutoGroup(Robot robot) {
+public class BackUpAndShoot extends SequentialCommandGroup {
+    public BackUpAndShoot(Robot robot) {
         super(
-            new AutoDrive(robot, -.5, 0, 2), // drive backwards
-            new AutoShoot(robot, 3, .4) //shoot
+            new AutoDrive(robot, -.7, 0, 1), // drive backwards
+            new AutoShoot(robot, .4, 3) //shoot
 
             // Robot on right tarmac
 

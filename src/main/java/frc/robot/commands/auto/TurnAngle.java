@@ -3,41 +3,40 @@
  *
  * --------------------------------------------------
  * Description:
- * Makes the robot shoot a ball at the target after a specified time
+ * Makes the robot turn a given angle in degrees using proportional speed
  * ================================================== */
 
 package frc.robot.commands.auto;
 
 import frc.robot.Robot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class AutoShoot extends CommandBase
+public class TurnAngle extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
   // VARIABLES //
 
   private Robot robot;
-  private Timer timer;
   private double speed;
-  private double timeToShot;
-  private final static double CONVEYOR_SPIN_TIME = .5;
+  private double degrees;
+  private double targetAngle;
 
   // CONSTANTS //
+  private static final double MIN_TURN_SPEED = .3;
+  private static final double ANGLE_THRESHOLD = 10;
 
   // CONSTRUCTOR //
 
-  public AutoShoot(Robot robot, double speed, double timeToShot)
+  public TurnAngle(Robot robot, double speed, double degrees)
   {
     this.robot = robot;
     this.speed = speed;
-    this.timeToShot = timeToShot;
-    timer = new Timer();
+    this.degrees = degrees;
 
     // subsystems that this command requires
-    addRequirements(robot.shooter, robot.conveyor);
+    addRequirements(robot.drivetrain);
   }
 
   // METHODS //
@@ -46,26 +45,25 @@ public class AutoShoot extends CommandBase
   @Override
   public void initialize()
   {
-    timer.start();
-    timer.reset();
-    SmartDashboard.putString("Robot Mode:", "Auto Shoot");
+    targetAngle = robot.drivetrain.gyroAngle() + degrees;
+
+    SmartDashboard.putString("Robot Mode:", "Turn Angle");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute()
   {
-    //Spin shooter
-    while (timer.get() < timeToShot) {
-      robot.shooter.spin(speed);
-    }
+    double currentAngle = Math.abs(robot.drivetrain.gyroAngle());
+    double error = targetAngle - currentAngle;
 
-    timer.reset();
+    while (error > ANGLE_THRESHOLD) {
+      double turnSpeed = Math.copySign(Math.max(MIN_TURN_SPEED, Math.abs(speed*error)), error); 
 
-    //Spin shooter and feed the conveyor
-    while (timer.get() < CONVEYOR_SPIN_TIME) {
-      robot.shooter.spin(speed);
-      robot.conveyor.feed();
+      robot.drivetrain.moveMotors(0, turnSpeed);
+
+      currentAngle = Math.abs(robot.drivetrain.gyroAngle());
+      error = targetAngle - currentAngle;
     }
   }
 
@@ -73,8 +71,7 @@ public class AutoShoot extends CommandBase
   @Override
   public void end(boolean interrupted)
   {
-    robot.shooter.stop();
-    robot.conveyor.stop();
+    robot.drivetrain.stopMotors();
   }
 
   // Returns true when the command should end.

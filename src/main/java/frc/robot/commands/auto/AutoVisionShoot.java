@@ -3,7 +3,7 @@
  *
  * --------------------------------------------------
  * Description:
- * Makes the robot shoot a ball at the target after a specified time
+ * Makes the robot aim at the target and shoot based on the speed from the vision
  * ================================================== */
 
 package frc.robot.commands.auto;
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class AutoShoot extends CommandBase
+public class AutoVisionShoot extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
@@ -21,18 +21,16 @@ public class AutoShoot extends CommandBase
 
   private Robot robot;
   private Timer timer;
-  private double speed;
   private double timeToShot;
-  private final static double CONVEYOR_SPIN_TIME = .5;
+  private final static double CONVEYOR_SPIN_TIME = .6;
 
   // CONSTANTS //
 
   // CONSTRUCTOR //
 
-  public AutoShoot(Robot robot, double speed, double timeToShot)
+  public AutoVisionShoot(Robot robot, double timeToShot)
   {
     this.robot = robot;
-    this.speed = speed;
     this.timeToShot = timeToShot;
     timer = new Timer();
 
@@ -46,8 +44,11 @@ public class AutoShoot extends CommandBase
   @Override
   public void initialize()
   {
+    robot.vision.enableShootingLight();
+
     timer.start();
     timer.reset();
+
     SmartDashboard.putString("Robot Mode:", "Auto Shoot");
   }
 
@@ -55,16 +56,19 @@ public class AutoShoot extends CommandBase
   @Override
   public void execute()
   {
-    //Spin shooter
+    //Spin shooter at auto speed
     while (timer.get() < timeToShot) {
-      robot.shooter.spin(speed);
+      double autoSpeed = robot.vision.autoShooterSpeed();
+      robot.shooter.spin(autoSpeed);
     }
 
     timer.reset();
+    
+    //Spin and Shoot
 
-    //Spin shooter and feed the conveyor
     while (timer.get() < CONVEYOR_SPIN_TIME) {
-      robot.shooter.spin(speed);
+      double autoSpeed = robot.vision.autoShooterSpeed();
+      robot.shooter.spin(autoSpeed);
       robot.conveyor.feed();
     }
   }
@@ -73,6 +77,8 @@ public class AutoShoot extends CommandBase
   @Override
   public void end(boolean interrupted)
   {
+    robot.vision.disableShootingLight();
+
     robot.shooter.stop();
     robot.conveyor.stop();
   }

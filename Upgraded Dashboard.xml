@@ -1,0 +1,204 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="In Shooting Range" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="570"/>
+	</widget>
+	<widget field="Shooter Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.SimpleDial">
+		<location x="997" y="397"/>
+	</widget>
+	<widget field="SendableChooser[3]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1277" y="180"/>
+	</widget>
+	<widget field="Target Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="511" y="70"/>
+	</widget>
+	<widget field="Acceleration" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1344" y="369"/>
+	</widget>
+	<widget field="Has Pressure" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="893" y="522"/>
+		<width>104</width>
+		<height>44</height>
+	</widget>
+	<widget field="Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="436" y="58"/>
+		<width>207</width>
+		<height>39</height>
+		<property name="Font Size" value="30"/>
+	</widget>
+	<widget field="Dist to Target" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="1301" y="55"/>
+		<width>194</width>
+		<height>53</height>
+		<property name="Font Size" value="30"/>
+	</widget>
+	<widget field="Robot Mode:" type="String" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="1035" y="53"/>
+		<width>253</width>
+		<height>46</height>
+		<property name="Font Size" value="25"/>
+	</widget>
+	<widget field="Targets Detected" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="6" y="59"/>
+		<width>411</width>
+		<height>37</height>
+		<property name="Background" value="51.204.255.255"/>
+		<property name="Font Size" value="30"/>
+	</widget>
+	<widget field="Drive Speed" type="String" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="827" y="53"/>
+		<width>189</width>
+		<height>45</height>
+		<property name="Font Size" value="30"/>
+	</widget>
+	<widget field="Gyro Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="1122" y="537"/>
+		<width>181</width>
+		<height>42</height>
+		<property name="Font Size" value="30"/>
+	</widget>
+	<widget field="Y Coord" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1363" y="492"/>
+	</widget>
+	<widget field="X Coord" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1362" y="464"/>
+	</widget>
+	<widget field="Dist from Start" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1333" y="518"/>
+	</widget>
+	<widget field="Total Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1337" y="418"/>
+	</widget>
+	<widget field="Dist from Hub" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1337" y="544"/>
+	</widget>
+	<widget field="Rotational Acceleration" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1297" y="346"/>
+	</widget>
+	<widget field="Velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1366" y="395"/>
+	</widget>
+	<widget field="Exposure" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="5" y="550"/>
+	</widget>
+	<widget field="SendableChooser[1]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1399" y="277"/>
+	</widget>
+	<widget field="SendableChooser[2]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1399" y="215"/>
+	</widget>
+	<widget field="Scheduler" type="Scheduler" class="edu.wpi.first.smartdashboard.gui.elements.Scheduler">
+		<location x="1023" y="113"/>
+		<width>167</width>
+		<height>288</height>
+	</widget>
+	<widget field="SendableChooser[0]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1279" y="236"/>
+	</widget>
+	<widget field="Lower Hue" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="477" y="487"/>
+	</widget>
+	<widget field="Upper Solidity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="514" y="522"/>
+	</widget>
+	<widget field="Upper Saturation" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="629" y="461"/>
+	</widget>
+	<widget field="Upper Blue" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="160" y="463"/>
+	</widget>
+	<widget field="Lower Blue" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="159" y="485"/>
+	</widget>
+	<widget field="Lower Green" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="309" y="486"/>
+	</widget>
+	<widget field="Lower Value" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="812" y="485"/>
+	</widget>
+	<widget field="Min Ratio" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="716" y="546"/>
+	</widget>
+	<widget field="Lower Saturation" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="629" y="486"/>
+	</widget>
+	<widget field="Upper Hue" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="479" y="463"/>
+	</widget>
+	<widget field="Min Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="164" y="550"/>
+	</widget>
+	<widget field="Lower Red" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="10" y="487"/>
+	</widget>
+	<widget field="Lower Solidity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="514" y="545"/>
+		<height>19</height>
+	</widget>
+	<widget field="Min Height" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="329" y="547"/>
+	</widget>
+	<widget field="Max Ratio" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="713" y="523"/>
+		<height>19</height>
+	</widget>
+	<widget field="Upper Green" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="309" y="463"/>
+	</widget>
+	<widget field="Upper Value" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="810" y="462"/>
+	</widget>
+	<widget field="Upper Red" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="12" y="462"/>
+	</widget>
+	<widget field="Max Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="163" y="526"/>
+	</widget>
+	<widget field="Max Height" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="330" y="524"/>
+	</widget>
+	<widget field="Min Area" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="8" y="526"/>
+	</widget>
+	<widget field="ALIGNED" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="1263" y="114"/>
+		<width>239</width>
+		<height>62</height>
+	</widget>
+	<widget field="Centre (0 to 1) " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.ProgressBar">
+		<location x="661" y="56"/>
+		<height>39</height>
+		<property name="Maximum" value="1.0"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="486" y="111"/>
+		<width>469</width>
+		<height>344</height>
+		<property name="Camera Choice" value="Target Video"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="7" y="0"/>
+		<width>1535</width>
+		<height>45</height>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="9" y="110"/>
+		<width>458</width>
+		<height>344</height>
+		<property name="Camera Choice" value="Filtered"/>
+		<property name="Selected Camera Path" value="/103path"/>
+	</static-widget>
+	<widget field="Shooter" type="Subsystem" class="edu.wpi.first.smartdashboard.gui.elements.Subsystem">
+		<location x="1065" y="168"/>
+	</widget>
+	<widget field="Intake" type="Subsystem" class="edu.wpi.first.smartdashboard.gui.elements.Subsystem">
+		<location x="1033" y="126"/>
+		<width>125</width>
+	</widget>
+	<widget field="Angle Error" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="269" y="20"/>
+	</widget>
+</dashboard>
+<live-window>
+</live-window>
+</xml>

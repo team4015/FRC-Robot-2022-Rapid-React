@@ -3,41 +3,39 @@
  *
  * --------------------------------------------------
  * Description:
- * Makes the robot shoot a ball at the target after a specified time
+ * Makes the robot drive a certain positive distance in metres using proportional speed
  * ================================================== */
 
 package frc.robot.commands.auto;
 
 import frc.robot.Robot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class AutoShoot extends CommandBase
+public class DriveDistance extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
   // VARIABLES //
 
   private Robot robot;
-  private Timer timer;
   private double speed;
-  private double timeToShot;
-  private final static double CONVEYOR_SPIN_TIME = .5;
+  private double distance;
+  private double targetDistance;
 
   // CONSTANTS //
+  private static final double MIN_DRIVE_SPEED = .3;
 
   // CONSTRUCTOR //
 
-  public AutoShoot(Robot robot, double speed, double timeToShot)
+  public DriveDistance(Robot robot, double speed, double distance)
   {
     this.robot = robot;
     this.speed = speed;
-    this.timeToShot = timeToShot;
-    timer = new Timer();
+    this.distance = distance;
 
     // subsystems that this command requires
-    addRequirements(robot.shooter, robot.conveyor);
+    addRequirements(robot.drivetrain);
   }
 
   // METHODS //
@@ -46,26 +44,25 @@ public class AutoShoot extends CommandBase
   @Override
   public void initialize()
   {
-    timer.start();
-    timer.reset();
-    SmartDashboard.putString("Robot Mode:", "Auto Shoot");
+    targetDistance = robot.drivetrain.getTotalDistance() + distance;
+
+    SmartDashboard.putString("Robot Mode:", "Turn Angle");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute()
   {
-    //Spin shooter
-    while (timer.get() < timeToShot) {
-      robot.shooter.spin(speed);
-    }
+    double currentDistance = Math.abs(robot.drivetrain.getTotalDistance());
+    double error = targetDistance - currentDistance;
 
-    timer.reset();
+    while (error > 0) {
+      double driveSpeed = Math.max(MIN_DRIVE_SPEED, speed*error); 
 
-    //Spin shooter and feed the conveyor
-    while (timer.get() < CONVEYOR_SPIN_TIME) {
-      robot.shooter.spin(speed);
-      robot.conveyor.feed();
+      robot.drivetrain.moveMotors(driveSpeed, 0);
+
+      currentDistance = Math.abs(robot.drivetrain.getTotalDistance());
+      error = targetDistance - currentDistance;
     }
   }
 
@@ -73,8 +70,7 @@ public class AutoShoot extends CommandBase
   @Override
   public void end(boolean interrupted)
   {
-    robot.shooter.stop();
-    robot.conveyor.stop();
+    robot.drivetrain.stopMotors();
   }
 
   // Returns true when the command should end.
