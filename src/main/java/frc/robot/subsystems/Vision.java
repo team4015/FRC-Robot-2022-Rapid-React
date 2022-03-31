@@ -45,6 +45,12 @@ public class Vision extends SubsystemBase {
 
   final static int TURN_THRESHOLD = 8;
   final static double SPEED_ADJUST = 1;
+
+  private final static double PIXELS_TO_DEGREES = 0.35;
+  private final static double THRESHOLD = 5;
+  private final static double MIN_TURN_SPEED = 0.5;
+  private final static double MAX_TURN_SPEED = 0.8;
+
   // VARIABLES //
   private VisionThread visionThread;
   private PipelineSettings settings;
@@ -52,6 +58,11 @@ public class Vision extends SubsystemBase {
   private double width;
   private Object imgLock;
   private double shooterSpeed;
+  private double previousTurn;
+  private double angleError;
+  private double currentAngle;
+  private double turnSpeed;
+  private boolean aligned;
 
   private SendableChooser<PipelineSettings> visionPipelines;
   private SendableChooser<Boolean> showRectangles;
@@ -59,16 +70,19 @@ public class Vision extends SubsystemBase {
 
   private boolean aimingLight;
   private boolean shootingLight;
-
-
+  
   public Vision() {
-    shooterSpeed = .5;
+    shooterSpeed = .4;
     SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
     xCentre = IMG_WIDTH/2.0;
     width = IMG_WIDTH/2.0;
     imgLock = new Object();
     light = new Solenoid(PneumaticsModuleType.CTREPCM, LIGHT_PORT);
     light.set(true); // turn light off
+
+    previousTurn = 100000;
+    angleError = 0;
+    currentAngle = 0;
 
     visionPipelines = new SendableChooser<>();
     visionPipelines.setDefaultOption("Waterloo Vision", new WaterlooSettings());
@@ -96,6 +110,14 @@ public class Vision extends SubsystemBase {
   }
 
   // METHODS //
+
+  public boolean isAligned() {
+    return aligned;
+  }
+
+  public double getTurnSpeed() {
+    return turnSpeed;
+  }
 
   /* =====================================
   Author: Lucas Jacobs
@@ -129,17 +151,17 @@ public class Vision extends SubsystemBase {
 
     visionThread = new VisionThread(cam, standardPipeline, pipeline -> {
       // Set to be the currently selected Pipeline
-      //synchronized (imgLock) {
-        //if (settings != visionPipelines.getSelected()) {
-        //  settings = visionPipelines.getSelected();
-      //    pipeline.set(settings);
-       //   outputFilterSettings(pipeline);
-      //  }
+      synchronized (imgLock) {
+        if (settings != visionPipelines.getSelected()) {
+          settings = visionPipelines.getSelected();
+          pipeline.set(settings);
+          outputFilterSettings(pipeline);
+        }
 
         // Retrieve new filter settings each time the thread runs
-       // retrieveFilterSettings(pipeline);
-       // setExposure(cam, pipeline);
-   //   }
+        retrieveFilterSettings(pipeline);
+        setExposure(cam, pipeline);
+      }
 
       //Create output frames which will have rectangles drawn on them
       Mat output = new Mat();
@@ -188,7 +210,7 @@ public class Vision extends SubsystemBase {
 
           Point checkedCentre = new Point(checked.x + checked.width/2, checked.y + checked.height/2);
 
-          for (int i = 0; i < targets.size(); i++) { //Go through triangle not yet in target
+          for (int i = 0; i < targets.size(); i++) { //Go through rectangles not yet in target
             Rect potential = targets.get(i);
 
             Point potentialCentre = new Point(potential.x + potential.width/2, potential.y + potential.height/2);
@@ -260,7 +282,7 @@ public class Vision extends SubsystemBase {
       xCentre = this.xCentre;
     }
 
-    double turn = xCentre - (IMG_WIDTH/ 2.0);
+    double turn = xCentre - (IMG_WIDTH/ 2.0)+15;
     SmartDashboard.putNumber("Dist to Target", turn);
 
     return turn; // return difference between the target and where the robot is pointed
@@ -392,11 +414,6 @@ public class Vision extends SubsystemBase {
   * ====================================================*/
 
   private void retrieveFilterSettings(StandardPipeline pipeline) {
-
-    SmartDashboard.putData(visionPipelines);
-    SmartDashboard.putData(visionType);
-
-    SmartDashboard.putData(showRectangles);
       pipeline.rgbThresholdRed[1] = SmartDashboard.getNumber("Upper Red", pipeline.rgbThresholdRed[1]);
       pipeline.rgbThresholdRed[0] = SmartDashboard.getNumber("Lower Red", pipeline.rgbThresholdRed[0]);
       pipeline.rgbThresholdGreen[1] = SmartDashboard.getNumber("Upper Green", pipeline.rgbThresholdGreen[1]);
@@ -440,6 +457,38 @@ public class Vision extends SubsystemBase {
     } else {
       cam.setExposureAuto();
     }
+  }
+
+  /* ===================================================
+  * Author: Lucas Jacobs      Date: 31 March 2022
+  *
+  * Desc: Calculates what angle the robot is from the target
+  * using frames from the camera. If the function is called multiple times
+  * during the same frame, it uses the gyroscope to estimate how far it has turned
+  * ====================================================*/
+  public void calcAlign(double angle) {
+    double turn = aimAtTarget(); //Get the turn speed from the camera
+    if (turn == previousTurn) {
+      angleError +=  angle - currentAngle; 
+      currentAngle = angle;
+    } else {
+      previousTurn = turn;
+      angleError = turn*PIXELS_TO_DEGREES;
+      currentAngle = angle;
+    }
+
+    SmartDashboard.putNumber("Angle Error", angleError);
+    turnSpeed = angleError*Drivetrain.AIM_TURN_SPEED;
+
+    if (Math.abs(turnSpeed) < MIN_TURN_SPEED) turnSpeed = Math.copySign(MIN_TURN_SPEED, turnSpeed);
+    if (Math.abs(turnSpeed) > MAX_TURN_SPEED) turnSpeed = Math.copySign(MIN_TURN_SPEED, turnSpeed);
+    if (Math.abs(angleError) > THRESHOLD) {
+      aligned = false;
+    } else {
+      aligned = true;
+    }
+
+    SmartDashboard.putBoolean("ALIGNED", aligned);
   }
 }
 
