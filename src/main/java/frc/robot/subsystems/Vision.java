@@ -45,6 +45,12 @@ public class Vision extends SubsystemBase {
 
   final static int TURN_THRESHOLD = 8;
   final static double SPEED_ADJUST = 1;
+
+  private final static double PIXELS_TO_DEGREES = 0.35;
+  private final static double THRESHOLD = 5;
+  private final static double MIN_TURN_SPEED = 0.5;
+  private final static double MAX_TURN_SPEED = 0.8;
+
   // VARIABLES //
   private VisionThread visionThread;
   private PipelineSettings settings;
@@ -52,6 +58,11 @@ public class Vision extends SubsystemBase {
   private double width;
   private Object imgLock;
   private double shooterSpeed;
+  private double previousTurn;
+  private double angleError;
+  private double currentAngle;
+  public double turnSpeed;
+  public boolean aligned;
 
   private SendableChooser<PipelineSettings> visionPipelines;
   private SendableChooser<Boolean> showRectangles;
@@ -60,8 +71,11 @@ public class Vision extends SubsystemBase {
   private boolean aimingLight;
   private boolean shootingLight;
 
+  Drivetrain drivetrain;
+  
+  public Vision(Drivetrain drivetrain) {
+    this.drivetrain = drivetrain;
 
-  public Vision() {
     shooterSpeed = .5;
     SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
     xCentre = IMG_WIDTH/2.0;
@@ -69,6 +83,10 @@ public class Vision extends SubsystemBase {
     imgLock = new Object();
     light = new Solenoid(PneumaticsModuleType.CTREPCM, LIGHT_PORT);
     light.set(true); // turn light off
+
+    previousTurn = 100000;
+    angleError = 0;
+    currentAngle = 0;
 
     visionPipelines = new SendableChooser<>();
     visionPipelines.setDefaultOption("Waterloo Vision", new WaterlooSettings());
@@ -435,6 +453,32 @@ public class Vision extends SubsystemBase {
     } else {
       cam.setExposureAuto();
     }
+  }
+
+  @Override
+  public void periodic() {
+    double turn = aimAtTarget(); //Get the turn speed from the camera
+    if (turn == previousTurn) {
+      angleError +=  drivetrain.gyroAngle() - currentAngle; 
+      currentAngle = drivetrain.gyroAngle();
+    } else {
+      previousTurn = turn;
+      angleError = turn*PIXELS_TO_DEGREES;
+      currentAngle = drivetrain.gyroAngle();
+    }
+
+    SmartDashboard.putNumber("Angle Error", angleError);
+    turnSpeed = angleError*Drivetrain.AIM_TURN_SPEED;
+
+    if (Math.abs(turnSpeed) < MIN_TURN_SPEED) turnSpeed = Math.copySign(MIN_TURN_SPEED, turnSpeed);
+    if (Math.abs(turnSpeed) > MAX_TURN_SPEED) turnSpeed = Math.copySign(MIN_TURN_SPEED, turnSpeed);
+    if (Math.abs(angleError) > THRESHOLD) {
+      aligned = false;
+    } else {
+      aligned = true;
+    }
+
+    SmartDashboard.putBoolean("ALIGNED", aligned);
   }
 }
 

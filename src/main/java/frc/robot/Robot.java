@@ -52,7 +52,7 @@ public class Robot
     drivetrain = new Drivetrain();
     intake = new Intake();
     shooter = new Shooter();
-    vision = new Vision();
+    vision = new Vision(drivetrain);
 
     // Instantiate Controls
     driver = new Driver(this);
