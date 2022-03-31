@@ -67,6 +67,8 @@ public class AutoVisionShoot extends CommandBase
     //Spin and Shoot
 
     while (timer.get() < CONVEYOR_SPIN_TIME) {
+      robot.vision.calcAlign(robot.drivetrain.gyroAngle());
+
       if (robot.vision.isAligned()) {
         double autoSpeed = robot.vision.autoShooterSpeed();
         robot.shooter.spin(autoSpeed);

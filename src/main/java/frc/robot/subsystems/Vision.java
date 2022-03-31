@@ -70,13 +70,9 @@ public class Vision extends SubsystemBase {
 
   private boolean aimingLight;
   private boolean shootingLight;
-
-  Drivetrain drivetrain;
   
-  public Vision(Drivetrain drivetrain) {
-    this.drivetrain = drivetrain;
-
-    shooterSpeed = .5;
+  public Vision() {
+    shooterSpeed = .4;
     SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
     xCentre = IMG_WIDTH/2.0;
     width = IMG_WIDTH/2.0;
@@ -214,7 +210,7 @@ public class Vision extends SubsystemBase {
 
           Point checkedCentre = new Point(checked.x + checked.width/2, checked.y + checked.height/2);
 
-          for (int i = 0; i < targets.size(); i++) { //Go through triangle not yet in target
+          for (int i = 0; i < targets.size(); i++) { //Go through rectangles not yet in target
             Rect potential = targets.get(i);
 
             Point potentialCentre = new Point(potential.x + potential.width/2, potential.y + potential.height/2);
@@ -463,16 +459,22 @@ public class Vision extends SubsystemBase {
     }
   }
 
-  @Override
-  public void periodic() {
+  /* ===================================================
+  * Author: Lucas Jacobs      Date: 31 March 2022
+  *
+  * Desc: Calculates what angle the robot is from the target
+  * using frames from the camera. If the function is called multiple times
+  * during the same frame, it uses the gyroscope to estimate how far it has turned
+  * ====================================================*/
+  public void calcAlign(double angle) {
     double turn = aimAtTarget(); //Get the turn speed from the camera
     if (turn == previousTurn) {
-      angleError +=  drivetrain.gyroAngle() - currentAngle; 
-      currentAngle = drivetrain.gyroAngle();
+      angleError +=  angle - currentAngle; 
+      currentAngle = angle;
     } else {
       previousTurn = turn;
       angleError = turn*PIXELS_TO_DEGREES;
-      currentAngle = drivetrain.gyroAngle();
+      currentAngle = angle;
     }
 
     SmartDashboard.putNumber("Angle Error", angleError);

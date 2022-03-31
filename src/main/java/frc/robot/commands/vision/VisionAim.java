@@ -49,6 +49,8 @@ public class VisionAim extends CommandBase
   @Override
   public void execute()
   {
+    robot.vision.calcAlign(robot.drivetrain.gyroAngle());
+    
     if (!robot.vision.isAligned()) {
       robot.drivetrain.moveMotors(0, robot.vision.getTurnSpeed());
     }
