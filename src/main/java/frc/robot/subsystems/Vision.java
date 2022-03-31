@@ -61,8 +61,8 @@ public class Vision extends SubsystemBase {
   private double previousTurn;
   private double angleError;
   private double currentAngle;
-  public double turnSpeed;
-  public boolean aligned;
+  private double turnSpeed;
+  private boolean aligned;
 
   private SendableChooser<PipelineSettings> visionPipelines;
   private SendableChooser<Boolean> showRectangles;
@@ -114,6 +114,14 @@ public class Vision extends SubsystemBase {
   }
 
   // METHODS //
+
+  public boolean isAligned() {
+    return aligned;
+  }
+
+  public double getTurnSpeed() {
+    return turnSpeed;
+  }
 
   /* =====================================
   Author: Lucas Jacobs

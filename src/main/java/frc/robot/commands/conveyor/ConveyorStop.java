@@ -46,7 +46,7 @@ public class ConveyorStop extends CommandBase
   @Override
   public void execute()
   {
-    if (robot.intake.spinning) {
+    if (robot.intake.isSpinning()) {
       robot.conveyor.feedSlow();
     } else {
       robot.conveyor.stop();

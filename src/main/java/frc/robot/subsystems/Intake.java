@@ -22,7 +22,7 @@ public class Intake extends SubsystemBase
   private PWMSparkMax intakeMotor;
   private DoubleSolenoid intakePiston;
   private boolean deployed;
-  public boolean spinning;
+  private boolean spinning;
 
   // PORTS //
   public static final int INTAKE_SPARK = 4;
@@ -43,6 +43,10 @@ public class Intake extends SubsystemBase
   }
 
   // METHODS //
+
+  public boolean isSpinning() {
+    return spinning;
+  }
 
   /* =====================================
   flip() deploys the intake if it is 
