@@ -37,8 +37,6 @@ public class Vision extends SubsystemBase {
   private final static int LIGHT_PORT = 2;
 
   // CONSTANTS //
-  final static int CAM_HEIGHT = 480;
-  final static int CAM_WIDTH = 640;
   final static int IMG_HEIGHT = 120;
   final static int IMG_WIDTH = 160;
   final static int FPS = 30;
@@ -180,6 +178,7 @@ public class Vision extends SubsystemBase {
         for (int i = 0; i < pipeline.filterContoursOutput().size(); i++) {
           Rect contour = Imgproc.boundingRect(pipeline.filterContoursOutput().get(i));
 
+          if (contour.y > IMG_WIDTH/2) continue; // Skip rectangles too low on the screen
           targets.add(contour);
 
           if (contour.area() > biggest.area()) biggest = contour;

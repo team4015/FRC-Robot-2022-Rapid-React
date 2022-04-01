@@ -20,22 +20,22 @@ public class AutoVisionShoot extends CommandBase
   // VARIABLES //
 
   private Robot robot;
-  private Timer timer;
-  private double timeToShot;
-  private final static double CONVEYOR_SPIN_TIME = .6;
+  //private Timer timer;
+  //private double timeToShot;
+  //private final static double CONVEYOR_SPIN_TIME = .6;
 
   // CONSTANTS //
 
   // CONSTRUCTOR //
 
-  public AutoVisionShoot(Robot robot, double timeToShot)
+  public AutoVisionShoot(Robot robot/*, double timeToShot*/)
   {
     this.robot = robot;
-    this.timeToShot = timeToShot;
-    timer = new Timer();
+    //this.timeToShot = timeToShot;
+    //timer = new Timer();
 
     // subsystems that this command requires
-    addRequirements(robot.shooter, robot.conveyor);
+    addRequirements(robot.shooter/*, robot.conveyor*/);
   }
 
   // METHODS //
@@ -45,9 +45,9 @@ public class AutoVisionShoot extends CommandBase
   public void initialize()
   {
     robot.vision.enableShootingLight();
-
-    timer.start();
-    timer.reset();
+    robot.shooter.setAutoShooting(true);
+    //timer.start();
+    //timer.reset();
 
     SmartDashboard.putString("Robot Mode:", "Auto Shoot");
   }
@@ -57,7 +57,12 @@ public class AutoVisionShoot extends CommandBase
   public void execute()
   {
     //Spin shooter at auto speed
-    while (timer.get() < timeToShot) {
+    double autoSpeed = robot.vision.autoShooterSpeed();
+    robot.shooter.spin(autoSpeed);
+
+    robot.vision.calcAlign(robot.drivetrain.gyroAngle());
+
+    /*while (timer.get() < timeToShot) {
       double autoSpeed = robot.vision.autoShooterSpeed();
       robot.shooter.spin(autoSpeed);
     }
@@ -76,7 +81,7 @@ public class AutoVisionShoot extends CommandBase
       } else {
         break;
       }
-    }
+    }*/
   }
 
   // Called once the command ends or is interrupted.
@@ -87,12 +92,14 @@ public class AutoVisionShoot extends CommandBase
 
     robot.shooter.stop();
     robot.conveyor.stop();
+
+    robot.shooter.setAutoShooting(false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished()
   {
-    return true;
+    return false;
   }
 }

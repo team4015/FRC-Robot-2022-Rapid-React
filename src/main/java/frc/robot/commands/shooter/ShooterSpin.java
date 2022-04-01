@@ -45,6 +45,6 @@ public class ShooterSpin extends CommandBase{
   @Override
   public boolean isFinished()
   {
-    return true;
+    return false;
   }
 }
