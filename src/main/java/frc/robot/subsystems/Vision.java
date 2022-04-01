@@ -22,6 +22,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -45,9 +46,9 @@ public class Vision extends SubsystemBase {
   final static double SPEED_ADJUST = 1;
 
   private final static double PIXELS_TO_DEGREES = 0.35;
-  private final static double THRESHOLD = 5;
-  private final static double MIN_TURN_SPEED = 0.5;
-  private final static double MAX_TURN_SPEED = 0.8;
+  private final static double TOLERANCE = 5;
+  //private final static double MIN_TURN_SPEED = 0.5;
+  //private final static double MAX_TURN_SPEED = 0.8;
 
   // VARIABLES //
   private VisionThread visionThread;
@@ -68,8 +69,20 @@ public class Vision extends SubsystemBase {
 
   private boolean aimingLight;
   private boolean shootingLight;
+
+  private PIDController pid;
+  private double p = 1;
+  private double i = 0;
+  private double d = 0;
   
   public Vision() {
+    pid = new PIDController(p,i,d);
+    pid.setTolerance(TOLERANCE);
+
+    SmartDashboard.putNumber("P", p);
+    SmartDashboard.putNumber("I", i);
+    SmartDashboard.putNumber("D", d);
+
     shooterSpeed = .4;
     SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
     xCentre = IMG_WIDTH/2.0;
@@ -470,24 +483,37 @@ public class Vision extends SubsystemBase {
     if (turn == previousTurn) {
       angleError +=  angle - currentAngle; 
       currentAngle = angle;
+      turnSpeed = pid.calculate(currentAngle);
     } else {
       previousTurn = turn;
       angleError = turn*PIXELS_TO_DEGREES;
       currentAngle = angle;
+      turnSpeed = pid.calculate(currentAngle, currentAngle - angleError); // get new PID value and change the setpoint
     }
 
+    aligned = pid.atSetpoint();
     SmartDashboard.putNumber("Angle Error", angleError);
-    turnSpeed = angleError*Drivetrain.AIM_TURN_SPEED;
-
-    if (Math.abs(turnSpeed) < MIN_TURN_SPEED) turnSpeed = Math.copySign(MIN_TURN_SPEED, turnSpeed);
-    if (Math.abs(turnSpeed) > MAX_TURN_SPEED) turnSpeed = Math.copySign(MIN_TURN_SPEED, turnSpeed);
-    if (Math.abs(angleError) > THRESHOLD) {
-      aligned = false;
-    } else {
-      aligned = true;
-    }
-
+    SmartDashboard.putNumber("PID Speed", turnSpeed);
     SmartDashboard.putBoolean("ALIGNED", aligned);
+  }
+
+ /* ====================================================
+  * Author: Lucas Jacobs      Date: 1 April 2022
+  *
+  * Desc: Resets the PID Controller and sets previousTurn to a value
+  * that is unwritable by the code so that the pid gets a new setpoint
+  * the next time that calcAlign runs
+  * ====================================================*/
+  public void resetPID() {
+    pid.reset();
+
+    p = SmartDashboard.getNumber("P", p);
+    i = SmartDashboard.getNumber("I", i);
+    d = SmartDashboard.getNumber("D", d);
+
+    pid.setPID(p,i,d);
+
+    previousTurn = 1000000000;
   }
 }
 

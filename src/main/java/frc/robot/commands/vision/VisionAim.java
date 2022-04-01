@@ -43,17 +43,18 @@ public class VisionAim extends CommandBase
   public void initialize()
   {
    robot.vision.enableAimingLight();
+   robot.vision.resetPID();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute()
   {
-    robot.vision.calcAlign(robot.drivetrain.gyroAngle());
+    if (!robot.shooter.isAutoShooting()) robot.vision.calcAlign(robot.drivetrain.gyroAngle());
     
-    if (!robot.vision.isAligned()) {
+    //if (!robot.vision.isAligned()) {
       robot.drivetrain.moveMotors(0, robot.vision.getTurnSpeed());
-    }
+    //}
   }
 
   // Called once the command ends or is interrupted.
