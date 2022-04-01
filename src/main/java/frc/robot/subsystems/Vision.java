@@ -47,6 +47,7 @@ public class Vision extends SubsystemBase {
 
   private final static double PIXELS_TO_DEGREES = 0.35;
   private final static double TOLERANCE = 4;
+  private final static double BASE_TURN_SPEED = .3;
   //private final static double MIN_TURN_SPEED = 0.5;
   //private final static double MAX_TURN_SPEED = 0.8;
 
@@ -484,13 +485,13 @@ public class Vision extends SubsystemBase {
       angleError +=  angle - currentAngle; 
       currentAngle = angle;
       double pidAdjustment = pid.calculate(currentAngle);
-      turnSpeed = pidAdjustment + Math.copySign(.3, pidAdjustment);
+      turnSpeed = pidAdjustment + Math.copySign(BASE_TURN_SPEED, pidAdjustment);
     } else {
       previousTurn = turn;
       angleError = turn*PIXELS_TO_DEGREES;
       currentAngle = angle;
       double pidAdjustment = pid.calculate(currentAngle, currentAngle + angleError);
-      turnSpeed = pidAdjustment + Math.copySign(.3, pidAdjustment); // get new PID value and change the setpoint
+      turnSpeed = pidAdjustment + Math.copySign(BASE_TURN_SPEED, pidAdjustment); // get new PID value and change the setpoint
     }
 
     aligned = pid.atSetpoint();
