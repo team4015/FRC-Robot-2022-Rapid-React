@@ -34,7 +34,7 @@ public class WaterlooSettings extends PipelineSettings {
 		filterContoursMaxWidth = 1000.0;
 		filterContoursMinHeight = 0.0;
 		filterContoursMaxHeight = 100.0;
-		filterContoursSolidity[0] = 10;
+		filterContoursSolidity[0] = 0;
 		filterContoursSolidity[1] = 100;
 		filterContoursMaxVertices = 1000000.0;
 		filterContoursMinVertices = 0.0;

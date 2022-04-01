@@ -11,11 +11,12 @@ package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Robot;
+import frc.robot.commands.shooter.ShooterSpin;
 
 public class AutoWallShoot extends ParallelCommandGroup {
     public AutoWallShoot(Robot robot) {
         super(
-            new AutoShoot(robot, .37, 1) //shoot
+            new ShooterSpin(robot, .37) //shoot
         );
     }
 }

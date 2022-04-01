@@ -46,7 +46,15 @@ public class ConveyorFeed extends CommandBase
   @Override
   public void execute()
   {
-    robot.conveyor.feed();
+    if (robot.shooter.isAutoShooting()) {
+      robot.vision.calcAlign(robot.drivetrain.gyroAngle());
+
+      if (robot.vision.isAligned()) {
+        robot.conveyor.feed();
+      }
+    } else {
+      robot.conveyor.feed();
+    }
   }
 
   // Called once the command ends or is interrupted.
