@@ -5,6 +5,8 @@
  * Description: Code for LED Light strips underneath
  * robot. Communicates via Serial using the RS-232
  * port on the Roborio.
+ * 
+ * RGB Controller Repository: https://github.com/team4015/RGB-Controller
  * ================================================== */
 
 package frc.robot.subsystems;
