@@ -75,6 +75,10 @@ public class AutoShoot extends CommandBase
   {
     robot.shooter.stop();
     robot.conveyor.stop();
+    
+    if (SmartDashboard.getString("Robot Mode:", "").equals("Auto Shoot")) {
+      SmartDashboard.putString("Robot Mode:", "TeleOp");
+    }
   }
 
   // Returns true when the command should end.

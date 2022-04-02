@@ -12,6 +12,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -58,6 +59,7 @@ public class Match extends TimedRobot
     CommandScheduler.getInstance().run();
 
     SmartDashboard.putBoolean("Has Pressure", robot.compressor.getPressureSwitchValue());
+    SmartDashboard.putNumber("Time Remaining", Math.ceil(Timer.getMatchTime()));
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

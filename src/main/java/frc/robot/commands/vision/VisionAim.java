@@ -9,8 +9,6 @@
 package frc.robot.commands.vision;
 
 import frc.robot.Robot;
-import frc.robot.subsystems.Drivetrain;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -21,7 +19,6 @@ public class VisionAim extends CommandBase
   // VARIABLES //
 
   private Robot robot;
-  private Timer timer;
 
   // CONSTANTS //
 
@@ -30,7 +27,8 @@ public class VisionAim extends CommandBase
   public VisionAim(Robot robot)
   {
     this.robot = robot;
-    timer = new Timer();
+
+    SmartDashboard.putString("Robot Mode:", "Auto Aim");
 
     // subsystems that this command requires
     addRequirements(robot.drivetrain);
@@ -62,7 +60,12 @@ public class VisionAim extends CommandBase
   public void end(boolean interrupted)
   {
     robot.vision.disableAimingLight();
+
+    if (SmartDashboard.getString("Robot Mode:", "").equals("Auto Aim")) {
+      SmartDashboard.putString("Robot Mode:", "TeleOp");
+    }
   }
+
   public boolean isFinished()
   {
     return false;

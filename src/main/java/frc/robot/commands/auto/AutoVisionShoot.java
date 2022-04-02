@@ -9,7 +9,6 @@
 package frc.robot.commands.auto;
 
 import frc.robot.Robot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -59,7 +58,7 @@ public class AutoVisionShoot extends CommandBase
   {
     //Spin shooter at auto speed
     robot.vision.calcAlign(robot.drivetrain.gyroAngle());
-    
+
     double autoSpeed = robot.vision.autoShooterSpeed();
     robot.shooter.spin(autoSpeed);
 
@@ -95,6 +94,10 @@ public class AutoVisionShoot extends CommandBase
     robot.conveyor.stop();
 
     robot.shooter.setAutoShooting(false);
+
+    if (SmartDashboard.getString("Robot Mode:", "").equals("Auto Shoot")) {
+      SmartDashboard.putString("Robot Mode:", "TeleOp");
+    }
   }
 
   // Returns true when the command should end.
