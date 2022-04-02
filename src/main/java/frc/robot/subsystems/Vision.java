@@ -150,7 +150,7 @@ public class Vision extends SubsystemBase {
     settings = visionPipelines.getSelected();
     standardPipeline.set(settings);
 
-    //setExposure(cam, standardPipeline);
+    setExposure(cam, standardPipeline);
 
     CvSink vIn = CameraServer.getVideo();
     CvSource vOut = CameraServer.putVideo("Target Video", IMG_WIDTH, IMG_HEIGHT);
