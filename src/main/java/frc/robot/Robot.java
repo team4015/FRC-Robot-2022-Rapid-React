@@ -39,6 +39,7 @@ public class Robot
   public Intake intake;
   public Shooter shooter;
   public Vision vision;
+  public Underglow underglow;
 
 
   // CONSTRUCTOR //
@@ -53,6 +54,7 @@ public class Robot
     intake = new Intake();
     shooter = new Shooter();
     vision = new Vision();
+    underglow = new Underglow();
 
     // Instantiate Controls
     driver = new Driver(this);
@@ -86,6 +88,8 @@ public class Robot
 
     vision.initCamera();
     shooter.stop();
+
+    underglow.off();
   }
 
   /* -------------------------------------
