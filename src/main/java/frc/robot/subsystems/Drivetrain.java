@@ -18,9 +18,6 @@ import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.wpilibj.ADXL362;
-import edu.wpi.first.wpilibj.SPI.Port;
-import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drivetrain extends SubsystemBase
@@ -45,11 +42,11 @@ public class Drivetrain extends SubsystemBase
   private LinearFilter xAccelFilter;
   private LinearFilter gyroFilter;
   private double angle;
-  private double previousXAccel;
-  private double previousVelocity;
-  private double totalDistance;
-  private double posX;
-  private double posY;
+  //private double previousXAccel;
+  //private double previousVelocity;
+  //private double totalDistance;
+  //private double posX;
+  //private double posY;
 
   // PORTS //
 
@@ -66,10 +63,10 @@ public class Drivetrain extends SubsystemBase
   public static final double ERROR_CORRECT = .07;
 
   //  ****ALL OF THESE CONSTANTS NEED TO BE TUNED BY TESTING****
-  private final static int SAMPLES = 10; // Num of samples of accelration in the moving average
-  private final static double ACCEL_DEADZONE = 0.3; // Minimum accel for it to count in the program
-  private final static double VELOCITY_DEADZONE = .2; // Minimum velocity for it to count in the program
-  private final static double STARTING_HUB_DIST = 1; // in metres
+  private final static int SAMPLES = 3; // Num of samples of accelration in the moving average
+  //private final static double ACCEL_DEADZONE = 0.3; // Minimum accel for it to count in the program
+  //private final static double VELOCITY_DEADZONE = .2; // Minimum velocity for it to count in the program
+  //private final static double STARTING_HUB_DIST = 1; // in metres
   private final static double ACCEL_TO_CENTRE_DIST = 0.3175; //Distance from accelerometer to centre of rotation of robot
   private final static double ACCEL_ANGLE = 43.3; //Angle between the accelerometer and straight backwards on the robot in degrees
   private final static double COS_OF_ACCEL_ANGLE = Math.cos(Math.toRadians(ACCEL_ANGLE));
@@ -93,8 +90,8 @@ public class Drivetrain extends SubsystemBase
     gyro = new ADXRS450_Gyro();
     calibrateGyro();
 
-    accel = new BuiltInAccelerometer(); // Measure in the range -4g to +4g
-    resetAccelerometer();
+    /*accel = new BuiltInAccelerometer(); // Measure in the range -4g to +4g
+    resetAccelerometer();*/
   }
 
   // METHODS // 
@@ -164,7 +161,7 @@ public class Drivetrain extends SubsystemBase
     return angle;
   }
 
-  public double getTotalDistance() {
+  /*public double getTotalDistance() {
     return totalDistance;
   }
 
@@ -175,13 +172,13 @@ public class Drivetrain extends SubsystemBase
     totalDistance = 0;
     posX = 0;
     posY = 0;
-  }
+  }*/
 
   @Override
   public void periodic() {
     //Update gyroscope
     angle = gyroFilter.calculate(gyro.getAngle());
-    double radians = Math.toRadians(angle);
+    //double radians = Math.toRadians(angle);
 
     //--- Update Robot Position based on the Accelerator ---
     double xAccel = xAccelFilter.calculate(-accel.getX());
@@ -195,6 +192,7 @@ public class Drivetrain extends SubsystemBase
     xAccel += turningAcceleration;
     SmartDashboard.putNumber("Acceleration", xAccel);
 
+    /*
     //Find avg acceleration
     double averageAccel = (xAccel + previousXAccel)/2;
     previousXAccel = xAccel; // set the previous accel to the the current accel for next loop
@@ -215,14 +213,15 @@ public class Drivetrain extends SubsystemBase
     totalDistance += Math.abs(distanceChange);
     posX += distanceChange*Math.sin(radians);
     posY += distanceChange*Math.cos(radians);
+    */
 
     //Update the Dash
     SmartDashboard.putNumber("Gyro Angle", angle);
-    SmartDashboard.putNumber("Rotational Acceleration", turningAcceleration);
+    /*SmartDashboard.putNumber("Rotational Acceleration", turningAcceleration);
     SmartDashboard.putNumber("Total Distance", totalDistance);
     SmartDashboard.putNumber("Dist from Hub", Math.sqrt(posX*posX + (posY-STARTING_HUB_DIST)*(posY-STARTING_HUB_DIST)));
     SmartDashboard.putNumber("Dist from Start", Math.sqrt(posX*posX + posY*posY));
     SmartDashboard.putNumber("X Coord", posX);
-    SmartDashboard.putNumber("Y Coord", posY);
+    SmartDashboard.putNumber("Y Coord", posY);*/
   }
 }

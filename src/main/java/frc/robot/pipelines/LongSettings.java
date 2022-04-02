@@ -34,7 +34,7 @@ public class LongSettings extends PipelineSettings {
 		filterContoursMinWidth = 0.0;
 		filterContoursMaxWidth = 1000.0;
 		filterContoursMinHeight = 0.0;
-		filterContoursMaxHeight = 100.0;
+		filterContoursMaxHeight = 30.0;
 		filterContoursSolidity[0] = 20;
 		filterContoursSolidity[1] = 100;
 		filterContoursMaxVertices = 1000000.0;

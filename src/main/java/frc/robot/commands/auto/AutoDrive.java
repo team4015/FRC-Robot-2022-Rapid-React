@@ -67,6 +67,9 @@ public class AutoDrive extends CommandBase
   public void end(boolean interrupted)
   {
     robot.drivetrain.stopMotors();
+    if (SmartDashboard.getString("Robot Mode:", "").equals("Auto Drive")) {
+      SmartDashboard.putString("Robot Mode:", "TeleOp");
+    }
   }
 
   // Returns true when the command should end.

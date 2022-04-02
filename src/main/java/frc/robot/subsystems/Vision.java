@@ -150,7 +150,7 @@ public class Vision extends SubsystemBase {
     settings = visionPipelines.getSelected();
     standardPipeline.set(settings);
 
-    setExposure(cam, standardPipeline);
+    //setExposure(cam, standardPipeline);
 
     CvSink vIn = CameraServer.getVideo();
     CvSource vOut = CameraServer.putVideo("Target Video", IMG_WIDTH, IMG_HEIGHT);
@@ -192,7 +192,7 @@ public class Vision extends SubsystemBase {
         for (int i = 0; i < pipeline.filterContoursOutput().size(); i++) {
           Rect contour = Imgproc.boundingRect(pipeline.filterContoursOutput().get(i));
 
-          if (contour.y > IMG_WIDTH/2) continue; // Skip rectangles too low on the screen
+          if (contour.y + contour.height > .75*IMG_WIDTH) continue; // Skip rectangles in the bottom fourth of the screen
           targets.add(contour);
 
           if (contour.area() > biggest.area()) biggest = contour;
@@ -495,7 +495,7 @@ public class Vision extends SubsystemBase {
     }
 
     aligned = pid.atSetpoint();
-    SmartDashboard.putNumber("Angle Error", angleError);
+    SmartDashboard.putNumber("Error", angleError);
     SmartDashboard.putNumber("PID Speed", turnSpeed);
     SmartDashboard.putBoolean("ALIGNED", aligned);
   }
