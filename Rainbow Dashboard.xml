@@ -108,10 +108,10 @@
 		<property name="Font Size" value="30"/>
 	</widget>
 	<widget field="Y Coord" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="483" y="696"/>
+		<location x="1394" y="389"/>
 	</widget>
 	<widget field="X Coord" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="482" y="672"/>
+		<location x="1252" y="388"/>
 	</widget>
 	<widget field="Dist from Start" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="451" y="717"/>
