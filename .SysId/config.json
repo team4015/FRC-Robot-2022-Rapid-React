@@ -1,9 +1,9 @@
 {
-  "counts per rotation": 1024.0,
+  "counts per rotation": 80.0,
   "encoder type": "roboRIO quadrature",
   "encoding": false,
   "gearing denominator": 1.0,
-  "gearing numerator": 1.0,
+  "gearing numerator": 10.71,
   "gyro": "ADXRS450",
   "gyro ctor": "SPI (Onboard CS0)",
   "is drivetrain": true,
@@ -13,8 +13,8 @@
   "number of samples per average": 1,
   "primary encoder inverted": false,
   "primary encoder ports": [
-    0,
-    1
+    2,
+    3
   ],
   "primary motor ports": [
     1
@@ -22,10 +22,10 @@
   "primary motors inverted": [
     true
   ],
-  "secondary encoder inverted": false,
+  "secondary encoder inverted": true,
   "secondary encoder ports": [
-    2,
-    3
+    0,
+    1
   ],
   "secondary motor ports": [
     0
