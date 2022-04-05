@@ -181,7 +181,7 @@ public class Drivetrain extends SubsystemBase
     //double radians = Math.toRadians(angle);
 
     //--- Update Robot Position based on the Accelerator ---
-    double xAccel = xAccelFilter.calculate(-accel.getX());
+    double xAccel = 0;//xAccelFilter.calculate(-accel.getX());
     xAccel *= 9.8; // convert accel from g's into m/s^2
 
     // Compensate for turning acceleration
