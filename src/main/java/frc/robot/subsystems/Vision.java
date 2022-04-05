@@ -119,6 +119,9 @@ public class Vision extends SubsystemBase {
 
     aimingLight = false;
     shootingLight = false;
+
+    //------ REMOVE LATER --------
+    SmartDashboard.putNumber("Shooter Speed", 0);
   }
 
   // METHODS //
@@ -313,31 +316,13 @@ public class Vision extends SubsystemBase {
       x = this.width;
     }
 
-    double speed = 0; // PUT SOME FUNCTION INVOLVING WIDTH HERE
+    double speed = -0.00490319384099398*x + 0.6;
 
-    VisionType function = visionType.getSelected();
-
-    if (function == VisionType.LONG) {
-      //speed = -0.000000149209973043796000000000*Math.pow(x,5) + 0.000030514434712358700000000000*Math.pow(x,4) - 0.002456571701941360000000000000*Math.pow(x,3) + 0.097238797730824400000000000000*Math.pow(x,2) - 1.894926271401340000000000000000*x + 15.000000000000000000000000000000;
-      speed = -0.00490319384099398*x + 0.6;
-    } else if (function == VisionType.PIECES) {
-      speed = -0.0051*x + 0.5657;
-    } else if (function == VisionType.FULL) {
-      x /= 1.5;
-      speed = -0.00490319384099398*x + 0.6;
-      //speed = -0.000000149209973043796000000000*Math.pow(x,5) + 0.000030514434712358700000000000*Math.pow(x,4) - 0.002456571701941360000000000000*Math.pow(x,3) + 0.097238797730824400000000000000*Math.pow(x,2) - 1.894926271401340000000000000000*x + 15.000000000000000000000000000000;
-    } else if (function == VisionType.BIGGEST) {
-      speed = -0.015*x + 0.488;
-    }
-
-    //if (width == 4) speed = 0.48;
-    //else if (width >= 5 && width <=  9) speed = -0.01333*width + 0.50666; //Experimentally Determined
-
-    //shooterSpeed = SmartDashboard.getNumber("Shooter Speed", speed);
+    shooterSpeed = SmartDashboard.getNumber("Shooter Speed", speed);
     speed *= SPEED_ADJUST;
-    SmartDashboard.putNumber("Shooter Speed", speed);
+    //SmartDashboard.putNumber("Shooter Speed", speed);
 
-    return speed; // return difference between the target and where the robot is pointed
+    return shooterSpeed; // return difference between the target and where the robot is pointed
   }
 
   /* ==========================

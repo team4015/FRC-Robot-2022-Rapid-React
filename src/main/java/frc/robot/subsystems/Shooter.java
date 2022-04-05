@@ -34,6 +34,10 @@ public class Shooter extends SubsystemBase
   public void spin(double speed){
     motor.set(speed);
   }
+
+  public void spinVoltage(double speedVoltage) {
+    motor.setVoltage(speedVoltage);
+  }
   
   //stops the motor for the shooter
   
