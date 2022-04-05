@@ -53,10 +53,10 @@ public class Drivetrain extends SubsystemBase
 
   public static final int RIGHT_MOTOR = 0;
   public static final int LEFT_MOTOR = 1;
-  public static final int LEFT_ENCODER_A = 0;
-  public static final int LEFT_ENCODER_B = 1;
-  public static final int RIGHT_ENCODER_A = 2;
-  public static final int RIGHT_ENCODER_B = 3;
+  public static final int LEFT_ENCODER_A = 2;
+  public static final int LEFT_ENCODER_B = 3;
+  public static final int RIGHT_ENCODER_A = 0;
+  public static final int RIGHT_ENCODER_B = 1;
 
 
   // CONSTANTS //
@@ -76,8 +76,8 @@ public class Drivetrain extends SubsystemBase
 
   //encoder constants
   private final static double WHEEL_RADIUS = Units.inchesToMeters(6)/2; //In Metres
-  private final static double ENCODER_RESOLUTION = 256;
-  private final static double GEAR_RATIO = 1/4.67; //Number of turns the wheel makes for each turn of the motor
+  private final static double ENCODER_RESOLUTION = 20;
+  private final static double GEAR_RATIO = 1/10.71; //Number of turns the wheel makes for each turn of the motor
   private final static double DISTANCE_PER_PULSE = 2*Math.PI*WHEEL_RADIUS*GEAR_RATIO/ENCODER_RESOLUTION;
   
 
@@ -102,6 +102,8 @@ public class Drivetrain extends SubsystemBase
     //Set up Encoders
     leftEncoder = new Encoder(LEFT_ENCODER_A, LEFT_ENCODER_B);
     rightEncoder = new Encoder(RIGHT_ENCODER_A, RIGHT_ENCODER_B);
+
+    rightEncoder.setReverseDirection(true);
 
     leftEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
     rightEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
