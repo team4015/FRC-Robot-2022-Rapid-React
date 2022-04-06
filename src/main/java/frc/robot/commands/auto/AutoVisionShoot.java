@@ -9,6 +9,7 @@
 package frc.robot.commands.auto;
 
 import frc.robot.Robot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -19,7 +20,7 @@ public class AutoVisionShoot extends CommandBase
   // VARIABLES //
 
   private Robot robot;
-  //private Timer timer;
+  private Timer timer;
   //private double timeToShot;
   //private final static double CONVEYOR_SPIN_TIME = .6;
 
@@ -31,7 +32,7 @@ public class AutoVisionShoot extends CommandBase
   {
     this.robot = robot;
     //this.timeToShot = timeToShot;
-    //timer = new Timer();
+    timer = new Timer();
 
     // subsystems that this command requires
     addRequirements(robot.shooter/*, robot.conveyor*/);
@@ -46,8 +47,13 @@ public class AutoVisionShoot extends CommandBase
     robot.vision.enableShootingLight();
     robot.shooter.setAutoShooting(true);
     robot.vision.resetPID();
-    //timer.start();
-    //timer.reset();
+
+    timer.start();
+    timer.reset();
+
+    while (timer.get() < 0.06) {
+      robot.conveyor.reverse();
+    }
 
     SmartDashboard.putString("Robot Mode:", "Auto Shoot");
   }
@@ -59,8 +65,8 @@ public class AutoVisionShoot extends CommandBase
     //Spin shooter at auto speed
     robot.vision.calcAlign(robot.drivetrain.gyroAngle());
 
-    double autoSpeed = robot.vision.autoShooterSpeed();
-    robot.shooter.spin(autoSpeed);
+    double autoVolts = robot.vision.autoShooterSpeed();
+    robot.shooter.spinVoltage(autoVolts);
 
     /*while (timer.get() < timeToShot) {
       double autoSpeed = robot.vision.autoShooterSpeed();

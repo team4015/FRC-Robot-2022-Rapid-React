@@ -85,7 +85,7 @@ public class Vision extends SubsystemBase {
     SmartDashboard.putNumber("D", d);
 
     shooterSpeed = .4;
-    SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
+    //SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
     xCentre = IMG_WIDTH/2.0;
     width = IMG_WIDTH/2.0;
     imgLock = new Object();
@@ -97,9 +97,9 @@ public class Vision extends SubsystemBase {
     currentAngle = 0;
 
     visionPipelines = new SendableChooser<>();
-    visionPipelines.setDefaultOption("Waterloo Vision", new WaterlooSettings());
+    visionPipelines.setDefaultOption("Long School Vision", new LongSettings());
+    visionPipelines.addOption("Waterloo Vision", new WaterlooSettings());
     visionPipelines.addOption("School Vision", new SchoolSettings());
-    visionPipelines.addOption("Long School Vision", new LongSettings());
     visionPipelines.addOption("Humber Vision", new HumberSettings());
     visionPipelines.addOption("Test Vision", new TestSettings());
     SmartDashboard.putData(visionPipelines);
@@ -295,7 +295,7 @@ public class Vision extends SubsystemBase {
       xCentre = this.xCentre;
     }
 
-    double turn = xCentre - (IMG_WIDTH/ 2.0)+15;
+    double turn = xCentre - (IMG_WIDTH/ 2.0)+10;
     SmartDashboard.putNumber("Dist to Target", turn);
 
     return turn; // return difference between the target and where the robot is pointed
@@ -305,7 +305,7 @@ public class Vision extends SubsystemBase {
   Author: Lucas Jacobs
 
   Desc:
-  This method returns the speed the shooter should spin to get in the target
+  This method returns the speed (in volts) the shooter should spin to get in the target
   ===================================== */
   public double autoShooterSpeed() {
     double x;
@@ -315,25 +315,9 @@ public class Vision extends SubsystemBase {
 
     double speed = 0; // PUT SOME FUNCTION INVOLVING WIDTH HERE
 
-    VisionType function = visionType.getSelected();
+    // Function to supply volts to the shooter (using Excel)
+    speed = -0.0429332715477292*x + 6.57254402224279;
 
-    if (function == VisionType.LONG) {
-      //speed = -0.000000149209973043796000000000*Math.pow(x,5) + 0.000030514434712358700000000000*Math.pow(x,4) - 0.002456571701941360000000000000*Math.pow(x,3) + 0.097238797730824400000000000000*Math.pow(x,2) - 1.894926271401340000000000000000*x + 15.000000000000000000000000000000;
-      speed = -0.00490319384099398*x + 0.6;
-    } else if (function == VisionType.PIECES) {
-      speed = -0.0051*x + 0.5657;
-    } else if (function == VisionType.FULL) {
-      x /= 1.5;
-      speed = -0.00490319384099398*x + 0.6;
-      //speed = -0.000000149209973043796000000000*Math.pow(x,5) + 0.000030514434712358700000000000*Math.pow(x,4) - 0.002456571701941360000000000000*Math.pow(x,3) + 0.097238797730824400000000000000*Math.pow(x,2) - 1.894926271401340000000000000000*x + 15.000000000000000000000000000000;
-    } else if (function == VisionType.BIGGEST) {
-      speed = -0.015*x + 0.488;
-    }
-
-    //if (width == 4) speed = 0.48;
-    //else if (width >= 5 && width <=  9) speed = -0.01333*width + 0.50666; //Experimentally Determined
-
-    //shooterSpeed = SmartDashboard.getNumber("Shooter Speed", speed);
     speed *= SPEED_ADJUST;
     SmartDashboard.putNumber("Shooter Speed", speed);
 
