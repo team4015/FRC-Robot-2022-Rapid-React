@@ -59,15 +59,15 @@ public class Robot
   // CONSTANTS //
 
   // Set using SysID Characterization
-  private final static double KS = 1.4865;
-  private final static double KV = 10.793;
-  private final static double KA = 4.9531;
-  private final static double KP_DRIVE = 2.0176; // Proportionality constant for the drive PID
-  private final static double TRACK_WIDTH_METRES = -100;
+  private final static double KS = 1.2374;
+  private final static double KV = 5.6065;
+  private final static double KA = 2;
+  private final static double KP_DRIVE = 3.2641; // Proportionality constant for the drive PID
+  private final static double TRACK_WIDTH_METRES = 0.59;
   private final static DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METRES);
   private final static double MAX_VOLTAGE = 10; // Below 12 to account for battery sag
-  private final static double MAX_VELOCITY = 3; // metres per second
-  private final static double MAX_ACCELERATION = 5; // metres per second^2
+  private final static double MAX_VELOCITY = 5; // metres per second
+  private final static double MAX_ACCELERATION = 20; // metres per second^2
   private final static double RAMSETE_B = 2; //Given value from wpilib
   private final static double RAMSETE_ZETA = 0.7; // Given value from wpilib
   // CONSTRUCTOR //
@@ -162,7 +162,7 @@ public class Robot
       // Start Point
       new Pose2d(0, 0, new Rotation2d(0)), 
       // Waypoints
-      List.of(new Translation2d(1, 1), new Translation2d(2, -1)), 
+      List.of(new Translation2d(3, 0)),//List.of(new Translation2d(1, 1), new Translation2d(2, -1)), 
       // End Point
       new Pose2d(3, 0, new Rotation2d(0)), 
       // Pass in the config
