@@ -63,6 +63,7 @@ public class Vision extends SubsystemBase {
   private double currentAngle;
   private double turnSpeed;
   private boolean aligned;
+  private boolean inRange;
 
   private SendableChooser<PipelineSettings> visionPipelines;
   private SendableChooser<Boolean> showRectangles;
@@ -84,8 +85,7 @@ public class Vision extends SubsystemBase {
     SmartDashboard.putNumber("I", i);
     SmartDashboard.putNumber("D", d);
 
-    shooterSpeed = .4;
-    //SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
+    shooterSpeed = 0;
     xCentre = IMG_WIDTH/2.0;
     width = IMG_WIDTH/2.0;
     imgLock = new Object();
@@ -95,6 +95,7 @@ public class Vision extends SubsystemBase {
     previousTurn = 100000;
     angleError = 0;
     currentAngle = 0;
+    inRange = false;
 
     visionPipelines = new SendableChooser<>();
     visionPipelines.setDefaultOption("Long School Vision", new LongSettings());
@@ -125,6 +126,10 @@ public class Vision extends SubsystemBase {
 
   public boolean isAligned() {
     return aligned;
+  }
+
+  public double getShooterSpeed() {
+    return shooterSpeed;
   }
 
   public double getTurnSpeed() {
@@ -266,9 +271,10 @@ public class Vision extends SubsystemBase {
         synchronized (imgLock) {
           this.xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
           this.width = targetRect.width;
+          inRange = width > 30 && width < 58;
           SmartDashboard.putNumber("Width", biggest.width);
           SmartDashboard.putNumber("Target Width", width);
-          SmartDashboard.putBoolean("In Shooting Range", width >= 4 && width <= 9);
+          SmartDashboard.putBoolean("In Shooting Range", inRange);
           SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);
           autoShooterSpeed(); //Prints the speed needed to get the ball in to the dashboard
         }
@@ -290,6 +296,8 @@ public class Vision extends SubsystemBase {
   in order to aim at the target
   ===================================== */
   public double aimAtTarget() {
+    if (!inRange) return 0;
+
     double xCentre;
     synchronized (imgLock) {
       xCentre = this.xCentre;
@@ -308,20 +316,20 @@ public class Vision extends SubsystemBase {
   This method returns the speed (in volts) the shooter should spin to get in the target
   ===================================== */
   public double autoShooterSpeed() {
+    if (!inRange) return 0;
+
     double x;
     synchronized (imgLock) {
       x = this.width;
     }
 
-    double speed = 0; // PUT SOME FUNCTION INVOLVING WIDTH HERE
-
     // Function to supply volts to the shooter (using Excel)
-    speed = -0.0429332715477292*x + 6.57254402224279;
+    shooterSpeed = -0.0429332715477292*x + 6.57254402224279;
 
-    speed *= SPEED_ADJUST;
-    SmartDashboard.putNumber("Shooter Speed", speed);
+    shooterSpeed *= SPEED_ADJUST;
+    SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
 
-    return speed; // return difference between the target and where the robot is pointed
+    return shooterSpeed; // return difference between the target and where the robot is pointed
   }
 
   /* ==========================
@@ -478,7 +486,7 @@ public class Vision extends SubsystemBase {
       turnSpeed = pidAdjustment + Math.copySign(BASE_TURN_SPEED, pidAdjustment); // get new PID value and change the setpoint
     }
 
-    aligned = pid.atSetpoint();
+    aligned = pid.atSetpoint() && inRange;
     SmartDashboard.putNumber("Error", angleError);
     SmartDashboard.putNumber("PID Speed", turnSpeed);
     SmartDashboard.putBoolean("ALIGNED", aligned);

@@ -9,6 +9,10 @@
 package frc.robot.commands.auto;
 
 import frc.robot.Robot;
+import frc.robot.subsystems.Vision;
+
+import java.util.LinkedList;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -20,22 +24,32 @@ public class AutoVisionShoot extends CommandBase
   // VARIABLES //
 
   private Robot robot;
+  private Vision vision;
   private Timer timer;
-  //private double timeToShot;
+  private LinkedList<Double> speeds;
+  private double averageSpeed;
+  private boolean endCommand;
   //private final static double CONVEYOR_SPIN_TIME = .6;
 
   // CONSTANTS //
+  private final static int SAVED_SPEEDS = 50;
+  private final static double DIFF_THRESHOLD = 0.05; 
+  private final static double CONVEYOR_FEED_TIME = 0.5; 
+  private final static double TIME_BETWEEN_BALLS = 1;
 
   // CONSTRUCTOR //
 
-  public AutoVisionShoot(Robot robot/*, double timeToShot*/)
+  public AutoVisionShoot(Robot robot)
   {
     this.robot = robot;
-    //this.timeToShot = timeToShot;
+    vision = robot.vision;
     timer = new Timer();
+    speeds = new LinkedList<Double>();
+    averageSpeed = 0;
+    endCommand = false;
 
     // subsystems that this command requires
-    addRequirements(robot.shooter/*, robot.conveyor*/);
+    addRequirements(robot.shooter, robot.conveyor);
   }
 
   // METHODS //
@@ -44,7 +58,7 @@ public class AutoVisionShoot extends CommandBase
   @Override
   public void initialize()
   {
-    robot.vision.enableShootingLight();
+    vision.enableShootingLight();
     robot.shooter.setAutoShooting(true);
     robot.vision.resetPID();
 
@@ -62,39 +76,30 @@ public class AutoVisionShoot extends CommandBase
   @Override
   public void execute()
   {
-    //Spin shooter at auto speed
-    robot.vision.calcAlign(robot.drivetrain.gyroAngle());
+    while (!constantShooterSpeed()); // Wait until the shooter speed is consistent
 
-    double autoVolts = robot.vision.autoShooterSpeed();
-    robot.shooter.spinVoltage(autoVolts);
-
-    /*while (timer.get() < timeToShot) {
-      double autoSpeed = robot.vision.autoShooterSpeed();
-      robot.shooter.spin(autoSpeed);
-    }
-
+    timer.start();
     timer.reset();
-    
-    //Spin and Shoot
 
-    while (timer.get() < CONVEYOR_SPIN_TIME) {
-      robot.vision.calcAlign(robot.drivetrain.gyroAngle());
-
-      if (robot.vision.isAligned()) {
-        double autoSpeed = robot.vision.autoShooterSpeed();
-        robot.shooter.spin(autoSpeed);
+    while (timer.get() < CONVEYOR_FEED_TIME) { // Feed the conveyor while the shooter speed is still consistent
+      if (constantShooterSpeed()) {
         robot.conveyor.feed();
       } else {
-        break;
+        endCommand = true;
       }
-    }*/
+    }
+
+    timer.start();
+    timer.reset();
+    
+    while (timer.get() < TIME_BETWEEN_BALLS); // Wait between shooting 2 balls
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted)
   {
-    robot.vision.disableShootingLight();
+    vision.disableShootingLight();
 
     robot.shooter.stop();
     robot.conveyor.stop();
@@ -110,6 +115,32 @@ public class AutoVisionShoot extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return false;
+    return endCommand;
+  }
+
+  /* ==============================
+  * Author: Lucas J
+  * 
+  * Desc: checks if the shooter has been spinning at a 
+  * consistent speed and is aligned to the target.
+  * ===============================*/
+  private boolean constantShooterSpeed() {
+    boolean aligned = robot.vision.isAligned();
+    boolean isConsistent = false;
+    double currentSpeed = vision.getShooterSpeed();
+    speeds.add(currentSpeed);
+    averageSpeed += currentSpeed/SAVED_SPEEDS;
+
+    if (speeds.size() > SAVED_SPEEDS) {
+      double oldSpeed = speeds.pop();
+      averageSpeed -= oldSpeed/SAVED_SPEEDS;
+
+      double oldDiff = Math.abs(oldSpeed - currentSpeed);
+      double avgDiff = Math.abs(averageSpeed - currentSpeed);
+
+      isConsistent = oldDiff < DIFF_THRESHOLD && avgDiff < DIFF_THRESHOLD;
+    }
+
+    return aligned && isConsistent;
   }
 }
