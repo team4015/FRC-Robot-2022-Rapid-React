@@ -46,8 +46,6 @@ public class AutoVisionShoot extends CommandBase
     robot.vision.enableShootingLight();
     robot.shooter.setAutoShooting(true);
     robot.vision.resetPID();
-    //timer.start();
-    //timer.reset();
 
     SmartDashboard.putString("Robot Mode:", "Auto Shoot");
   }
@@ -59,8 +57,8 @@ public class AutoVisionShoot extends CommandBase
     //Spin shooter at auto speed
     robot.vision.calcAlign(robot.drivetrain.gyroAngle());
 
-    double autoSpeed = robot.vision.autoShooterSpeed();
-    robot.shooter.spin(autoSpeed);
+    double autoVolts = robot.vision.autoShooterSpeed();
+    robot.shooter.spinVoltage(autoVolts);
 
     /*while (timer.get() < timeToShot) {
       double autoSpeed = robot.vision.autoShooterSpeed();

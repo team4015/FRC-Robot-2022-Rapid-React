@@ -40,7 +40,7 @@ public class Match extends TimedRobot
     SmartDashboard.putData(CommandScheduler.getInstance());
 
     // Disable Live Window that was causing loop overruns
-    //LiveWindow.disableAllTelemetry();
+    LiveWindow.disableAllTelemetry();
 
     //Create menu for commands that run in autonomous
     autoMode = new SendableChooser<>();
