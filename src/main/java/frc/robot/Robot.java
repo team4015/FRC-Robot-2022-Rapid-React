@@ -59,10 +59,10 @@ public class Robot
   // CONSTANTS //
 
   // Set using SysID Characterization
-  private final static double KS = -100;
-  private final static double KV = -100;
-  private final static double KA = -100;
-  private final static double KP_DRIVE = -100; // Proportionality constant for the drive PID
+  private final static double KS = 1.4865;
+  private final static double KV = 10.793;
+  private final static double KA = 4.9531;
+  private final static double KP_DRIVE = 2.0176; // Proportionality constant for the drive PID
   private final static double TRACK_WIDTH_METRES = -100;
   private final static DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METRES);
   private final static double MAX_VOLTAGE = 10; // Below 12 to account for battery sag
