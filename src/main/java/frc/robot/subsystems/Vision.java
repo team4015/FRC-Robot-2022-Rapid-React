@@ -321,7 +321,7 @@ public class Vision extends SubsystemBase {
     speed *= SPEED_ADJUST;
     SmartDashboard.putNumber("Shooter Speed", speed);
 
-    return shooterSpeed; // return difference between the target and where the robot is pointed
+    return speed; // return difference between the target and where the robot is pointed
   }
 
   /* ==========================
