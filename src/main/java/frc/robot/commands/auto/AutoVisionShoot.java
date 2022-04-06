@@ -29,9 +29,12 @@ public class AutoVisionShoot extends CommandBase
   private LinkedList<Double> speeds;
   private double averageSpeed;
   private boolean endCommand;
+  private boolean constantSpeed;
+  private double timerInit;
   //private final static double CONVEYOR_SPIN_TIME = .6;
 
   // CONSTANTS //
+  private final static double CONVEYOR_REVERSE_TIME = 0.06;
   private final static int SAVED_SPEEDS = 50;
   private final static double DIFF_THRESHOLD = 0.05; 
   private final static double CONVEYOR_FEED_TIME = 0.5; 
@@ -47,6 +50,8 @@ public class AutoVisionShoot extends CommandBase
     speeds = new LinkedList<Double>();
     averageSpeed = 0;
     endCommand = false;
+    constantSpeed = false;
+    timerInit = 0;
 
     // subsystems that this command requires
     addRequirements(robot.shooter, robot.conveyor);
@@ -65,10 +70,6 @@ public class AutoVisionShoot extends CommandBase
     timer.start();
     timer.reset();
 
-    while (timer.get() < 0.06) {
-      robot.conveyor.reverse();
-    }
-
     SmartDashboard.putString("Robot Mode:", "Auto Shoot");
   }
 
@@ -76,23 +77,28 @@ public class AutoVisionShoot extends CommandBase
   @Override
   public void execute()
   {
-    while (!constantShooterSpeed()); // Wait until the shooter speed is consistent
 
-    timer.start();
-    timer.reset();
+    if (timer.get() < CONVEYOR_REVERSE_TIME) { // No premature shoots
+      robot.conveyor.reverse();
+    }
 
-    while (timer.get() < CONVEYOR_FEED_TIME) { // Feed the conveyor while the shooter speed is still consistent
-      if (constantShooterSpeed()) {
-        robot.conveyor.feed();
-      } else {
+    if (constantSpeed && !constantShooterSpeed()) {
+      constantSpeed = false;
+      endCommand = true;
+    }
+
+    if (constantShooterSpeed() && !constantSpeed) {
+      constantSpeed = true;
+      timerInit = timer.get();
+    } // Wait until the shooter speed is consistent
+
+    if (constantSpeed) {
+      if (timer.get() - timerInit < CONVEYOR_FEED_TIME) { // Feed the conveyor while the shooter speed is still consistent
+          robot.conveyor.feed();
+      } else if (timer.get() - timerInit > CONVEYOR_FEED_TIME + TIME_BETWEEN_BALLS) {
         endCommand = true;
       }
     }
-
-    timer.start();
-    timer.reset();
-    
-    while (timer.get() < TIME_BETWEEN_BALLS); // Wait between shooting 2 balls
   }
 
   // Called once the command ends or is interrupted.
