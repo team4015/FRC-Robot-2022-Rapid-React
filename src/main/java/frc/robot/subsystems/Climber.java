@@ -16,10 +16,12 @@ public class Climber extends SubsystemBase
 {
   // HARDWARE //
   private Spark spoolmotor;
+  private Spark spoolmotor2;
   private Spark gearmotor;
 
   // Ports //
   public static final int CLIMBER_SPARK_SPOOL = 5;
+  public static final int CLIMBER_SPARK_SPOOL_2 = 7;
   public static final int CLIMBER_SPARK_GEAR = 6;
 
   // CONSTANTS //
@@ -33,6 +35,8 @@ public class Climber extends SubsystemBase
   {
     // instantiate hardware
     spoolmotor = new Spark(CLIMBER_SPARK_SPOOL);
+    spoolmotor2 = new Spark(CLIMBER_SPARK_SPOOL_2);
+    spoolmotor.setInverted(false);
     //the climber is run by a spool and gear motor, controlled by two Spark motor controllers.
     gearmotor = new Spark(CLIMBER_SPARK_GEAR);
   }
@@ -41,6 +45,7 @@ public class Climber extends SubsystemBase
   //unwind() winds out cable and strap to climb
 public void unwind(){
     spoolmotor.set(SPOOL_REVERSE_SPEED);
+    spoolmotor2.set(SPOOL_REVERSE_SPEED);
   }
   //extend() unwinds cable, and extends the extension rod
 public void extend(){
@@ -49,16 +54,19 @@ public void extend(){
 //retract() retracts the rod, after the cable has been unwinded.
 public void retract(){
   spoolmotor.set(0);
+  spoolmotor2.set(0);
   gearmotor.set(GEAR_REVERSE_SPEED);
 }
 //climb() after the rod has been retracted, the spool winds in the cable, so the robot can climb.
 public void climb(){
   spoolmotor.set(SPOOL_SPEED);
+  spoolmotor2.set(SPOOL_SPEED);
   gearmotor.set(0);
 }//stop() allows both motors to immedediatly stop spinning 
 public void stop(){
   gearmotor.set(0);
   spoolmotor.set(0);
+  spoolmotor2.set(0);
 }
 
 }
