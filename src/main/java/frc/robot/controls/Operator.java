@@ -128,7 +128,7 @@ public class Operator
         autoShoot.whileHeld(new AutoVisionShoot(robot));
         
         shooterHub.whenPressed(new AutoHubShoot(robot));
-        shooterSpin.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_SPIN));
+        //shooterSpin.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_SPIN));
         shooterWall.whenHeld(new AutoWallShoot(robot));
         shooterReverse.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_REVERSE));
     }
