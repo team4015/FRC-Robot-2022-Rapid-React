@@ -271,7 +271,7 @@ public class Vision extends SubsystemBase {
         synchronized (imgLock) {
           this.xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
           this.width = targetRect.width;
-          inRange = width > 30 && width < 58;
+          inRange = width > 25 && width < 58;
           SmartDashboard.putNumber("Width", biggest.width);
           SmartDashboard.putNumber("Target Width", width);
           SmartDashboard.putBoolean("In Shooting Range", inRange);
@@ -303,7 +303,7 @@ public class Vision extends SubsystemBase {
       xCentre = this.xCentre;
     }
 
-    double turn = xCentre - (IMG_WIDTH/ 2.0)+10;
+    double turn = xCentre - (IMG_WIDTH/ 2.0)+5;
     SmartDashboard.putNumber("Dist to Target", turn);
 
     return turn; // return difference between the target and where the robot is pointed

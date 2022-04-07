@@ -11,6 +11,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber extends SubsystemBase
 {
@@ -26,7 +27,7 @@ public class Climber extends SubsystemBase
 
   // CONSTANTS //
 
-  public static final double SPOOL_SPEED = -.5;
+  double SPOOL_SPEED = -.5;
   public static final double SPOOL_REVERSE_SPEED = .3 ;
   public static final double GEAR_SPEED = -1;
   public static final double GEAR_REVERSE_SPEED = 1;
@@ -36,9 +37,10 @@ public class Climber extends SubsystemBase
     // instantiate hardware
     spoolmotor = new Spark(CLIMBER_SPARK_SPOOL);
     spoolmotor2 = new Spark(CLIMBER_SPARK_SPOOL_2);
-    spoolmotor.setInverted(false);
     //the climber is run by a spool and gear motor, controlled by two Spark motor controllers.
     gearmotor = new Spark(CLIMBER_SPARK_GEAR);
+
+    SmartDashboard.putNumber("Spool Speed", SPOOL_SPEED);
   }
 
   // METHODS //
@@ -59,7 +61,8 @@ public void retract(){
 }
 //climb() after the rod has been retracted, the spool winds in the cable, so the robot can climb.
 public void climb(){
-  spoolmotor.set(SPOOL_SPEED);
+  SPOOL_SPEED = SmartDashboard.getNumber("Spool Speed", SPOOL_SPEED);
+  spoolmotor.set(-SPOOL_SPEED);
   spoolmotor2.set(SPOOL_SPEED);
   gearmotor.set(0);
 }//stop() allows both motors to immedediatly stop spinning 

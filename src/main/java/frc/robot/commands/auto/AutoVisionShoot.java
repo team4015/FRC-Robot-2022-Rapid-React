@@ -34,11 +34,11 @@ public class AutoVisionShoot extends CommandBase
   //private final static double CONVEYOR_SPIN_TIME = .6;
 
   // CONSTANTS //
-  private final static double CONVEYOR_REVERSE_TIME = 0.06;
-  private final static int SAVED_SPEEDS = 50;
-  private final static double DIFF_THRESHOLD = 0.05; 
-  private final static double CONVEYOR_FEED_TIME = 0.5; 
-  private final static double TIME_BETWEEN_BALLS = 1;
+  private final static double CONVEYOR_REVERSE_TIME = 0.1;
+  private final static int SAVED_SPEEDS = 120;
+  private final static double DIFF_THRESHOLD = 0.2; 
+  private final static double CONVEYOR_FEED_TIME = 0.25; 
+  private final static double TIME_BETWEEN_BALLS = .6;
 
   // CONSTRUCTOR //
 
@@ -46,12 +46,6 @@ public class AutoVisionShoot extends CommandBase
   {
     this.robot = robot;
     vision = robot.vision;
-    timer = new Timer();
-    speeds = new LinkedList<Double>();
-    averageSpeed = 0;
-    endCommand = false;
-    constantSpeed = false;
-    timerInit = 0;
 
     // subsystems that this command requires
     addRequirements(robot.shooter, robot.conveyor);
@@ -67,8 +61,15 @@ public class AutoVisionShoot extends CommandBase
     robot.shooter.setAutoShooting(true);
     robot.vision.resetPID();
 
+    timer = new Timer();
     timer.start();
     timer.reset();
+
+    speeds = new LinkedList<Double>();
+    averageSpeed = 0;
+    endCommand = false;
+    constantSpeed = false;
+    timerInit = 0;
 
     SmartDashboard.putString("Robot Mode:", "Auto Shoot");
   }
@@ -80,15 +81,16 @@ public class AutoVisionShoot extends CommandBase
 
     if (timer.get() < CONVEYOR_REVERSE_TIME) { // No premature shoots
       robot.conveyor.reverse();
+    } else {
+      robot.shooter.spinVoltage(robot.vision.getShooterSpeed());
     }
 
     if (constantSpeed && !constantShooterSpeed()) {
       constantSpeed = false;
-      endCommand = true;
+      speeds = new LinkedList<Double>();
     }
 
     if (constantShooterSpeed() && !constantSpeed) {
-      constantSpeed = true;
       timerInit = timer.get();
     } // Wait until the shooter speed is consistent
 
@@ -96,8 +98,12 @@ public class AutoVisionShoot extends CommandBase
       if (timer.get() - timerInit < CONVEYOR_FEED_TIME) { // Feed the conveyor while the shooter speed is still consistent
           robot.conveyor.feed();
       } else if (timer.get() - timerInit > CONVEYOR_FEED_TIME + TIME_BETWEEN_BALLS) {
-        endCommand = true;
+        constantSpeed = false;
+      } else {
+        robot.conveyor.stop();
       }
+    } else if (!(timer.get() < CONVEYOR_REVERSE_TIME)) {
+      robot.conveyor.stop();
     }
   }
 
@@ -121,7 +127,7 @@ public class AutoVisionShoot extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return endCommand;
+    return false;
   }
 
   /* ==============================
