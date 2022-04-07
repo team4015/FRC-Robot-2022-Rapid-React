@@ -17,6 +17,8 @@ package frc.robot;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.intake.*;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -29,8 +31,10 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -157,6 +161,15 @@ public class Robot
       // Add voltage Constraint
       .addConstraint(voltageConstraint);
 
+    //Add in path
+    String trajJSON = "paths/SimpleForwardwpilib.json";
+
+    Path trajPath = Filesystem.getDeployDirectory().toPath().resolve(trajJSON);
+    Trajectory weaverTraj = new Trajectory();
+    try {
+      weaverTraj = TrajectoryUtil.fromPathweaverJson(trajPath);
+    } catch (IOException e) {}
+
     // Example Trajectory (Real Auto Trajectories to come later)
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
       // Start Point
@@ -174,7 +187,7 @@ public class Robot
     // Make command to be sent out
     RamseteCommand ramseteCommand = new RamseteCommand(
       // Trajectory to be followed
-      trajectory, 
+      weaverTraj, //trajectory, 
       // Method to get robot pose
       drivetrain::getRobotPose, 
       // Controller that does path following computation
