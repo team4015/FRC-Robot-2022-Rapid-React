@@ -23,6 +23,7 @@ import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -73,17 +74,29 @@ public class Vision extends SubsystemBase {
   private boolean shootingLight;
 
   private PIDController pid;
-  private double p = 0.02;
-  private double i = 0.02;
-  private double d = 0.002;
+  private double p = 0.04;
+  private double i = 0.1;
+  private double d = 0.001;
+
+  private double estimateCoeff = 0.3
+  ;
+
+  SimpleMotorFeedforward feedForward;
+  private final static double KS = 1.2374;
+  private final static double KV = 5.6065;
+  private final static double KA = 2;
   
   public Vision() {
+    feedForward = new SimpleMotorFeedforward(KS, KV, KA);
+
     pid = new PIDController(p,i,d);
     pid.setTolerance(TOLERANCE);
+    pid.setIntegratorRange(-.5, .5);
 
     SmartDashboard.putNumber("P", p);
     SmartDashboard.putNumber("I", i);
     SmartDashboard.putNumber("D", d);
+    SmartDashboard.putNumber("Estimate Coeff", estimateCoeff);
 
     shooterSpeed = 0;
     xCentre = IMG_WIDTH/2.0;
@@ -477,16 +490,20 @@ public class Vision extends SubsystemBase {
       angleError +=  angle - currentAngle; 
       currentAngle = angle;
       double pidAdjustment = pid.calculate(currentAngle);
-      turnSpeed = pidAdjustment + Math.copySign(BASE_TURN_SPEED, pidAdjustment);
+      double estimate = 0;
+      if (Math.abs(turn) > TOLERANCE) estimate = Math.copySign(estimateCoeff, turn);
+      turnSpeed = pidAdjustment + feedForward.calculate(estimate);
     } else {
       previousTurn = turn;
       angleError = turn*PIXELS_TO_DEGREES;
       currentAngle = angle;
       double pidAdjustment = pid.calculate(currentAngle, currentAngle + angleError);
-      turnSpeed = pidAdjustment + Math.copySign(BASE_TURN_SPEED, pidAdjustment); // get new PID value and change the setpoint
+      double estimate = 0;
+      if (Math.abs(turn) > TOLERANCE) estimate = Math.copySign(estimateCoeff, turn);
+      turnSpeed = pidAdjustment +  feedForward.calculate(estimate); // get new PID value and change the setpoint
     }
 
-    aligned = pid.atSetpoint() && inRange;
+    aligned = Math.abs(angleError) < TOLERANCE && inRange;
     SmartDashboard.putNumber("Error", angleError);
     SmartDashboard.putNumber("PID Speed", turnSpeed);
     SmartDashboard.putBoolean("ALIGNED", aligned);
@@ -505,6 +522,7 @@ public class Vision extends SubsystemBase {
     p = SmartDashboard.getNumber("P", p);
     i = SmartDashboard.getNumber("I", i);
     d = SmartDashboard.getNumber("D", d);
+    estimateCoeff = SmartDashboard.getNumber("Estimate Coeff", estimateCoeff);
 
     pid.setPID(p,i,d);
 

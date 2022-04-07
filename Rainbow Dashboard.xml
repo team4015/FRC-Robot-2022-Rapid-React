@@ -1,5 +1,14 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Estimate Coeff" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="9" y="28"/>
+	</widget>
+	<widget field="Turn Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="751"/>
+	</widget>
+	<widget field="Spool Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="570"/>
+	</widget>
 	<widget field="Time Remaining" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
 		<location x="1341" y="50"/>
 		<width>172</width>
@@ -35,14 +44,14 @@
 		<property name="Font Size" value="30"/>
 	</widget>
 	<widget field="D" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="24" y="701"/>
+		<location x="493" y="19"/>
 	</widget>
 	<widget field="I" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="26" y="677"/>
+		<location x="359" y="10"/>
 	</widget>
 	<widget field="P" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="25" y="654"/>
-		<width>111</width>
+		<location x="199" y="9"/>
+		<width>133</width>
 	</widget>
 	<widget field="Rate" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="641" y="620"/>

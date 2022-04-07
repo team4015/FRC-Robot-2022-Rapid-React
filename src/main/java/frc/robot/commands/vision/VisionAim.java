@@ -49,7 +49,8 @@ public class VisionAim extends CommandBase
   @Override
   public void execute()
   {
-      robot.drivetrain.moveMotors(0, robot.vision.getTurnSpeed());
+      double turnSpeed = robot.vision.getTurnSpeed();
+      robot.drivetrain.tankDriveVoltage(-turnSpeed, turnSpeed);
   }
 
   // Called once the command ends or is interrupted.
