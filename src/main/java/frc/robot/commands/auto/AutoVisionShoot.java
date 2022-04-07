@@ -34,10 +34,10 @@ public class AutoVisionShoot extends CommandBase
   //private final static double CONVEYOR_SPIN_TIME = .6;
 
   // CONSTANTS //
-  private final static double CONVEYOR_REVERSE_TIME = 0.1;
-  private final static int SAVED_SPEEDS = 120;
-  private final static double DIFF_THRESHOLD = 0.2; 
-  private final static double CONVEYOR_FEED_TIME = 0.25; 
+  private final static double CONVEYOR_REVERSE_TIME = 0.2;
+  private final static int SAVED_SPEEDS = 70;
+  private final static double DIFF_THRESHOLD = 0.6; 
+  private final static double CONVEYOR_FEED_TIME = 0.3; 
   private final static double TIME_BETWEEN_BALLS = .6;
 
   // CONSTRUCTOR //
@@ -91,6 +91,7 @@ public class AutoVisionShoot extends CommandBase
     }
 
     if (constantShooterSpeed() && !constantSpeed) {
+      constantSpeed = true;
       timerInit = timer.get();
     } // Wait until the shooter speed is consistent
 
@@ -144,6 +145,11 @@ public class AutoVisionShoot extends CommandBase
     averageSpeed += currentSpeed/SAVED_SPEEDS;
 
     if (speeds.size() > SAVED_SPEEDS) {
+      while (speeds.size() > SAVED_SPEEDS+1) {
+        double extra = speeds.pop();
+        averageSpeed -= extra/SAVED_SPEEDS;
+      }
+
       double oldSpeed = speeds.pop();
       averageSpeed -= oldSpeed/SAVED_SPEEDS;
 

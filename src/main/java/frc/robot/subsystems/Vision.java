@@ -44,7 +44,7 @@ public class Vision extends SubsystemBase {
   final static int FPS = 30;
 
   final static int TURN_THRESHOLD = 8;
-  final static double SPEED_ADJUST = 1;
+  final static double SPEED_ADJUST = .95;
 
   private final static double PIXELS_TO_DEGREES = 0.35;
   private final static double TOLERANCE = 4;
@@ -316,7 +316,7 @@ public class Vision extends SubsystemBase {
       xCentre = this.xCentre;
     }
 
-    double turn = xCentre - (IMG_WIDTH/ 2.0)+5;
+    double turn = xCentre - (IMG_WIDTH/ 2.0)+3;
     SmartDashboard.putNumber("Dist to Target", turn);
 
     return turn; // return difference between the target and where the robot is pointed
