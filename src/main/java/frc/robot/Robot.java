@@ -142,7 +142,7 @@ public class Robot
    * autonomous mode. The command makes the robot follow a given trajectory.
    * =========================================*/
 
-  public CommandBase getAutonomousCommand() {
+  /*public CommandBase getAutonomousCommand() {
     
     // Make feed forward for Motors
     SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(KS, KV, KA);
@@ -209,5 +209,5 @@ public class Robot
 
       // Run command, then stop
       return ramseteCommand.andThen(() -> drivetrain.tankDriveVoltage(0, 0));
-  }
+  }*/
 }
