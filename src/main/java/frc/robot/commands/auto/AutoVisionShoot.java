@@ -36,8 +36,8 @@ public class AutoVisionShoot extends CommandBase
   // CONSTANTS //
   private final static double CONVEYOR_REVERSE_TIME = 0.2;
   private final static int SAVED_SPEEDS = 70;
-  private final static double DIFF_THRESHOLD = 0.6; 
-  private final static double CONVEYOR_FEED_TIME = 0.3; 
+  private final static double DIFF_THRESHOLD = 1; 
+  private final static double CONVEYOR_FEED_TIME = 0.25; 
   private final static double TIME_BETWEEN_BALLS = .6;
 
   // CONSTRUCTOR //
@@ -88,6 +88,7 @@ public class AutoVisionShoot extends CommandBase
     if (constantSpeed && !constantShooterSpeed()) {
       constantSpeed = false;
       speeds = new LinkedList<Double>();
+      averageSpeed = 0;
     }
 
     if (constantShooterSpeed() && !constantSpeed) {
@@ -159,6 +160,8 @@ public class AutoVisionShoot extends CommandBase
       isConsistent = oldDiff < DIFF_THRESHOLD && avgDiff < DIFF_THRESHOLD;
     }
 
+    SmartDashboard.putBoolean("Aligned Auto", aligned);
+    SmartDashboard.putBoolean("Consistent Speed", isConsistent);
     return aligned && isConsistent;
   }
 }

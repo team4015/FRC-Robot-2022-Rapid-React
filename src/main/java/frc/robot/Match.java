@@ -89,7 +89,7 @@ public class Match extends TimedRobot
     SmartDashboard.putData(CommandScheduler.getInstance());
 
     //Start Autonomous Commands
-    auto = robot.getAutonomousCommand();
+    auto = autoMode.getSelected();
 
     if (auto != null) {
       auto.schedule();

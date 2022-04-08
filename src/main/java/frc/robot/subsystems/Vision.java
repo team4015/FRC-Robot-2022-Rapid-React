@@ -284,7 +284,7 @@ public class Vision extends SubsystemBase {
         synchronized (imgLock) {
           this.xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
           this.width = targetRect.width;
-          inRange = width > 25 && width < 58;
+          inRange = width > 19 && width < 58;
           SmartDashboard.putNumber("Width", biggest.width);
           SmartDashboard.putNumber("Target Width", width);
           SmartDashboard.putBoolean("In Shooting Range", inRange);
@@ -329,7 +329,6 @@ public class Vision extends SubsystemBase {
   This method returns the speed (in volts) the shooter should spin to get in the target
   ===================================== */
   public double autoShooterSpeed() {
-    if (!inRange) return 0;
 
     double x;
     synchronized (imgLock) {
