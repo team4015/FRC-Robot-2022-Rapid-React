@@ -42,7 +42,7 @@ public class Driver
     public static final double THROTTLE_LOW_SPEED = 0.5;
     public static final double STEER_LOW_SPEED = 0.4;
     public static final double THROTTLE_HIGH_SPEED = .8;
-    public static final double STEER_HIGH_SPEED = .65;
+    public static final double STEER_HIGH_SPEED = .75;
 
     public static final int LOW_SPEED = 5;
     public static final int HIGH_SPEED = 3;

@@ -17,6 +17,8 @@ package frc.robot;
 import frc.robot.commands.drivetrain.*;
 import frc.robot.commands.intake.*;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -29,8 +31,10 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -67,7 +71,7 @@ public class Robot
   private final static DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METRES);
   private final static double MAX_VOLTAGE = 10; // Below 12 to account for battery sag
   private final static double MAX_VELOCITY = 5; // metres per second
-  private final static double MAX_ACCELERATION = 20; // metres per second^2
+  private final static double MAX_ACCELERATION = 7; // metres per second^2
   private final static double RAMSETE_B = 2; //Given value from wpilib
   private final static double RAMSETE_ZETA = 0.7; // Given value from wpilib
   // CONSTRUCTOR //
@@ -138,7 +142,7 @@ public class Robot
    * autonomous mode. The command makes the robot follow a given trajectory.
    * =========================================*/
 
-  public CommandBase getAutonomousCommand() {
+  /*public CommandBase getAutonomousCommand() {
     
     // Make feed forward for Motors
     SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(KS, KV, KA);
@@ -157,6 +161,15 @@ public class Robot
       // Add voltage Constraint
       .addConstraint(voltageConstraint);
 
+    //Add in path
+    String trajJSON = "paths/SimpleForwardwpilib.json";
+
+    Path trajPath = Filesystem.getDeployDirectory().toPath().resolve(trajJSON);
+    Trajectory weaverTraj = new Trajectory();
+    try {
+      weaverTraj = TrajectoryUtil.fromPathweaverJson(trajPath);
+    } catch (IOException e) {}
+
     // Example Trajectory (Real Auto Trajectories to come later)
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
       // Start Point
@@ -169,12 +182,12 @@ public class Robot
       config);
 
     // Reset odometry to starting point of trajectory
-    drivetrain.resetOdometry(trajectory.getInitialPose());
+    drivetrain.resetOdometry(weaverTraj.getInitialPose());
 
     // Make command to be sent out
     RamseteCommand ramseteCommand = new RamseteCommand(
       // Trajectory to be followed
-      trajectory, 
+      weaverTraj, //trajectory, 
       // Method to get robot pose
       drivetrain::getRobotPose, 
       // Controller that does path following computation
@@ -196,5 +209,5 @@ public class Robot
 
       // Run command, then stop
       return ramseteCommand.andThen(() -> drivetrain.tankDriveVoltage(0, 0));
-  }
+  }*/
 }

@@ -42,17 +42,15 @@ public class VisionAim extends CommandBase
   {
    robot.vision.enableAimingLight();
    robot.vision.resetPID();
+   robot.drivetrain.setAutoAiming(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute()
   {
-    if (!robot.shooter.isAutoShooting()) robot.vision.calcAlign(robot.drivetrain.gyroAngle());
-    
-    //if (!robot.vision.isAligned()) {
-      robot.drivetrain.moveMotors(0, robot.vision.getTurnSpeed());
-    //}
+      double turnSpeed = robot.vision.getTurnSpeed();
+      robot.drivetrain.tankDriveVoltage(-turnSpeed, turnSpeed);
   }
 
   // Called once the command ends or is interrupted.
@@ -60,6 +58,7 @@ public class VisionAim extends CommandBase
   public void end(boolean interrupted)
   {
     robot.vision.disableAimingLight();
+    robot.drivetrain.setAutoAiming(false);
 
     if (SmartDashboard.getString("Robot Mode:", "").equals("Auto Aim")) {
       SmartDashboard.putString("Robot Mode:", "TeleOp");

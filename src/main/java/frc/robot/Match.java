@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.auto.startMatch.BackUpAndShoot;
+import frc.robot.commands.auto.startMatch.TwoBallAuto;
 
 public class Match extends TimedRobot
 {
@@ -44,7 +45,8 @@ public class Match extends TimedRobot
 
     //Create menu for commands that run in autonomous
     autoMode = new SendableChooser<>();
-    autoMode.setDefaultOption("Back Up and Shoot", new BackUpAndShoot(robot));
+    autoMode.setDefaultOption("(Away) Two Ball Auto", new TwoBallAuto(robot));
+    autoMode.addOption("(Toward) One Ball Auto", new BackUpAndShoot(robot));
     autoMode.addOption("Do nothing", null);
     SmartDashboard.putData(autoMode);
   }
@@ -64,6 +66,8 @@ public class Match extends TimedRobot
 
     SmartDashboard.putBoolean("Has Pressure", robot.compressor.getPressureSwitchValue());
     SmartDashboard.putNumber("Time Remaining", Math.ceil(Timer.getMatchTime()));
+
+    if (robot.shooter.isAutoShooting() || robot.drivetrain.isAutoAiming()) robot.vision.calcAlign(robot.drivetrain.gyroAngle());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -87,7 +91,7 @@ public class Match extends TimedRobot
     SmartDashboard.putData(CommandScheduler.getInstance());
 
     //Start Autonomous Commands
-    auto = robot.getAutonomousCommand();
+    auto = autoMode.getSelected();
 
     if (auto != null) {
       auto.schedule();

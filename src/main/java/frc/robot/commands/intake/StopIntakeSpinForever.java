@@ -1,8 +1,6 @@
 /* ==================================================
-Authour: Shane Pinto
-Description: IntakeSpin.java is a command that
-tells the intake subsystem to spin the intake to 
-intake balls.
+Author: Lucas Jacobs
+Description: Stops the intake from spinning forever
 ================================================== */
 
 package frc.robot.commands.intake;
@@ -10,12 +8,12 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 
-public class IntakeSpin extends CommandBase
+public class StopIntakeSpinForever extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private Robot robot;
 
-  public IntakeSpin(Robot robot)
+  public StopIntakeSpinForever(Robot robot)
   {
     this.robot = robot;
     addRequirements(robot.intake);
@@ -32,7 +30,9 @@ public class IntakeSpin extends CommandBase
   @Override
   public void execute()
   {
-    robot.intake.spin();
+    robot.intake.setDefaultCommand(new IntakeStop(robot));
+    robot.intake.stop();
+    robot.conveyor.stop();
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +46,6 @@ public class IntakeSpin extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return false;
+    return true;
   }
 }
