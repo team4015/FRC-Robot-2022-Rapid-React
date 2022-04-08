@@ -1,5 +1,20 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Consistent Speed" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="815" y="12"/>
+	</widget>
+	<widget field="Aligned Auto" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1033" y="11"/>
+	</widget>
+	<widget field="Estimate Coeff" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="9" y="28"/>
+	</widget>
+	<widget field="Turn Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="104" y="712"/>
+	</widget>
+	<widget field="Spool Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="570"/>
+	</widget>
 	<widget field="Time Remaining" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
 		<location x="1341" y="50"/>
 		<width>172</width>
@@ -35,14 +50,14 @@
 		<property name="Font Size" value="30"/>
 	</widget>
 	<widget field="D" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="24" y="701"/>
+		<location x="493" y="19"/>
 	</widget>
 	<widget field="I" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="26" y="677"/>
+		<location x="359" y="10"/>
 	</widget>
 	<widget field="P" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="25" y="654"/>
-		<width>111</width>
+		<location x="199" y="9"/>
+		<width>133</width>
 	</widget>
 	<widget field="Rate" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="641" y="620"/>
@@ -51,7 +66,7 @@
 		<location x="196" y="653"/>
 	</widget>
 	<widget field="In Shooting Range" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="15" y="731"/>
+		<location x="107" y="758"/>
 	</widget>
 	<widget field="Shooter Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.SimpleDial">
 		<location x="985" y="422"/>
@@ -228,7 +243,7 @@
 		<property name="Camera Choice" value="Target Video"/>
 	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
-		<location x="-7" y="2"/>
+		<location x="1" y="-2"/>
 		<width>1541</width>
 		<height>45</height>
 	</static-widget>

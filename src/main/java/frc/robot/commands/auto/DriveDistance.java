@@ -3,39 +3,35 @@
  *
  * --------------------------------------------------
  * Description:
- * Makes the robot turn a given angle in degrees using proportional speed
+ * Makes the robot drive a given distance
  * ================================================== */
 
 package frc.robot.commands.auto;
 
 import frc.robot.Robot;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class TurnAngle extends CommandBase
+public class DriveDistance extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
   // VARIABLES //
 
   private Robot robot;
-  private double speed;
-  private double degrees;
-  private double targetAngle;
+  private double distance;
 
   // CONSTANTS //
-  private static final double MIN_TURN_SPEED = .5
-  ;
-  private static final double ANGLE_THRESHOLD = 10;
+  private static final double DRIVE_SPEED = .7;
 
   // CONSTRUCTOR //
 
-  public TurnAngle(Robot robot, double speed, double degrees)
+  public DriveDistance(Robot robot, double distance)
   {
     this.robot = robot;
-    this.speed = speed;
-    this.degrees = degrees;
-
+    this.distance = distance;
     // subsystems that this command requires
     addRequirements(robot.drivetrain);
   }
@@ -46,25 +42,17 @@ public class TurnAngle extends CommandBase
   @Override
   public void initialize()
   {
-    targetAngle = robot.drivetrain.gyroAngle() + degrees;
+    robot.drivetrain.resetOdometry(new Pose2d(0,0,new Rotation2d(0)));
 
-    SmartDashboard.putString("Robot Mode:", "Turn Angle");
+    SmartDashboard.putString("Robot Mode:", "Drive Distance");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute()
   {
-    double currentAngle = robot.drivetrain.gyroAngle();
-    double error = targetAngle - currentAngle;
-
-    while (Math.abs(error) > ANGLE_THRESHOLD) {
-      double turnSpeed = Math.copySign(Math.max(MIN_TURN_SPEED, Math.abs(speed*error)), error); 
-
-      robot.drivetrain.moveMotors(0, turnSpeed);
-
-      currentAngle = Math.abs(robot.drivetrain.gyroAngle());
-      error = targetAngle - currentAngle;
+    while (robot.drivetrain.updateOdometry().getX() < distance) {
+      robot.drivetrain.moveMotors(DRIVE_SPEED, 0);
     }
   }
 

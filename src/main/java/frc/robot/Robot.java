@@ -71,7 +71,7 @@ public class Robot
   private final static DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METRES);
   private final static double MAX_VOLTAGE = 10; // Below 12 to account for battery sag
   private final static double MAX_VELOCITY = 5; // metres per second
-  private final static double MAX_ACCELERATION = 20; // metres per second^2
+  private final static double MAX_ACCELERATION = 7; // metres per second^2
   private final static double RAMSETE_B = 2; //Given value from wpilib
   private final static double RAMSETE_ZETA = 0.7; // Given value from wpilib
   // CONSTRUCTOR //
@@ -182,7 +182,7 @@ public class Robot
       config);
 
     // Reset odometry to starting point of trajectory
-    drivetrain.resetOdometry(trajectory.getInitialPose());
+    drivetrain.resetOdometry(weaverTraj.getInitialPose());
 
     // Make command to be sent out
     RamseteCommand ramseteCommand = new RamseteCommand(

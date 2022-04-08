@@ -207,6 +207,13 @@ public class Drivetrain extends SubsystemBase
     odometry.resetPosition(pose, gyroRotation2d());
   }
 
+  public Pose2d updateOdometry() {
+    Pose2d currentPos = odometry.update(gyroRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
+    SmartDashboard.putNumber("X Coord", currentPos.getX());
+    SmartDashboard.putNumber("Y Coord", currentPos.getY());
+    return currentPos;
+  }
+
   /* =============================
    * Author: Lucas Jacobs
    * 
@@ -221,7 +228,7 @@ public class Drivetrain extends SubsystemBase
   @Override
   public void periodic() {
     // --- Update Odometry ---
-    Pose2d currentPos = odometry.update(gyroRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
+    Pose2d currentPos = updateOdometry();
 
     //--- Update Robot Position based on the Accelerator ---
     double xAccel = -accel.getX();
@@ -238,7 +245,5 @@ public class Drivetrain extends SubsystemBase
 
     SmartDashboard.putNumber("Gyro Angle", gyroAngle());
     SmartDashboard.putNumber("Acceleration", xAccel);
-    SmartDashboard.putNumber("X Coord", currentPos.getX());
-    SmartDashboard.putNumber("Y Coord", currentPos.getY());
   }
 }
