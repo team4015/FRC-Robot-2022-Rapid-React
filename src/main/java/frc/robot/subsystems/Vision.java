@@ -23,6 +23,7 @@ import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -43,7 +44,7 @@ public class Vision extends SubsystemBase {
   final static int FPS = 30;
 
   final static int TURN_THRESHOLD = 8;
-  final static double SPEED_ADJUST = 1;
+  final static double SPEED_ADJUST = .95;
 
   private final static double PIXELS_TO_DEGREES = 0.35;
   private final static double TOLERANCE = 4;
@@ -63,6 +64,7 @@ public class Vision extends SubsystemBase {
   private double currentAngle;
   private double turnSpeed;
   private boolean aligned;
+  private boolean inRange;
 
   private SendableChooser<PipelineSettings> visionPipelines;
   private SendableChooser<Boolean> showRectangles;
@@ -72,20 +74,31 @@ public class Vision extends SubsystemBase {
   private boolean shootingLight;
 
   private PIDController pid;
-  private double p = 0.02;
-  private double i = 0.02;
-  private double d = 0.002;
+  private double p = 0.04;
+  private double i = 0.1;
+  private double d = 0.001;
+
+  private double estimateCoeff = 0.3
+  ;
+
+  SimpleMotorFeedforward feedForward;
+  private final static double KS = 1.2374;
+  private final static double KV = 5.6065;
+  private final static double KA = 2;
   
   public Vision() {
+    feedForward = new SimpleMotorFeedforward(KS, KV, KA);
+
     pid = new PIDController(p,i,d);
     pid.setTolerance(TOLERANCE);
+    pid.setIntegratorRange(-.5, .5);
 
     SmartDashboard.putNumber("P", p);
     SmartDashboard.putNumber("I", i);
     SmartDashboard.putNumber("D", d);
+    SmartDashboard.putNumber("Estimate Coeff", estimateCoeff);
 
-    shooterSpeed = .4;
-    //SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
+    shooterSpeed = 0;
     xCentre = IMG_WIDTH/2.0;
     width = IMG_WIDTH/2.0;
     imgLock = new Object();
@@ -95,6 +108,7 @@ public class Vision extends SubsystemBase {
     previousTurn = 100000;
     angleError = 0;
     currentAngle = 0;
+    inRange = false;
 
     visionPipelines = new SendableChooser<>();
     visionPipelines.setDefaultOption("Long School Vision", new LongSettings());
@@ -125,6 +139,10 @@ public class Vision extends SubsystemBase {
 
   public boolean isAligned() {
     return aligned;
+  }
+
+  public double getShooterSpeed() {
+    return shooterSpeed;
   }
 
   public double getTurnSpeed() {
@@ -266,9 +284,10 @@ public class Vision extends SubsystemBase {
         synchronized (imgLock) {
           this.xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
           this.width = targetRect.width;
+          inRange = width > 19 && width < 58;
           SmartDashboard.putNumber("Width", biggest.width);
           SmartDashboard.putNumber("Target Width", width);
-          SmartDashboard.putBoolean("In Shooting Range", width >= 4 && width <= 9);
+          SmartDashboard.putBoolean("In Shooting Range", inRange);
           SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);
           autoShooterSpeed(); //Prints the speed needed to get the ball in to the dashboard
         }
@@ -290,12 +309,14 @@ public class Vision extends SubsystemBase {
   in order to aim at the target
   ===================================== */
   public double aimAtTarget() {
+    if (!inRange) return 0;
+
     double xCentre;
     synchronized (imgLock) {
       xCentre = this.xCentre;
     }
 
-    double turn = xCentre - (IMG_WIDTH/ 2.0)+10;
+    double turn = xCentre - (IMG_WIDTH/ 2.0)+3;
     SmartDashboard.putNumber("Dist to Target", turn);
 
     return turn; // return difference between the target and where the robot is pointed
@@ -308,20 +329,19 @@ public class Vision extends SubsystemBase {
   This method returns the speed (in volts) the shooter should spin to get in the target
   ===================================== */
   public double autoShooterSpeed() {
+
     double x;
     synchronized (imgLock) {
       x = this.width;
     }
 
-    double speed = 0; // PUT SOME FUNCTION INVOLVING WIDTH HERE
-
     // Function to supply volts to the shooter (using Excel)
-    speed = -0.0429332715477292*x + 6.57254402224279;
+    shooterSpeed = -0.0429332715477292*x + 6.57254402224279;
 
-    speed *= SPEED_ADJUST;
-    SmartDashboard.putNumber("Shooter Speed", speed);
+    shooterSpeed *= SPEED_ADJUST;
+    SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
 
-    return speed; // return difference between the target and where the robot is pointed
+    return shooterSpeed; // return difference between the target and where the robot is pointed
   }
 
   /* ==========================
@@ -469,16 +489,20 @@ public class Vision extends SubsystemBase {
       angleError +=  angle - currentAngle; 
       currentAngle = angle;
       double pidAdjustment = pid.calculate(currentAngle);
-      turnSpeed = pidAdjustment + Math.copySign(BASE_TURN_SPEED, pidAdjustment);
+      double estimate = 0;
+      if (Math.abs(turn) > TOLERANCE) estimate = Math.copySign(estimateCoeff, turn);
+      turnSpeed = pidAdjustment + feedForward.calculate(estimate);
     } else {
       previousTurn = turn;
       angleError = turn*PIXELS_TO_DEGREES;
       currentAngle = angle;
       double pidAdjustment = pid.calculate(currentAngle, currentAngle + angleError);
-      turnSpeed = pidAdjustment + Math.copySign(BASE_TURN_SPEED, pidAdjustment); // get new PID value and change the setpoint
+      double estimate = 0;
+      if (Math.abs(turn) > TOLERANCE) estimate = Math.copySign(estimateCoeff, turn);
+      turnSpeed = pidAdjustment +  feedForward.calculate(estimate); // get new PID value and change the setpoint
     }
 
-    aligned = pid.atSetpoint();
+    aligned = Math.abs(angleError) < TOLERANCE && inRange;
     SmartDashboard.putNumber("Error", angleError);
     SmartDashboard.putNumber("PID Speed", turnSpeed);
     SmartDashboard.putBoolean("ALIGNED", aligned);
@@ -497,6 +521,7 @@ public class Vision extends SubsystemBase {
     p = SmartDashboard.getNumber("P", p);
     i = SmartDashboard.getNumber("I", i);
     d = SmartDashboard.getNumber("D", d);
+    estimateCoeff = SmartDashboard.getNumber("Estimate Coeff", estimateCoeff);
 
     pid.setPID(p,i,d);
 

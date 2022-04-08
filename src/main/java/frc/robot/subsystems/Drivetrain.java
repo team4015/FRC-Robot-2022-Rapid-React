@@ -46,6 +46,7 @@ public class Drivetrain extends SubsystemBase
   private boolean goingStraight;
   private double targetAngle;
   private boolean coasting;
+  private boolean autoAiming;
 
   private final DifferentialDriveOdometry odometry;
 
@@ -114,6 +115,14 @@ public class Drivetrain extends SubsystemBase
   }
 
   // METHODS // 
+
+  public void setAutoAiming(boolean autoAiming) {
+    this.autoAiming = autoAiming;
+  }
+
+  public boolean isAutoAiming() {
+    return autoAiming;
+  }
   
   // -----------Motor Methods --------
 

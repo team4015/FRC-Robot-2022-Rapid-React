@@ -1,11 +1,5 @@
 <xml version="1.0">
 <dashboard>
-	<widget field="Consistent Speed" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="815" y="12"/>
-	</widget>
-	<widget field="Aligned Auto" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1033" y="11"/>
-	</widget>
 	<widget field="Estimate Coeff" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="9" y="28"/>
 	</widget>

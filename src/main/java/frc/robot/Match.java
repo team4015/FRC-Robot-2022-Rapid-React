@@ -66,6 +66,8 @@ public class Match extends TimedRobot
 
     SmartDashboard.putBoolean("Has Pressure", robot.compressor.getPressureSwitchValue());
     SmartDashboard.putNumber("Time Remaining", Math.ceil(Timer.getMatchTime()));
+
+    if (robot.shooter.isAutoShooting() || robot.drivetrain.isAutoAiming()) robot.vision.calcAlign(robot.drivetrain.gyroAngle());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
