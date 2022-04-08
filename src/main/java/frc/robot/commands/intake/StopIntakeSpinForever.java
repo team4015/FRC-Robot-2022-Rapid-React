@@ -32,6 +32,7 @@ public class StopIntakeSpinForever extends CommandBase
   {
     robot.intake.setDefaultCommand(new IntakeStop(robot));
     robot.intake.stop();
+    robot.conveyor.stop();
   }
 
   // Called once the command ends or is interrupted.

@@ -44,7 +44,7 @@ public class Vision extends SubsystemBase {
   final static int FPS = 30;
 
   final static int TURN_THRESHOLD = 8;
-  final static double SPEED_ADJUST = .95;
+  final static double SPEED_ADJUST = 1;
 
   private final static double PIXELS_TO_DEGREES = 0.35;
   private final static double TOLERANCE = 4;

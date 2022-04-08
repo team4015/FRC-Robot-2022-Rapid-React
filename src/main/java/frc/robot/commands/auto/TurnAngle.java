@@ -63,7 +63,7 @@ public class TurnAngle extends CommandBase
 
       robot.drivetrain.moveMotors(0, turnSpeed);
 
-      currentAngle = Math.abs(robot.drivetrain.gyroAngle());
+      currentAngle = robot.drivetrain.gyroAngle();
       error = targetAngle - currentAngle;
     }
   }

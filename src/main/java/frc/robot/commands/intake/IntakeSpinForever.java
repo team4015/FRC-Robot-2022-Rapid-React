@@ -34,6 +34,7 @@ public class IntakeSpinForever extends CommandBase
   {
     robot.intake.setDefaultCommand(new IntakeSpin(robot));
     robot.intake.spin();
+    robot.conveyor.feedSlow();
   }
 
   // Called once the command ends or is interrupted.
