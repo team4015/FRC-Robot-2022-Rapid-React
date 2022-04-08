@@ -23,7 +23,6 @@ public class ConveyorStop extends CommandBase
   // CONSTANTS //
 
 
-
   // CONSTRUCTOR //
 
   public ConveyorStop(Robot robot)
@@ -47,7 +46,11 @@ public class ConveyorStop extends CommandBase
   @Override
   public void execute()
   {
-    robot.conveyor.stop();
+    if (robot.intake.isSpinning()) {
+      robot.conveyor.feedSlow();
+    } else {
+      robot.conveyor.stop();
+    }
   }
 
   // Called once the command ends or is interrupted.

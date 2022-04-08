@@ -22,6 +22,8 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -37,14 +39,19 @@ public class Vision extends SubsystemBase {
   private final static int LIGHT_PORT = 2;
 
   // CONSTANTS //
-  final static int CAM_HEIGHT = 480;
-  final static int CAM_WIDTH = 640;
   final static int IMG_HEIGHT = 120;
   final static int IMG_WIDTH = 160;
   final static int FPS = 30;
 
   final static int TURN_THRESHOLD = 8;
   final static double SPEED_ADJUST = 1;
+
+  private final static double PIXELS_TO_DEGREES = 0.35;
+  private final static double TOLERANCE = 4;
+  private final static double BASE_TURN_SPEED = .3;
+  //private final static double MIN_TURN_SPEED = 0.5;
+  //private final static double MAX_TURN_SPEED = 0.8;
+
   // VARIABLES //
   private VisionThread visionThread;
   private PipelineSettings settings;
@@ -52,6 +59,12 @@ public class Vision extends SubsystemBase {
   private double width;
   private Object imgLock;
   private double shooterSpeed;
+  private double previousTurn;
+  private double angleError;
+  private double currentAngle;
+  private double turnSpeed;
+  private boolean aligned;
+  private boolean inRange;
 
   private SendableChooser<PipelineSettings> visionPipelines;
   private SendableChooser<Boolean> showRectangles;
@@ -60,20 +73,47 @@ public class Vision extends SubsystemBase {
   private boolean aimingLight;
   private boolean shootingLight;
 
+  private PIDController pid;
+  private double p = 0.04;
+  private double i = 0.1;
+  private double d = 0.001;
 
+  private double estimateCoeff = 0.3
+  ;
+
+  SimpleMotorFeedforward feedForward;
+  private final static double KS = 1.2374;
+  private final static double KV = 5.6065;
+  private final static double KA = 2;
+  
   public Vision() {
-    shooterSpeed = .5;
-    SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
+    feedForward = new SimpleMotorFeedforward(KS, KV, KA);
+
+    pid = new PIDController(p,i,d);
+    pid.setTolerance(TOLERANCE);
+    pid.setIntegratorRange(-.5, .5);
+
+    SmartDashboard.putNumber("P", p);
+    SmartDashboard.putNumber("I", i);
+    SmartDashboard.putNumber("D", d);
+    SmartDashboard.putNumber("Estimate Coeff", estimateCoeff);
+
+    shooterSpeed = 0;
     xCentre = IMG_WIDTH/2.0;
     width = IMG_WIDTH/2.0;
     imgLock = new Object();
     light = new Solenoid(PneumaticsModuleType.CTREPCM, LIGHT_PORT);
     light.set(true); // turn light off
 
+    previousTurn = 100000;
+    angleError = 0;
+    currentAngle = 0;
+    inRange = false;
+
     visionPipelines = new SendableChooser<>();
-    visionPipelines.setDefaultOption("Waterloo Vision", new WaterlooSettings());
+    visionPipelines.setDefaultOption("Long School Vision", new LongSettings());
+    visionPipelines.addOption("Waterloo Vision", new WaterlooSettings());
     visionPipelines.addOption("School Vision", new SchoolSettings());
-    visionPipelines.addOption("Long School Vision", new LongSettings());
     visionPipelines.addOption("Humber Vision", new HumberSettings());
     visionPipelines.addOption("Test Vision", new TestSettings());
     SmartDashboard.putData(visionPipelines);
@@ -96,6 +136,18 @@ public class Vision extends SubsystemBase {
   }
 
   // METHODS //
+
+  public boolean isAligned() {
+    return aligned;
+  }
+
+  public double getShooterSpeed() {
+    return shooterSpeed;
+  }
+
+  public double getTurnSpeed() {
+    return turnSpeed;
+  }
 
   /* =====================================
   Author: Lucas Jacobs
@@ -129,17 +181,17 @@ public class Vision extends SubsystemBase {
 
     visionThread = new VisionThread(cam, standardPipeline, pipeline -> {
       // Set to be the currently selected Pipeline
-      //synchronized (imgLock) {
-        //if (settings != visionPipelines.getSelected()) {
-        //  settings = visionPipelines.getSelected();
-      //    pipeline.set(settings);
-       //   outputFilterSettings(pipeline);
-      //  }
+      synchronized (imgLock) {
+        if (settings != visionPipelines.getSelected()) {
+          settings = visionPipelines.getSelected();
+          pipeline.set(settings);
+          outputFilterSettings(pipeline);
+        }
 
         // Retrieve new filter settings each time the thread runs
-       // retrieveFilterSettings(pipeline);
-       // setExposure(cam, pipeline);
-   //   }
+        retrieveFilterSettings(pipeline);
+        setExposure(cam, pipeline);
+      }
 
       //Create output frames which will have rectangles drawn on them
       Mat output = new Mat();
@@ -158,6 +210,7 @@ public class Vision extends SubsystemBase {
         for (int i = 0; i < pipeline.filterContoursOutput().size(); i++) {
           Rect contour = Imgproc.boundingRect(pipeline.filterContoursOutput().get(i));
 
+          if (contour.y + contour.height > .75*IMG_WIDTH) continue; // Skip rectangles in the bottom fourth of the screen
           targets.add(contour);
 
           if (contour.area() > biggest.area()) biggest = contour;
@@ -188,7 +241,7 @@ public class Vision extends SubsystemBase {
 
           Point checkedCentre = new Point(checked.x + checked.width/2, checked.y + checked.height/2);
 
-          for (int i = 0; i < targets.size(); i++) { //Go through triangle not yet in target
+          for (int i = 0; i < targets.size(); i++) { //Go through rectangles not yet in target
             Rect potential = targets.get(i);
 
             Point potentialCentre = new Point(potential.x + potential.width/2, potential.y + potential.height/2);
@@ -231,9 +284,10 @@ public class Vision extends SubsystemBase {
         synchronized (imgLock) {
           this.xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
           this.width = targetRect.width;
+          inRange = width > 19 && width < 58;
           SmartDashboard.putNumber("Width", biggest.width);
           SmartDashboard.putNumber("Target Width", width);
-          SmartDashboard.putBoolean("In Shooting Range", width >= 4 && width <= 9);
+          SmartDashboard.putBoolean("In Shooting Range", inRange);
           SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);
           autoShooterSpeed(); //Prints the speed needed to get the ball in to the dashboard
         }
@@ -255,12 +309,14 @@ public class Vision extends SubsystemBase {
   in order to aim at the target
   ===================================== */
   public double aimAtTarget() {
+    if (!inRange) return 0;
+
     double xCentre;
     synchronized (imgLock) {
       xCentre = this.xCentre;
     }
 
-    double turn = xCentre - (IMG_WIDTH/ 2.0);
+    double turn = xCentre - (IMG_WIDTH/ 2.0)+3;
     SmartDashboard.putNumber("Dist to Target", turn);
 
     return turn; // return difference between the target and where the robot is pointed
@@ -270,39 +326,22 @@ public class Vision extends SubsystemBase {
   Author: Lucas Jacobs
 
   Desc:
-  This method returns the speed the shooter should spin to get in the target
+  This method returns the speed (in volts) the shooter should spin to get in the target
   ===================================== */
   public double autoShooterSpeed() {
+
     double x;
     synchronized (imgLock) {
       x = this.width;
     }
 
-    double speed = 0; // PUT SOME FUNCTION INVOLVING WIDTH HERE
+    // Function to supply volts to the shooter (using Excel)
+    shooterSpeed = -0.0429332715477292*x + 6.57254402224279;
 
-    VisionType function = visionType.getSelected();
+    shooterSpeed *= SPEED_ADJUST;
+    SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
 
-    if (function == VisionType.LONG) {
-      //speed = -0.000000149209973043796000000000*Math.pow(x,5) + 0.000030514434712358700000000000*Math.pow(x,4) - 0.002456571701941360000000000000*Math.pow(x,3) + 0.097238797730824400000000000000*Math.pow(x,2) - 1.894926271401340000000000000000*x + 15.000000000000000000000000000000;
-      speed = -0.00490319384099398*x + 0.6;
-    } else if (function == VisionType.PIECES) {
-      speed = -0.0051*x + 0.5657;
-    } else if (function == VisionType.FULL) {
-      x /= 1.5;
-      speed = -0.00490319384099398*x + 0.6;
-      //speed = -0.000000149209973043796000000000*Math.pow(x,5) + 0.000030514434712358700000000000*Math.pow(x,4) - 0.002456571701941360000000000000*Math.pow(x,3) + 0.097238797730824400000000000000*Math.pow(x,2) - 1.894926271401340000000000000000*x + 15.000000000000000000000000000000;
-    } else if (function == VisionType.BIGGEST) {
-      speed = -0.015*x + 0.488;
-    }
-
-    //if (width == 4) speed = 0.48;
-    //else if (width >= 5 && width <=  9) speed = -0.01333*width + 0.50666; //Experimentally Determined
-
-    //shooterSpeed = SmartDashboard.getNumber("Shooter Speed", speed);
-    speed *= SPEED_ADJUST;
-    SmartDashboard.putNumber("Shooter Speed", speed);
-
-    return speed; // return difference between the target and where the robot is pointed
+    return shooterSpeed; // return difference between the target and where the robot is pointed
   }
 
   /* ==========================
@@ -392,11 +431,6 @@ public class Vision extends SubsystemBase {
   * ====================================================*/
 
   private void retrieveFilterSettings(StandardPipeline pipeline) {
-
-    SmartDashboard.putData(visionPipelines);
-    SmartDashboard.putData(visionType);
-
-    SmartDashboard.putData(showRectangles);
       pipeline.rgbThresholdRed[1] = SmartDashboard.getNumber("Upper Red", pipeline.rgbThresholdRed[1]);
       pipeline.rgbThresholdRed[0] = SmartDashboard.getNumber("Lower Red", pipeline.rgbThresholdRed[0]);
       pipeline.rgbThresholdGreen[1] = SmartDashboard.getNumber("Upper Green", pipeline.rgbThresholdGreen[1]);
@@ -440,6 +474,58 @@ public class Vision extends SubsystemBase {
     } else {
       cam.setExposureAuto();
     }
+  }
+
+  /* ===================================================
+  * Author: Lucas Jacobs      Date: 31 March 2022
+  *
+  * Desc: Calculates what angle the robot is from the target
+  * using frames from the camera. If the function is called multiple times
+  * during the same frame, it uses the gyroscope to estimate how far it has turned
+  * ====================================================*/
+  public void calcAlign(double angle) {
+    double turn = aimAtTarget(); //Get the turn speed from the camera
+    if (turn == previousTurn) {
+      angleError +=  angle - currentAngle; 
+      currentAngle = angle;
+      double pidAdjustment = pid.calculate(currentAngle);
+      double estimate = 0;
+      if (Math.abs(turn) > TOLERANCE) estimate = Math.copySign(estimateCoeff, turn);
+      turnSpeed = pidAdjustment + feedForward.calculate(estimate);
+    } else {
+      previousTurn = turn;
+      angleError = turn*PIXELS_TO_DEGREES;
+      currentAngle = angle;
+      double pidAdjustment = pid.calculate(currentAngle, currentAngle + angleError);
+      double estimate = 0;
+      if (Math.abs(turn) > TOLERANCE) estimate = Math.copySign(estimateCoeff, turn);
+      turnSpeed = pidAdjustment +  feedForward.calculate(estimate); // get new PID value and change the setpoint
+    }
+
+    aligned = Math.abs(angleError) < TOLERANCE && inRange;
+    SmartDashboard.putNumber("Error", angleError);
+    SmartDashboard.putNumber("PID Speed", turnSpeed);
+    SmartDashboard.putBoolean("ALIGNED", aligned);
+  }
+
+ /* ====================================================
+  * Author: Lucas Jacobs      Date: 1 April 2022
+  *
+  * Desc: Resets the PID Controller and sets previousTurn to a value
+  * that is unwritable by the code so that the pid gets a new setpoint
+  * the next time that calcAlign runs
+  * ====================================================*/
+  public void resetPID() {
+    pid.reset();
+
+    p = SmartDashboard.getNumber("P", p);
+    i = SmartDashboard.getNumber("I", i);
+    d = SmartDashboard.getNumber("D", d);
+    estimateCoeff = SmartDashboard.getNumber("Estimate Coeff", estimateCoeff);
+
+    pid.setPID(p,i,d);
+
+    previousTurn = 1000000000;
   }
 }
 

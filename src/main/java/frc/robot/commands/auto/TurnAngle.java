@@ -24,7 +24,8 @@ public class TurnAngle extends CommandBase
   private double targetAngle;
 
   // CONSTANTS //
-  private static final double MIN_TURN_SPEED = .3;
+  private static final double MIN_TURN_SPEED = .5
+  ;
   private static final double ANGLE_THRESHOLD = 10;
 
   // CONSTRUCTOR //
@@ -54,15 +55,15 @@ public class TurnAngle extends CommandBase
   @Override
   public void execute()
   {
-    double currentAngle = Math.abs(robot.drivetrain.gyroAngle());
+    double currentAngle = robot.drivetrain.gyroAngle();
     double error = targetAngle - currentAngle;
 
-    while (error > ANGLE_THRESHOLD) {
+    while (Math.abs(error) > ANGLE_THRESHOLD) {
       double turnSpeed = Math.copySign(Math.max(MIN_TURN_SPEED, Math.abs(speed*error)), error); 
 
       robot.drivetrain.moveMotors(0, turnSpeed);
 
-      currentAngle = Math.abs(robot.drivetrain.gyroAngle());
+      currentAngle = robot.drivetrain.gyroAngle();
       error = targetAngle - currentAngle;
     }
   }
