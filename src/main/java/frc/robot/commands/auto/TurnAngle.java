@@ -73,6 +73,9 @@ public class TurnAngle extends CommandBase
   public void end(boolean interrupted)
   {
     robot.drivetrain.stopMotors();
+    if (SmartDashboard.getString("Robot Mode:", "").equals("Turn Angle")) {
+      SmartDashboard.putString("Robot Mode:", "TeleOp");
+    }
   }
 
   // Returns true when the command should end.

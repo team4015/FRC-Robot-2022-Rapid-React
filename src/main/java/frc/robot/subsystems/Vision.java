@@ -111,8 +111,9 @@ public class Vision extends SubsystemBase {
     inRange = false;
 
     visionPipelines = new SendableChooser<>();
-    visionPipelines.setDefaultOption("Long School Vision", new LongSettings());
+    visionPipelines.setDefaultOption("St. Mary Vision", new StMarySettings());
     visionPipelines.addOption("Waterloo Vision", new WaterlooSettings());
+    visionPipelines.addOption("Long School Vision", new LongSettings());
     visionPipelines.addOption("School Vision", new SchoolSettings());
     visionPipelines.addOption("Humber Vision", new HumberSettings());
     visionPipelines.addOption("Test Vision", new TestSettings());
