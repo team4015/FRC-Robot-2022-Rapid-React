@@ -125,11 +125,11 @@ public class Operator
         climberExtend.whileHeld(new ClimberExtend(robot));
         climberRetract.whileHeld(new ClimberRetract(robot));
       
-        autoShoot.whileHeld(new AutoVisionShoot(robot, 1));
+        autoShoot.whileHeld(new AutoVisionShoot(robot));
         
         shooterHub.whenPressed(new AutoHubShoot(robot));
         shooterSpin.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_SPIN));
-        shooterWall.whenPressed(new AutoWallShoot(robot));
+        shooterWall.whenHeld(new AutoWallShoot(robot));
         shooterReverse.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_REVERSE));
     }
        // METHODS

@@ -22,6 +22,7 @@ public class Intake extends SubsystemBase
   private PWMSparkMax intakeMotor;
   private DoubleSolenoid intakePiston;
   private boolean deployed;
+  private boolean spinning;
 
   // PORTS //
   public static final int INTAKE_SPARK = 4;
@@ -38,9 +39,14 @@ public class Intake extends SubsystemBase
     intakeMotor = new PWMSparkMax(INTAKE_SPARK); // The intake is run by one brushless motor controlled by one SparkMax motor controller
     intakePiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE_PISTON_DEPLOY, INTAKE_PISTON_RETRACT);
     deployed = false;
+    spinning = false;
   }
 
   // METHODS //
+
+  public boolean isSpinning() {
+    return spinning;
+  }
 
   /* =====================================
   flip() deploys the intake if it is 
@@ -86,6 +92,7 @@ public class Intake extends SubsystemBase
     if (deployed) // Prevents the intake from spinning when held up inside the chassis
     {
       intakeMotor.set(INTAKE_SPEED);
+      spinning = true;
     }
   }
 
@@ -97,6 +104,7 @@ public class Intake extends SubsystemBase
   public void stop()
   {
     intakeMotor.set(0);
+    spinning = false;
   }
 
   /* =====================================
