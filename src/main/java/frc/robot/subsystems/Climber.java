@@ -38,7 +38,7 @@ public class Climber extends SubsystemBase
     // instantiate hardware
     rightSpoolMotor = new PWMSparkMax(CLIMBER_SPARK_SPOOL_RIGHT);
     leftSpoolMotor = new PWMSparkMax(CLIMBER_SPARK_SPOOL_LEFT);
-    //the climber is run by spool motors (Spark MAX) and gear motor (Victor SP).
+    //the climber is run by spool motors (Spark MAX) and gear motors (Victor SPX).
     gearmotor = new PWMVictorSPX(CLIMBER_SPARK_GEARS);
 
     SmartDashboard.putNumber("Spool Speed", SPOOL_SPEED);
