@@ -11,7 +11,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
+import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber extends SubsystemBase
@@ -19,7 +19,7 @@ public class Climber extends SubsystemBase
   // HARDWARE //
   private PWMSparkMax rightSpoolMotor;
   private PWMSparkMax leftSpoolMotor;
-  private VictorSP gearmotor;
+  private PWMVictorSPX gearmotor;
 
   // Ports //
   public static final int CLIMBER_SPARK_SPOOL_RIGHT = 5;
@@ -39,7 +39,7 @@ public class Climber extends SubsystemBase
     rightSpoolMotor = new PWMSparkMax(CLIMBER_SPARK_SPOOL_RIGHT);
     leftSpoolMotor = new PWMSparkMax(CLIMBER_SPARK_SPOOL_LEFT);
     //the climber is run by spool motors (Spark MAX) and gear motor (Victor SP).
-    gearmotor = new VictorSP(CLIMBER_SPARK_GEARS);
+    gearmotor = new PWMVictorSPX(CLIMBER_SPARK_GEARS);
 
     SmartDashboard.putNumber("Spool Speed", SPOOL_SPEED);
   }
