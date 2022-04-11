@@ -44,10 +44,10 @@ public class Vision extends SubsystemBase {
   final static int FPS = 30;
 
   final static int TURN_THRESHOLD = 8;
-  final static double SPEED_ADJUST = 1;
+  final static double SPEED_ADJUST = 1.06;
 
   private final static double PIXELS_TO_DEGREES = 0.35;
-  private final static double TOLERANCE = 4;
+  private final static double TOLERANCE = 4.5;
   private final static double BASE_TURN_SPEED = .3;
   //private final static double MIN_TURN_SPEED = 0.5;
   //private final static double MAX_TURN_SPEED = 0.8;
@@ -65,6 +65,7 @@ public class Vision extends SubsystemBase {
   private double turnSpeed;
   private boolean aligned;
   private boolean inRange;
+  private double adjustment = 35;
 
   private SendableChooser<PipelineSettings> visionPipelines;
   private SendableChooser<Boolean> showRectangles;
@@ -93,6 +94,7 @@ public class Vision extends SubsystemBase {
     pid.setTolerance(TOLERANCE);
     pid.setIntegratorRange(-.5, .5);
 
+    SmartDashboard.putNumber("Adjust", adjustment);
     SmartDashboard.putNumber("P", p);
     SmartDashboard.putNumber("I", i);
     SmartDashboard.putNumber("D", d);
@@ -111,9 +113,9 @@ public class Vision extends SubsystemBase {
     inRange = false;
 
     visionPipelines = new SendableChooser<>();
-    visionPipelines.setDefaultOption("St. Mary Vision", new StMarySettings());
+    visionPipelines.setDefaultOption("Long School Vision", new LongSettings());
+    visionPipelines.addOption("St. Mary Vision", new StMarySettings());
     visionPipelines.addOption("Waterloo Vision", new WaterlooSettings());
-    visionPipelines.addOption("Long School Vision", new LongSettings());
     visionPipelines.addOption("School Vision", new SchoolSettings());
     visionPipelines.addOption("Humber Vision", new HumberSettings());
     visionPipelines.addOption("Test Vision", new TestSettings());
@@ -211,7 +213,7 @@ public class Vision extends SubsystemBase {
         for (int i = 0; i < pipeline.filterContoursOutput().size(); i++) {
           Rect contour = Imgproc.boundingRect(pipeline.filterContoursOutput().get(i));
 
-          if (contour.y + contour.height > .75*IMG_WIDTH) continue; // Skip rectangles in the bottom fourth of the screen
+          if (contour.y + contour.height > .85*IMG_HEIGHT) continue; // Skip rectangles in the bottom fourth of the screen
           targets.add(contour);
 
           if (contour.area() > biggest.area()) biggest = contour;
@@ -317,7 +319,8 @@ public class Vision extends SubsystemBase {
       xCentre = this.xCentre;
     }
 
-    double turn = xCentre - (IMG_WIDTH/ 2.0)+3;
+    adjustment = SmartDashboard.getNumber("Adjust", adjustment);
+    double turn = xCentre - (IMG_WIDTH/ 2.0)+adjustment;
     SmartDashboard.putNumber("Dist to Target", turn);
 
     return turn; // return difference between the target and where the robot is pointed

@@ -12,12 +12,13 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Robot;
 
 import frc.robot.commands.vision.VisionAim;
+import frc.robot.commands.vision.VisionAimTime;
 
 public class AimAndShoot extends ParallelCommandGroup {
     public AimAndShoot(Robot robot) {
         super(
-            new AutoVisionShoot(robot),
-            new VisionAim(robot)
+            new VisionAim(robot),
+            new AutoVisionShoot(robot)
         );
     }
 }

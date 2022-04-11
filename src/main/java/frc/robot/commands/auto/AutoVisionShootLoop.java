@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class AutoVisionShoot extends CommandBase
+public class AutoVisionShootLoop extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
@@ -42,7 +42,7 @@ public class AutoVisionShoot extends CommandBase
 
   // CONSTRUCTOR //
 
-  public AutoVisionShoot(Robot robot)
+  public AutoVisionShootLoop(Robot robot)
   {
     this.robot = robot;
     vision = robot.vision;
@@ -78,7 +78,7 @@ public class AutoVisionShoot extends CommandBase
   @Override
   public void execute()
   {
-
+    while(true) {
     if (timer.get() < CONVEYOR_REVERSE_TIME) { // No premature shoots
       robot.conveyor.reverse();
     } else {
@@ -108,6 +108,7 @@ public class AutoVisionShoot extends CommandBase
       robot.conveyor.stop();
     }
   }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -129,7 +130,7 @@ public class AutoVisionShoot extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return false;
+    return true;
   }
 
   /* ==============================

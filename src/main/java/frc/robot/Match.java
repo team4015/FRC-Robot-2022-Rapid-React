@@ -125,7 +125,8 @@ public class Match extends TimedRobot
   @Override
   public void teleopPeriodic()
   {
-
+    double time = Timer.getMatchTime();
+    if (time < 1 && time>0) robot.intake.retract();
   }
 
   @Override

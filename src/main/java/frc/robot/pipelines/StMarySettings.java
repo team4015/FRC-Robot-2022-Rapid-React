@@ -14,24 +14,24 @@ public class StMarySettings extends PipelineSettings {
 		isRGB = true;
 		cameraExposure = 25;
 
-		rgbThresholdRed[0] = 100;
-		rgbThresholdRed[1] = 242;
-		rgbThresholdGreen[0] = 140;
+		rgbThresholdRed[0] = 0;
+		rgbThresholdRed[1] = 255;
+		rgbThresholdGreen[0] = 70;
 		rgbThresholdGreen[1] = 255;
-		rgbThresholdBlue[0] = 124;
+		rgbThresholdBlue[0] = 60;
 		rgbThresholdBlue[1] = 255;
 
-		hsvThresholdHue[0] = 60;
-		hsvThresholdHue[1] = 164;
-		hsvThresholdSaturation[0] = 25;
+		hsvThresholdHue[0] = 50;
+		hsvThresholdHue[1] = 90;
+		hsvThresholdSaturation[0] = 50;
 		hsvThresholdSaturation[1] = 255;
-		hsvThresholdValue[0] = 140;
+		hsvThresholdValue[0] = 0;
 		hsvThresholdValue[1] = 255.0;
 
 		filterContoursMinArea = 1.0;
 		filterContoursMinPerimeter = 0.0;
 		filterContoursMinWidth = 0.0;
-		filterContoursMaxWidth = 1000.0;
+		filterContoursMaxWidth = 30.0;
 		filterContoursMinHeight = 0.0;
 		filterContoursMaxHeight = 30.0;
 		filterContoursSolidity[0] = 0;
