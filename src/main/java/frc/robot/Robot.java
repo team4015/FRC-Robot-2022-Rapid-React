@@ -42,6 +42,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.conveyor.*;
 import frc.robot.commands.shooter.*;
+import frc.robot.commands.underglow.UnderglowRainbow;
 import frc.robot.controls.*;
 import frc.robot.subsystems.*;
 
@@ -137,17 +138,18 @@ public class Robot
     drivetrain.setDefaultCommand(new Drive(this));
     conveyor.setDefaultCommand(new ConveyorStop(this));
     shooter.setDefaultCommand(new ShooterStop(this));
+    underglow.setDefaultCommand(new UnderglowRainbow(this));
   }
 
   /* =============================
    * Author: Lucas Jacobs
-   * 
-   * Desc: Returns the command that the robot will use in 
+   *
+   * Desc: Returns the command that the robot will use in
    * autonomous mode. The command makes the robot follow a given trajectory.
    * =========================================*/
 
   /*public CommandBase getAutonomousCommand() {
-    
+
     // Make feed forward for Motors
     SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(KS, KV, KA);
 
@@ -177,11 +179,11 @@ public class Robot
     // Example Trajectory (Real Auto Trajectories to come later)
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
       // Start Point
-      new Pose2d(0, 0, new Rotation2d(0)), 
+      new Pose2d(0, 0, new Rotation2d(0)),
       // Waypoints
-      List.of(new Translation2d(3, 0)),//List.of(new Translation2d(1, 1), new Translation2d(2, -1)), 
+      List.of(new Translation2d(3, 0)),//List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
       // End Point
-      new Pose2d(3, 0, new Rotation2d(0)), 
+      new Pose2d(3, 0, new Rotation2d(0)),
       // Pass in the config
       config);
 
@@ -191,23 +193,23 @@ public class Robot
     // Make command to be sent out
     RamseteCommand ramseteCommand = new RamseteCommand(
       // Trajectory to be followed
-      weaverTraj, //trajectory, 
+      weaverTraj, //trajectory,
       // Method to get robot pose
-      drivetrain::getRobotPose, 
+      drivetrain::getRobotPose,
       // Controller that does path following computation
-      new RamseteController(RAMSETE_B, RAMSETE_ZETA), 
+      new RamseteController(RAMSETE_B, RAMSETE_ZETA),
       // Motor feed Forward
       feedForward,
-      // Drivetrain Kinematics 
-      DRIVE_KINEMATICS, 
+      // Drivetrain Kinematics
+      DRIVE_KINEMATICS,
       // Method to get wheel speeds
-      drivetrain::getWheelSpeeds, 
+      drivetrain::getWheelSpeeds,
       // PID Controller for left motor
-      new PIDController(KP_DRIVE, 0, 0), 
+      new PIDController(KP_DRIVE, 0, 0),
       // PID controller for right motor
-      new PIDController(KP_DRIVE, 0, 0), 
+      new PIDController(KP_DRIVE, 0, 0),
       // Method for setting the voltage on each motor
-      drivetrain::tankDriveVoltage, 
+      drivetrain::tankDriveVoltage,
       // Pass drivetrain as a requirement
       drivetrain);
 
