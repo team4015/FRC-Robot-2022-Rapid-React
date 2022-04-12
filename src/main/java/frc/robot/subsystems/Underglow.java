@@ -108,7 +108,7 @@ public class Underglow extends SubsystemBase
 
   public void purple()
   {
-    setColour(70, 0, 255);
+    setColour(200, 0, 128);
   }
 
   public void yellow()
