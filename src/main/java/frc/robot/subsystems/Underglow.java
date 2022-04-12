@@ -39,8 +39,8 @@ public class Underglow extends SubsystemBase
     timer.reset();
     timer.start();
 
-    index = 0;
     data = new int[0];
+    index = data.length;
   }
 
   public boolean busy()
@@ -55,6 +55,7 @@ public class Underglow extends SubsystemBase
     {
       byte [] buffer = new byte[1];
       buffer[0] = (byte)data[index];
+      index++;
 
       uart.write(buffer, 1);
       uart.flush();
@@ -67,7 +68,12 @@ public class Underglow extends SubsystemBase
   {
     if (!busy())
     {
-      this.data = data;
+      this.data = new int[data.length];
+      for (int i = 0; i < data.length; i++)
+      {
+        this.data[i] = data[i];
+      }
+
       index = 0;
     }
   }
