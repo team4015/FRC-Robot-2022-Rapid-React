@@ -48,7 +48,7 @@ public class Vision extends SubsystemBase {
 
   private final static double PIXELS_TO_DEGREES = 0.35;
   private final static double TOLERANCE = 4.5;
-  private final static double BASE_TURN_SPEED = .3;
+  //private final static double BASE_TURN_SPEED = .3;
   //private final static double MIN_TURN_SPEED = 0.5;
   //private final static double MAX_TURN_SPEED = 0.8;
 

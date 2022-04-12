@@ -28,7 +28,6 @@ public class AutoVisionShoot extends CommandBase
   private Timer timer;
   private LinkedList<Double> speeds;
   private double averageSpeed;
-  private boolean endCommand;
   private boolean constantSpeed;
   private double timerInit;
   private double speed;
@@ -69,7 +68,6 @@ public class AutoVisionShoot extends CommandBase
 
     speeds = new LinkedList<Double>();
     averageSpeed = 0;
-    endCommand = false;
     constantSpeed = false;
     timerInit = 0;
 
