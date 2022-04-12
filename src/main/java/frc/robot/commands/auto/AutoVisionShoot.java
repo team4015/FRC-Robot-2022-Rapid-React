@@ -31,6 +31,7 @@ public class AutoVisionShoot extends CommandBase
   private boolean endCommand;
   private boolean constantSpeed;
   private double timerInit;
+  private double speed;
   //private final static double CONVEYOR_SPIN_TIME = .6;
 
   // CONSTANTS //
@@ -42,9 +43,10 @@ public class AutoVisionShoot extends CommandBase
 
   // CONSTRUCTOR //
 
-  public AutoVisionShoot(Robot robot)
+  public AutoVisionShoot(Robot robot, double speed)
   {
     this.robot = robot;
+    this.speed = speed;
     vision = robot.vision;
 
     // subsystems that this command requires
@@ -82,7 +84,7 @@ public class AutoVisionShoot extends CommandBase
     if (timer.get() < CONVEYOR_REVERSE_TIME) { // No premature shoots
       robot.conveyor.reverse();
     } else {
-      robot.shooter.spinVoltage(robot.vision.getShooterSpeed());
+      robot.shooter.spinVoltage(getSpeed());
     }
 
     if (constantSpeed && !constantShooterSpeed()) {
@@ -141,7 +143,7 @@ public class AutoVisionShoot extends CommandBase
   private boolean constantShooterSpeed() {
     boolean aligned = robot.vision.isAligned();
     boolean isConsistent = false;
-    double currentSpeed = vision.getShooterSpeed();
+    double currentSpeed = getSpeed();
     speeds.add(currentSpeed);
     averageSpeed += currentSpeed/SAVED_SPEEDS;
 
@@ -163,5 +165,10 @@ public class AutoVisionShoot extends CommandBase
     SmartDashboard.putBoolean("Aligned Auto", aligned);
     SmartDashboard.putBoolean("Consistent Speed", isConsistent);
     return aligned && isConsistent;
+  }
+
+  private double getSpeed() {
+    if (speed > 0) return speed;
+    else return robot.vision.getShooterSpeed();
   }
 }

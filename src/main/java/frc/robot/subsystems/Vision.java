@@ -44,7 +44,7 @@ public class Vision extends SubsystemBase {
   final static int FPS = 30;
 
   final static int TURN_THRESHOLD = 8;
-  final static double SPEED_ADJUST = 1.06;
+  final static double SPEED_ADJUST = 1.06; //1.06
 
   private final static double PIXELS_TO_DEGREES = 0.35;
   private final static double TOLERANCE = 4.5;
@@ -58,14 +58,15 @@ public class Vision extends SubsystemBase {
   private double xCentre;
   private double width;
   private Object imgLock;
-  private double shooterSpeed;
+  private double shooterSpeed = 5;
   private double previousTurn;
   private double angleError;
   private double currentAngle;
   private double turnSpeed;
   private boolean aligned;
   private boolean inRange;
-  private double adjustment = 35;
+  private double adjustment = 10; //35
+  private double overlayWidth = 30;
 
   private SendableChooser<PipelineSettings> visionPipelines;
   private SendableChooser<Boolean> showRectangles;
@@ -95,9 +96,11 @@ public class Vision extends SubsystemBase {
     pid.setIntegratorRange(-.5, .5);
 
     SmartDashboard.putNumber("Adjust", adjustment);
+    SmartDashboard.putNumber("Overlay Width", overlayWidth);
     SmartDashboard.putNumber("P", p);
     SmartDashboard.putNumber("I", i);
     SmartDashboard.putNumber("D", d);
+    SmartDashboard.putNumber("Speedy", shooterSpeed);
     SmartDashboard.putNumber("Estimate Coeff", estimateCoeff);
 
     shooterSpeed = 0;
@@ -276,18 +279,37 @@ public class Vision extends SubsystemBase {
         }
         //-----------------------------------------------------
 
-        //Add target in blue on screen
         synchronized (imgLock) {
           if (showRectangles.getSelected()) {
+            //Add target in blue on screen
             Imgproc.rectangle(output, targetRect,  new Scalar(255, 0, 0, 255), 1);
+
+            // Show shooting lines on screen
+
+            this.overlayWidth = SmartDashboard.getNumber("Overlay Width", overlayWidth);
+            this.adjustment = SmartDashboard.getNumber("Adjust", adjustment);
+            double adjustment = IMG_WIDTH/2.0 -this.adjustment;
+            /*
+            WIDTH   SPEED
+            55      5.2 RED
+            58      4.8 ORANGE
+            60      5 -----------------
+            65      4.5 GREEN
+            70      4.4 BLUE
+            80      4.3 VIOLET
+
+            */
+            Imgproc.line(output, new Point(adjustment, 0), new Point(adjustment, 40), new Scalar(0,0,0));
+            lineOnScreen(output, 55, new Scalar(0x22, 0, 0xE3)); //BGR
+            lineOnScreen(output, 58, new Scalar(0, 0x7E, 0xFF));
+            lineOnScreen(output, 65, new Scalar(0x08, 0x88, 0x13));
+            lineOnScreen(output, 70, new Scalar(0xBA, 0x48, 0));
+            lineOnScreen(output, 80, new Scalar(0x85, 0x15, 0xC7));
           }
-        }
 
-
-        synchronized (imgLock) {
           this.xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
           this.width = targetRect.width;
-          inRange = width > 19 && width < 58;
+          inRange = width > 9 && width < 80;
           SmartDashboard.putNumber("Width", biggest.width);
           SmartDashboard.putNumber("Target Width", width);
           SmartDashboard.putBoolean("In Shooting Range", inRange);
@@ -302,6 +324,12 @@ public class Vision extends SubsystemBase {
     });
 
     visionThread.start();
+  }
+
+  public void lineOnScreen(Mat output, double totalWidth, Scalar colour) {
+    double offset = totalWidth/2;
+    Imgproc.line(output, new Point(adjustment+offset, 0), new Point(adjustment+offset, 120), colour);
+    Imgproc.line(output, new Point(adjustment-offset, 0), new Point(adjustment-offset, 120), colour);
   }
 
   /* =====================================
@@ -319,7 +347,6 @@ public class Vision extends SubsystemBase {
       xCentre = this.xCentre;
     }
 
-    adjustment = SmartDashboard.getNumber("Adjust", adjustment);
     double turn = xCentre - (IMG_WIDTH/ 2.0)+adjustment;
     SmartDashboard.putNumber("Dist to Target", turn);
 
@@ -344,6 +371,7 @@ public class Vision extends SubsystemBase {
 
     shooterSpeed *= SPEED_ADJUST;
     SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
+    //shooterSpeed = SmartDashboard.getNumber("Speedy", shooterSpeed);
 
     return shooterSpeed; // return difference between the target and where the robot is pointed
   }

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.intake.IntakeDeploy;
+import frc.robot.commands.intake.IntakeRetract;
 import frc.robot.commands.intake.IntakeSpinForever;
 import frc.robot.commands.intake.IntakeStop;
 import frc.robot.commands.intake.StopIntakeSpinForever;
@@ -30,6 +31,7 @@ public class TwoBallAuto extends SequentialCommandGroup {
             new IntakeSpinForever(robot),
             new DriveDistance(robot, 1.6),
             new Wait(2),
+            new IntakeRetract(robot),
             new StopIntakeSpinForever(robot),
             new TurnAngle(robot, 0.01, 180),
            new AimAndShoot(robot)

@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class AutoVisionShootLoop extends CommandBase
+public class AutoVisionShootTimed extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
@@ -31,24 +31,26 @@ public class AutoVisionShootLoop extends CommandBase
   private boolean endCommand;
   private boolean constantSpeed;
   private double timerInit;
+  private double time;
   //private final static double CONVEYOR_SPIN_TIME = .6;
 
   // CONSTANTS //
   private final static double CONVEYOR_REVERSE_TIME = 0.3;
   private final static int SAVED_SPEEDS = 140;
   private final static double DIFF_THRESHOLD = 1; 
-  private final static double CONVEYOR_FEED_TIME = 0.25; 
+  private final static double CONVEYOR_FEED_TIME = 0.2; 
   private final static double TIME_BETWEEN_BALLS = .6;
 
   // CONSTRUCTOR //
 
-  public AutoVisionShootLoop(Robot robot)
+  public AutoVisionShootTimed(Robot robot, double time)
   {
     this.robot = robot;
     vision = robot.vision;
+    this.time = time;
 
     // subsystems that this command requires
-    addRequirements(robot.shooter/*, robot.conveyor*/);
+    addRequirements(robot.shooter, robot.conveyor);
   }
 
   // METHODS //
@@ -78,7 +80,7 @@ public class AutoVisionShootLoop extends CommandBase
   @Override
   public void execute()
   {
-    while(true) {
+
     if (timer.get() < CONVEYOR_REVERSE_TIME) { // No premature shoots
       robot.conveyor.reverse();
     } else {
@@ -108,7 +110,6 @@ public class AutoVisionShootLoop extends CommandBase
       robot.conveyor.stop();
     }
   }
-  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -130,7 +131,7 @@ public class AutoVisionShootLoop extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return true;
+    return false;
   }
 
   /* ==============================
@@ -141,25 +142,7 @@ public class AutoVisionShootLoop extends CommandBase
   * ===============================*/
   private boolean constantShooterSpeed() {
     boolean aligned = robot.vision.isAligned();
-    boolean isConsistent = false;
-    double currentSpeed = vision.getShooterSpeed();
-    speeds.add(currentSpeed);
-    averageSpeed += currentSpeed/SAVED_SPEEDS;
-
-    if (speeds.size() > SAVED_SPEEDS) {
-      while (speeds.size() > SAVED_SPEEDS+1) {
-        double extra = speeds.pop();
-        averageSpeed -= extra/SAVED_SPEEDS;
-      }
-
-      double oldSpeed = speeds.pop();
-      averageSpeed -= oldSpeed/SAVED_SPEEDS;
-
-      double oldDiff = Math.abs(oldSpeed - currentSpeed);
-      double avgDiff = Math.abs(averageSpeed - currentSpeed);
-
-      isConsistent = oldDiff < DIFF_THRESHOLD && avgDiff < DIFF_THRESHOLD;
-    }
+    boolean isConsistent = time < timer.get();
 
     SmartDashboard.putBoolean("Aligned Auto", aligned);
     SmartDashboard.putBoolean("Consistent Speed", isConsistent);
