@@ -45,6 +45,11 @@ public class Underglow extends SubsystemBase
 
   public boolean busy()
   {
+    if (data == null)
+    {
+      return false;
+    }
+
     return index < data.length;
   }
 
