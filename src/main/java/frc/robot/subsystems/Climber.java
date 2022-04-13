@@ -21,8 +21,8 @@ public class Climber extends SubsystemBase
   private VictorSP gearmotor;
 
   // Ports //
-  public static final int CLIMBER_SPOOL = 9;//5
-  public static final int CLIMBER_SPOOL_2 = 8;//7
+  public static final int LEFT_CLIMBER_SPOOL = 9;//5
+  public static final int RIGHT_CLIMBER_SPOOL = 8;//7
   public static final int CLIMBER_GEAR = 6;
 
   // CONSTANTS //
@@ -35,8 +35,8 @@ public class Climber extends SubsystemBase
   public Climber()
   {
     // instantiate hardware
-    leftSpoolMotor = new VictorSP(CLIMBER_SPOOL);
-    rightSpoolMotor = new VictorSP(CLIMBER_SPOOL_2);
+    leftSpoolMotor = new VictorSP(LEFT_CLIMBER_SPOOL);
+    rightSpoolMotor = new VictorSP(RIGHT_CLIMBER_SPOOL);
     //the climber is run by a spool and gear motor, controlled by two Spark motor controllers.
     gearmotor = new VictorSP(CLIMBER_GEAR);
 
