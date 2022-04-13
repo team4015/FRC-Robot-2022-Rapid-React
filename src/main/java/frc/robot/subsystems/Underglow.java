@@ -15,8 +15,9 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SerialPort.*;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Underglow extends SubsystemBase
@@ -33,7 +34,8 @@ public class Underglow extends SubsystemBase
 
   public Underglow()
   {
-    uart = new SerialPort(BAUD_RATE, SerialPort.Port.kOnboard);
+    uart = new SerialPort(BAUD_RATE, Port.kOnboard, 8, Parity.kNone, StopBits.kOne);
+    uart.setFlowControl(FlowControl.kNone);
     uart.setTimeout(TIMEOUT);
 
     timer = new Timer();
