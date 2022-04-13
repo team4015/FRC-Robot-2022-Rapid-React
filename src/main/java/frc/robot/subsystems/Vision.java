@@ -67,6 +67,7 @@ public class Vision extends SubsystemBase {
   private boolean inRange;
   private double adjustment = 10; //35
   private double overlayWidth = 30;
+  private double height = 30;
 
   private SendableChooser<PipelineSettings> visionPipelines;
   private SendableChooser<Boolean> showRectangles;
@@ -95,6 +96,7 @@ public class Vision extends SubsystemBase {
     pid.setTolerance(TOLERANCE);
     pid.setIntegratorRange(-.5, .5);
 
+    SmartDashboard.putNumber("Inverse Height", height);
     SmartDashboard.putNumber("Adjust", adjustment);
     SmartDashboard.putNumber("Overlay Width", overlayWidth);
     SmartDashboard.putNumber("P", p);
@@ -288,6 +290,7 @@ public class Vision extends SubsystemBase {
 
             this.overlayWidth = SmartDashboard.getNumber("Overlay Width", overlayWidth);
             this.adjustment = SmartDashboard.getNumber("Adjust", adjustment);
+            this.height = SmartDashboard.getNumber("Inverse Height",height);
             double adjustment = IMG_WIDTH/2.0 -this.adjustment;
             /*
             WIDTH   SPEED
@@ -298,25 +301,46 @@ public class Vision extends SubsystemBase {
             70      4.4 BLUE
             80      4.3 VIOLET
 
+            24     4.3 REd
+            33     4.3 or
+            49     4.4 gg
+            68     4.6 b
+            80     5   v
+
             */
-            Imgproc.line(output, new Point(adjustment, 0), new Point(adjustment, 40), new Scalar(0,0,0));
-            lineOnScreen(output, 55, new Scalar(0x22, 0, 0xE3)); //BGR
-            lineOnScreen(output, 58, new Scalar(0, 0x7E, 0xFF));
-            lineOnScreen(output, 65, new Scalar(0x08, 0x88, 0x13));
-            lineOnScreen(output, 70, new Scalar(0xBA, 0x48, 0));
-            lineOnScreen(output, 80, new Scalar(0x85, 0x15, 0xC7));
           }
+
+          Imgproc.line(output, new Point(adjustment, 0), new Point(adjustment, 40), new Scalar(0,0,0));
+            horizLineOnScreen(output, height, new Scalar(0, 0, 0));
+            horizLineOnScreen(output, 33, new Scalar(0x22, 0, 0xE3)); //BGR //RED
+            horizLineOnScreen(output, 45, new Scalar(0, 0x7E, 0xFF));
+            horizLineOnScreen(output, 57, new Scalar(0x08, 0x88, 0x13));
+            horizLineOnScreen(output, 77, new Scalar(0xBA, 0x48, 0));
+            horizLineOnScreen(output, 90, new Scalar(0x85, 0x15, 0xC7)); //VIOLET
 
           this.xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
           this.width = targetRect.width;
+          this.height = targetRect.y;
           inRange = width > 9 && width < 80;
           SmartDashboard.putNumber("Width", biggest.width);
           SmartDashboard.putNumber("Target Width", width);
+          SmartDashboard.putNumber("Target Height", targetRect.y);
           SmartDashboard.putBoolean("In Shooting Range", inRange);
           SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);
           autoShooterSpeed(); //Prints the speed needed to get the ball in to the dashboard
         }
       }
+
+      synchronized (imgLock) {
+      Imgproc.line(output, new Point(adjustment, 0), new Point(adjustment, 40), new Scalar(0,0,0));
+            horizLineOnScreen(output, height, new Scalar(0, 0, 0));
+            horizLineOnScreen(output, 24, new Scalar(0x22, 0, 0xE3)); //BGR //RED
+            horizLineOnScreen(output, 33, new Scalar(0, 0x7E, 0xFF));
+            horizLineOnScreen(output, 49, new Scalar(0x08, 0x88, 0x13));
+            horizLineOnScreen(output, 68, new Scalar(0xBA, 0x48, 0));
+            horizLineOnScreen(output, 80, new Scalar(0x85, 0x15, 0xC7)); //VIOLET
+      }
+
       vOut.putFrame(output);
 
       //Put out rbg or hsv filter output depending on pipeline settings
@@ -328,10 +352,14 @@ public class Vision extends SubsystemBase {
 
   public void lineOnScreen(Mat output, double totalWidth, Scalar colour) {
     double offset = totalWidth/2;
-    Imgproc.line(output, new Point(adjustment+offset, 0), new Point(adjustment+offset, 120), colour);
-    Imgproc.line(output, new Point(adjustment-offset, 0), new Point(adjustment-offset, 120), colour);
+    double middle = IMG_WIDTH/2.0-adjustment;
+    Imgproc.line(output, new Point(middle+offset, 0), new Point(middle+offset, 120), colour);
+    Imgproc.line(output, new Point(middle-offset, 0), new Point(middle-offset, 120), colour);
   }
 
+  public void horizLineOnScreen(Mat output, double height, Scalar colour) {
+    Imgproc.line(output, new Point(0, height), new Point(160, height), colour);
+  }
   /* =====================================
   Author: Lucas Jacobs
 
@@ -363,11 +391,11 @@ public class Vision extends SubsystemBase {
 
     double x;
     synchronized (imgLock) {
-      x = this.width;
+      x = this.height;
     }
 
     // Function to supply volts to the shooter (using Excel)
-    shooterSpeed = -0.0429332715477292*x + 6.57254402224279;
+    shooterSpeed = 0.013004629629629700000000000000*x + 3.89616287878786;
 
     shooterSpeed *= SPEED_ADJUST;
     SmartDashboard.putNumber("Shooter Speed", shooterSpeed);

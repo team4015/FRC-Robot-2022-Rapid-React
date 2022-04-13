@@ -23,7 +23,7 @@ public class LongSettings extends PipelineSettings {
 		rgbThresholdBlue[1] = 255;
 
 		hsvThresholdHue[0] = 36;
-		hsvThresholdHue[1] = 110;
+		hsvThresholdHue[1] = 95;
 		hsvThresholdSaturation[0] = 40; //was 100
 		hsvThresholdSaturation[1] = 255;
 		hsvThresholdValue[0] = 0;

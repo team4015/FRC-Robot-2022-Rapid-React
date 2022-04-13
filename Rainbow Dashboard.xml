@@ -1,5 +1,26 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Consistent Speed" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="418" y="7"/>
+	</widget>
+	<widget field="Aligned Auto" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="225" y="17"/>
+	</widget>
+	<widget field="Target Height" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="613" y="12"/>
+	</widget>
+	<widget field="Speedy" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1156" y="16"/>
+	</widget>
+	<widget field="Inverse Height" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="978" y="12"/>
+	</widget>
+	<widget field="Overlay Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="795" y="16"/>
+	</widget>
+	<widget field="Adjust" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="12" y="11"/>
+	</widget>
 	<widget field="Estimate Coeff" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="13" y="733"/>
 	</widget>

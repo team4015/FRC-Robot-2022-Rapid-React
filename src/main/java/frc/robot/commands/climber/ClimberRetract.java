@@ -17,7 +17,7 @@ public class ClimberRetract extends CommandBase{
   public ClimberRetract(Robot robot)
   {
     this.robot = robot;
-    addRequirements(robot.climber);
+   // addRequirements(robot.climber);
   }
   // Called when the command is initially scheduled.
   @Override
