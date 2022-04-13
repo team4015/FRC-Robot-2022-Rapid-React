@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class AutoVisionShoot extends CommandBase
+public class AutoVisionShootTimed extends CommandBase
 {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
@@ -28,28 +28,29 @@ public class AutoVisionShoot extends CommandBase
   private Timer timer;
   private LinkedList<Double> speeds;
   private double averageSpeed;
+  private boolean endCommand;
   private boolean constantSpeed;
   private double timerInit;
-  private double speed;
+  private double time;
   //private final static double CONVEYOR_SPIN_TIME = .6;
 
   // CONSTANTS //
   private final static double CONVEYOR_REVERSE_TIME = 0.3;
-  private final static int SAVED_SPEEDS = 90;
+  private final static int SAVED_SPEEDS = 140;
   private final static double DIFF_THRESHOLD = 1; 
-  private final static double CONVEYOR_FEED_TIME = 0.25; 
+  private final static double CONVEYOR_FEED_TIME = 0.2; 
   private final static double TIME_BETWEEN_BALLS = .6;
 
   // CONSTRUCTOR //
 
-  public AutoVisionShoot(Robot robot, double speed)
+  public AutoVisionShootTimed(Robot robot, double time)
   {
     this.robot = robot;
-    this.speed = speed;
     vision = robot.vision;
+    this.time = time;
 
     // subsystems that this command requires
-    addRequirements(robot.shooter/*, robot.conveyor*/);
+    addRequirements(robot.shooter, robot.conveyor);
   }
 
   // METHODS //
@@ -68,6 +69,7 @@ public class AutoVisionShoot extends CommandBase
 
     speeds = new LinkedList<Double>();
     averageSpeed = 0;
+    endCommand = false;
     constantSpeed = false;
     timerInit = 0;
 
@@ -82,7 +84,7 @@ public class AutoVisionShoot extends CommandBase
     if (timer.get() < CONVEYOR_REVERSE_TIME) { // No premature shoots
       robot.conveyor.reverse();
     } else {
-      robot.shooter.spinVoltage(getSpeed());
+      robot.shooter.spinVoltage(robot.vision.getShooterSpeed());
     }
 
     if (constantSpeed && !constantShooterSpeed()) {
@@ -140,33 +142,10 @@ public class AutoVisionShoot extends CommandBase
   * ===============================*/
   private boolean constantShooterSpeed() {
     boolean aligned = robot.vision.isAligned();
-    boolean isConsistent = false;
-    double currentSpeed = getSpeed();
-    speeds.add(currentSpeed);
-    averageSpeed += currentSpeed/SAVED_SPEEDS;
-
-    if (speeds.size() > SAVED_SPEEDS) {
-      while (speeds.size() > SAVED_SPEEDS+1) {
-        double extra = speeds.pop();
-        averageSpeed -= extra/SAVED_SPEEDS;
-      }
-
-      double oldSpeed = speeds.pop();
-      averageSpeed -= oldSpeed/SAVED_SPEEDS;
-
-      double oldDiff = Math.abs(oldSpeed - currentSpeed);
-      double avgDiff = Math.abs(averageSpeed - currentSpeed);
-
-      isConsistent = oldDiff < DIFF_THRESHOLD && avgDiff < DIFF_THRESHOLD;
-    }
+    boolean isConsistent = time < timer.get();
 
     SmartDashboard.putBoolean("Aligned Auto", aligned);
     SmartDashboard.putBoolean("Consistent Speed", isConsistent);
     return aligned && isConsistent;
-  }
-
-  private double getSpeed() {
-    if (speed > 0) return speed;
-    else return robot.vision.getShooterSpeed();
   }
 }

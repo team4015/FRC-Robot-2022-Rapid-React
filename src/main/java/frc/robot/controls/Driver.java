@@ -39,8 +39,8 @@ public class Driver
 
 	// CONSTANTS //
     public static final double DEADZONE = 0.15; // Deadzone applied to joysticks to aid in adjusting sensitivity
-    public static final double THROTTLE_LOW_SPEED = 0.5;
-    public static final double STEER_LOW_SPEED = 0.4;
+    public static final double THROTTLE_LOW_SPEED = 1;
+    public static final double STEER_LOW_SPEED = 0.85;
     public static final double THROTTLE_HIGH_SPEED = .8;
     public static final double STEER_HIGH_SPEED = .75;
 
@@ -116,7 +116,7 @@ public class Driver
     public void useLowSpeed() {
         throttleSpeed = THROTTLE_LOW_SPEED;
         steerSpeed = STEER_LOW_SPEED;
-        SmartDashboard.putString("Drive Speed", "LOW");
+        SmartDashboard.putString("Drive Speed", "DEFEND");
     }
 
     /* Author: Lucas Jacobs
@@ -124,6 +124,6 @@ public class Driver
     public void useHighSpeed() {
         throttleSpeed = THROTTLE_HIGH_SPEED;
         steerSpeed = STEER_HIGH_SPEED;
-        SmartDashboard.putString("Drive Speed", "HIGH");
+        SmartDashboard.putString("Drive Speed", "SHOOTING");
     }
 }

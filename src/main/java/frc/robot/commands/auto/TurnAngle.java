@@ -26,7 +26,7 @@ public class TurnAngle extends CommandBase
   // CONSTANTS //
   private static final double MIN_TURN_SPEED = .5
   ;
-  private static final double ANGLE_THRESHOLD = 10;
+  private static final double ANGLE_THRESHOLD = 20;
 
   // CONSTRUCTOR //
 
@@ -62,7 +62,6 @@ public class TurnAngle extends CommandBase
       double turnSpeed = Math.copySign(Math.max(MIN_TURN_SPEED, Math.abs(speed*error)), error); 
 
       robot.drivetrain.moveMotors(0, turnSpeed);
-
       currentAngle = robot.drivetrain.gyroAngle();
       error = targetAngle - currentAngle;
     }
@@ -73,6 +72,9 @@ public class TurnAngle extends CommandBase
   public void end(boolean interrupted)
   {
     robot.drivetrain.stopMotors();
+    if (SmartDashboard.getString("Robot Mode:", "").equals("Turn Angle")) {
+      SmartDashboard.putString("Robot Mode:", "TeleOp");
+    }
   }
 
   // Returns true when the command should end.

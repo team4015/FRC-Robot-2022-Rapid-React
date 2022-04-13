@@ -237,7 +237,7 @@ public class Drivetrain extends SubsystemBase
   @Override
   public void periodic() {
     // --- Update Odometry ---
-    Pose2d currentPos = updateOdometry();
+    updateOdometry();
 
     //--- Update Robot Position based on the Accelerator ---
     double xAccel = -accel.getX();

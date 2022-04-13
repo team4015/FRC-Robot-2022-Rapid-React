@@ -1,7 +1,35 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="SendableChooser[4]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="0" y="590"/>
+	</widget>
+	<widget field="Target Height" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="708" y="55"/>
+		<width>166</width>
+		<property name="Foreground" value="51.51.51.255"/>
+		<property name="Background" value="0.204.0.255"/>
+		<property name="Font Size" value="30"/>
+	</widget>
+	<widget field="Consistent Speed" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1314" y="653"/>
+	</widget>
+	<widget field="Aligned Auto" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1317" y="696"/>
+	</widget>
+	<widget field="Speedy" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1071" y="641"/>
+	</widget>
+	<widget field="Inverse Height" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1061" y="672"/>
+	</widget>
+	<widget field="Overlay Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1049" y="719"/>
+	</widget>
+	<widget field="Adjust" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1368" y="728"/>
+	</widget>
 	<widget field="Estimate Coeff" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="9" y="28"/>
+		<location x="13" y="733"/>
 	</widget>
 	<widget field="Turn Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="104" y="712"/>
@@ -37,21 +65,21 @@
 		<property name="Font Size" value="30"/>
 	</widget>
 	<widget field="Target Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
-		<location x="714" y="54"/>
+		<location x="1223" y="656"/>
 		<width>156</width>
 		<height>46</height>
 		<property name="Background" value="51.255.0.255"/>
 		<property name="Font Size" value="30"/>
 	</widget>
 	<widget field="D" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="493" y="19"/>
+		<location x="19" y="695"/>
 	</widget>
 	<widget field="I" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="359" y="10"/>
+		<location x="24" y="667"/>
 	</widget>
 	<widget field="P" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="199" y="9"/>
-		<width>133</width>
+		<location x="20" y="647"/>
+		<width>134</width>
 	</widget>
 	<widget field="Rate" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="641" y="620"/>
@@ -64,7 +92,8 @@
 	</widget>
 	<widget field="Shooter Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.SimpleDial">
 		<location x="985" y="422"/>
-		<property name="Upper Limit" value="1.0"/>
+		<property name="Upper Limit" value="5.0"/>
+		<property name="Lower Limit" value="4.0"/>
 		<property name="Tick Interval" value="0.1"/>
 	</widget>
 	<widget field="SendableChooser[3]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
@@ -236,11 +265,6 @@
 		<height>344</height>
 		<property name="Camera Choice" value="Target Video"/>
 	</static-widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
-		<location x="1" y="-2"/>
-		<width>1541</width>
-		<height>45</height>
-	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
 		<location x="9" y="110"/>
 		<width>458</width>
@@ -257,6 +281,27 @@
 	</widget>
 	<widget field="Angle Error" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="840" y="629"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="486" y="111"/>
+		<width>469</width>
+		<height>344</height>
+		<property name="Camera Choice" value="Target Video"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="-2" y="-3"/>
+		<width>1541</width>
+		<height>50</height>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="9" y="110"/>
+		<width>458</width>
+		<height>344</height>
+		<property name="Camera Choice" value="Filtered"/>
+		<property name="Selected Camera Path" value="/103path"/>
+	</static-widget>
+	<widget field="Gotten Height" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1243" y="731"/>
 	</widget>
 </dashboard>
 <live-window>

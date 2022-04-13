@@ -10,66 +10,70 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber extends SubsystemBase
 {
   // HARDWARE //
-  private Spark spoolmotor;
-  private Spark spoolmotor2;
-  private Spark gearmotor;
+  private VictorSP leftSpoolMotor;
+  private VictorSP rightSpoolMotor;
+  private VictorSP gearmotor;
 
   // Ports //
-  public static final int CLIMBER_SPARK_SPOOL = 5;
-  public static final int CLIMBER_SPARK_SPOOL_2 = 7;
-  public static final int CLIMBER_SPARK_GEAR = 6;
+  public static final int LEFT_CLIMBER_SPOOL = 9;//5
+  public static final int RIGHT_CLIMBER_SPOOL = 8;//7
+  public static final int CLIMBER_GEAR = 6;
 
   // CONSTANTS //
 
-  double SPOOL_SPEED = -.5;
+  double SPOOL_SPEED = 1;
   public static final double SPOOL_REVERSE_SPEED = .3 ;
-  public static final double GEAR_SPEED = -1;
-  public static final double GEAR_REVERSE_SPEED = 1;
-
+  public static final double GEAR_SPEED = 1;
+  public static final double GEAR_REVERSE_SPEED = -1;
+  private boolean extending;
   public Climber()
   {
     // instantiate hardware
-    spoolmotor = new Spark(CLIMBER_SPARK_SPOOL);
-    spoolmotor2 = new Spark(CLIMBER_SPARK_SPOOL_2);
+    leftSpoolMotor = new VictorSP(LEFT_CLIMBER_SPOOL);
+    rightSpoolMotor = new VictorSP(RIGHT_CLIMBER_SPOOL);
     //the climber is run by a spool and gear motor, controlled by two Spark motor controllers.
-    gearmotor = new Spark(CLIMBER_SPARK_GEAR);
+    gearmotor = new VictorSP(CLIMBER_GEAR);
 
     SmartDashboard.putNumber("Spool Speed", SPOOL_SPEED);
+    extending = false;
   }
 
   // METHODS //
   //unwind() winds out cable and strap to climb
 public void unwind(){
-    spoolmotor.set(SPOOL_REVERSE_SPEED);
-    spoolmotor2.set(SPOOL_REVERSE_SPEED);
+  leftSpoolMotor.set(SPOOL_REVERSE_SPEED);
+    rightSpoolMotor.set(SPOOL_REVERSE_SPEED);
   }
   //extend() unwinds cable, and extends the extension rod
 public void extend(){
   gearmotor.set(GEAR_SPEED);
+  extending = true;
 }
 //retract() retracts the rod, after the cable has been unwinded.
 public void retract(){
-  spoolmotor.set(0);
-  spoolmotor2.set(0);
+  leftSpoolMotor.set(0);
+  rightSpoolMotor.set(0);
   gearmotor.set(GEAR_REVERSE_SPEED);
 }
 //climb() after the rod has been retracted, the spool winds in the cable, so the robot can climb.
 public void climb(){
-  SPOOL_SPEED = SmartDashboard.getNumber("Spool Speed", SPOOL_SPEED);
-  spoolmotor.set(-SPOOL_SPEED);
-  spoolmotor2.set(SPOOL_SPEED);
+  if (!extending) {
+    leftSpoolMotor.set(SPOOL_SPEED);
+    rightSpoolMotor.set(SPOOL_SPEED);
   gearmotor.set(0);
+  }
 }//stop() allows both motors to immedediatly stop spinning 
 public void stop(){
   gearmotor.set(0);
-  spoolmotor.set(0);
-  spoolmotor2.set(0);
+  leftSpoolMotor.set(0);
+  rightSpoolMotor.set(0);
+  extending = false;
 }
 
 }

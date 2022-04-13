@@ -16,8 +16,8 @@ import frc.robot.commands.vision.VisionAim;
 public class AimAndShoot extends ParallelCommandGroup {
     public AimAndShoot(Robot robot) {
         super(
-            new AutoVisionShoot(robot),
-            new VisionAim(robot)
+            new VisionAim(robot),
+            new AutoVisionShootTimed(robot, 4)
         );
     }
 }

@@ -26,7 +26,7 @@ public class Intake extends SubsystemBase
 
   // PORTS //
   public static final int INTAKE_SPARK = 4;
-  public static final int INTAKE_PISTON_DEPLOY = 4;
+  public static final int INTAKE_PISTON_DEPLOY = 6;
   public static final int INTAKE_PISTON_RETRACT = 5;
 
   // CONSTANTS //

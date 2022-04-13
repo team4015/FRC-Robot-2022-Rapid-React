@@ -45,9 +45,15 @@ public class Operator
 
     private JoystickButton autoShoot;
 
-    private POVButton shooterHub;
-    private POVButton shooterSpin;
-    private POVButton shooterWall;
+    private POVButton shooterRed;
+    private POVButton shooterOrange;
+    private POVButton shooterGreen;
+    private POVButton shooterBlue;
+    private POVButton shooterViolet;
+
+    //private POVButton shooterHub;
+    //private POVButton shooterSpin;
+    //private POVButton shooterWall;
     private POVButton shooterReverse;
 
 	  // PORTS //
@@ -69,9 +75,15 @@ public class Operator
 
     public static final int AUTO_SHOOT = 9;
 
-    public static final int SHOOTER_HUB = 90;
-    public static final int SHOOTER_SPIN = 180;
-    public static final int SHOOTER_WALL = 270;
+    public static final int SHOOTER_RED = 90;
+    public static final int SHOOTER_ORANGE = 135;
+    public static final int SHOOTER_GREEN = 180;
+    public static final int SHOOTER_BLUE = 225;
+    public static final int SHOOTER_VIOLET = 270;
+
+    //public static final int SHOOTER_HUB = 90;
+    //public static final int SHOOTER_SPIN = 180;
+    //public static final int SHOOTER_WALL = 270;
     public static final int SHOOTER_REVERSE = 0;
   
     // CONSTANTS //
@@ -105,9 +117,15 @@ public class Operator
 
         autoShoot = new JoystickButton(dualshock, AUTO_SHOOT);
 
-        shooterHub = new POVButton(dualshock, SHOOTER_HUB);
-        shooterSpin = new POVButton(dualshock, SHOOTER_SPIN);
-        shooterWall = new POVButton(dualshock, SHOOTER_WALL);
+        shooterRed = new POVButton(dualshock, SHOOTER_RED);
+        shooterOrange = new POVButton(dualshock, SHOOTER_ORANGE);
+        shooterGreen = new POVButton(dualshock, SHOOTER_GREEN);
+        shooterBlue = new POVButton(dualshock, SHOOTER_BLUE);
+        shooterViolet = new POVButton(dualshock, SHOOTER_VIOLET);
+
+        //shooterHub = new POVButton(dualshock, SHOOTER_HUB);
+        //shooterSpin = new POVButton(dualshock, SHOOTER_SPIN);
+        //shooterWall = new POVButton(dualshock, SHOOTER_WALL);
         shooterReverse = new POVButton(dualshock, SHOOTER_REVERSE);
 
         // bind buttons to commands
@@ -125,11 +143,28 @@ public class Operator
         climberExtend.whileHeld(new ClimberExtend(robot));
         climberRetract.whileHeld(new ClimberRetract(robot));
       
-        autoShoot.whileHeld(new AutoVisionShoot(robot));
+        autoShoot.whileHeld(new AutoVisionShoot(robot, -1));
         
-        shooterHub.whenPressed(new AutoHubShoot(robot));
-        shooterSpin.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_SPIN));
-        shooterWall.whenHeld(new AutoWallShoot(robot));
+         /*
+            WIDTH   SPEED
+            55      5.2 RED
+            58      4.8 ORANGE
+            60      5 -----------------
+            65      4.5 GREEN
+            70      4.4 BLUE
+            80      4.3 VIOLET
+
+            */
+
+        shooterRed.whileHeld(new AutoVisionShoot(robot, 4.132));
+        shooterOrange.whileHeld(new AutoVisionShoot(robot, 4.142));
+        shooterGreen.whileHeld(new AutoVisionShoot(robot, 4.258));
+        shooterBlue.whileHeld(new AutoVisionShoot(robot, 4.48));
+        shooterViolet.whileHeld(new AutoVisionShoot(robot, 4.785));
+
+        //shooterHub.whenPressed(new AutoHubShoot(robot));
+        //shooterSpin.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_SPIN));
+        //shooterWall.whenHeld(new AutoWallShoot(robot));
         shooterReverse.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_REVERSE));
     }
        // METHODS

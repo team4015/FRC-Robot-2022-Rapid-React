@@ -44,11 +44,11 @@ public class Vision extends SubsystemBase {
   final static int FPS = 30;
 
   final static int TURN_THRESHOLD = 8;
-  final static double SPEED_ADJUST = 1;
+  final static double SPEED_ADJUST = .96; //1.06
 
   private final static double PIXELS_TO_DEGREES = 0.35;
-  private final static double TOLERANCE = 4;
-  private final static double BASE_TURN_SPEED = .3;
+  private final static double TOLERANCE = 4.5;
+  //private final static double BASE_TURN_SPEED = .3;
   //private final static double MIN_TURN_SPEED = 0.5;
   //private final static double MAX_TURN_SPEED = 0.8;
 
@@ -58,16 +58,20 @@ public class Vision extends SubsystemBase {
   private double xCentre;
   private double width;
   private Object imgLock;
-  private double shooterSpeed;
+  private double shooterSpeed = 5;
   private double previousTurn;
   private double angleError;
   private double currentAngle;
   private double turnSpeed;
   private boolean aligned;
   private boolean inRange;
+  private double adjustment = 10; //35
+  private double overlayWidth = 30;
+  private double height = 30;
 
   private SendableChooser<PipelineSettings> visionPipelines;
   private SendableChooser<Boolean> showRectangles;
+  private SendableChooser<Boolean> showLines;
   private SendableChooser<VisionType> visionType;
 
   private boolean aimingLight;
@@ -93,9 +97,13 @@ public class Vision extends SubsystemBase {
     pid.setTolerance(TOLERANCE);
     pid.setIntegratorRange(-.5, .5);
 
+    SmartDashboard.putNumber("Inverse Height", height);
+    SmartDashboard.putNumber("Adjust", adjustment);
+    SmartDashboard.putNumber("Overlay Width", overlayWidth);
     SmartDashboard.putNumber("P", p);
     SmartDashboard.putNumber("I", i);
     SmartDashboard.putNumber("D", d);
+    SmartDashboard.putNumber("Speedy", shooterSpeed);
     SmartDashboard.putNumber("Estimate Coeff", estimateCoeff);
 
     shooterSpeed = 0;
@@ -111,17 +119,22 @@ public class Vision extends SubsystemBase {
     inRange = false;
 
     visionPipelines = new SendableChooser<>();
-    visionPipelines.setDefaultOption("Long School Vision", new LongSettings());
+    visionPipelines.setDefaultOption("Highschool Vision", new LongSettings());
+    visionPipelines.addOption("Provincial Vision", new ProvincialSettings());
+    visionPipelines.addOption("Practice field Vision", new StMarySettings());
     visionPipelines.addOption("Waterloo Vision", new WaterlooSettings());
-    visionPipelines.addOption("School Vision", new SchoolSettings());
     visionPipelines.addOption("Humber Vision", new HumberSettings());
-    visionPipelines.addOption("Test Vision", new TestSettings());
     SmartDashboard.putData(visionPipelines);
 
     showRectangles = new SendableChooser<>();
     showRectangles.setDefaultOption("Show Boxes", true);
     showRectangles.addOption("Don't Show Boxes", false);
     SmartDashboard.putData(showRectangles);
+
+    showLines = new SendableChooser<>();
+    showLines.setDefaultOption("Show Lines", true);
+    showLines.addOption("Don't Show Lines", false);
+    SmartDashboard.putData(showLines);
 
     visionType = new SendableChooser<>();
     visionType.setDefaultOption("Long", VisionType.LONG);
@@ -195,6 +208,7 @@ public class Vision extends SubsystemBase {
 
       //Create output frames which will have rectangles drawn on them
       Mat output = new Mat();
+      Mat filtered = pipeline.maskOutput();
       vIn.grabFrame(output);
 
       SmartDashboard.putNumber("Targets Detected", pipeline.filterContoursOutput().size());
@@ -210,7 +224,7 @@ public class Vision extends SubsystemBase {
         for (int i = 0; i < pipeline.filterContoursOutput().size(); i++) {
           Rect contour = Imgproc.boundingRect(pipeline.filterContoursOutput().get(i));
 
-          if (contour.y + contour.height > .75*IMG_WIDTH) continue; // Skip rectangles in the bottom fourth of the screen
+          if (contour.y + contour.height > .85*IMG_HEIGHT) continue; // Skip rectangles in the bottom fourth of the screen
           targets.add(contour);
 
           if (contour.area() > biggest.area()) biggest = contour;
@@ -273,34 +287,88 @@ public class Vision extends SubsystemBase {
         }
         //-----------------------------------------------------
 
-        //Add target in blue on screen
         synchronized (imgLock) {
           if (showRectangles.getSelected()) {
+            //Add target in blue on screen
             Imgproc.rectangle(output, targetRect,  new Scalar(255, 0, 0, 255), 1);
+
+            // Show shooting lines on screen
+
+            this.overlayWidth = SmartDashboard.getNumber("Overlay Width", overlayWidth);
+            this.adjustment = SmartDashboard.getNumber("Adjust", adjustment);
+            this.height = SmartDashboard.getNumber("Inverse Height",height);
+            double adjustment = IMG_WIDTH/2.0 -this.adjustment;
+            /*
+            WIDTH   SPEED
+            55      5.2 RED
+            58      4.8 ORANGE
+            60      5 -----------------
+            65      4.5 GREEN
+            70      4.4 BLUE
+            80      4.3 VIOLET
+
+            24     4.3 REd
+            33     4.3 or
+            49     4.4 gg
+            68     4.6 b
+            80     5   v
+
+            */
           }
-        }
 
+          Imgproc.line(output, new Point(adjustment, 0), new Point(adjustment, 40), new Scalar(0,0,0));
+            /*horizLineOnScreen(output, height, new Scalar(0, 0, 0));
+            horizLineOnScreen(output, 33, new Scalar(0x22, 0, 0xE3)); //BGR //RED
+            horizLineOnScreen(output, 45, new Scalar(0, 0x7E, 0xFF));
+            horizLineOnScreen(output, 57, new Scalar(0x08, 0x88, 0x13));
+            horizLineOnScreen(output, 77, new Scalar(0xBA, 0x48, 0));
+            horizLineOnScreen(output, 90, new Scalar(0x85, 0x15, 0xC7)); //VIOLET*/
 
-        synchronized (imgLock) {
           this.xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
           this.width = targetRect.width;
-          inRange = width > 19 && width < 58;
+          this.height = targetRect.y;
+          inRange = width > 9 && width < 80;
           SmartDashboard.putNumber("Width", biggest.width);
           SmartDashboard.putNumber("Target Width", width);
+          SmartDashboard.putNumber("Target Height", targetRect.y);
           SmartDashboard.putBoolean("In Shooting Range", inRange);
           SmartDashboard.putNumber("Centre (0 to 1) ", xCentre/160.0);
           autoShooterSpeed(); //Prints the speed needed to get the ball in to the dashboard
         }
       }
+
+
+      synchronized (imgLock) {
+        if (showLines.getSelected()) {
+      Imgproc.line(output, new Point(adjustment, 0), new Point(adjustment, 40), new Scalar(0,0,0));
+            //horizLineOnScreen(output, height, new Scalar(0, 0, 0));
+            horizLineOnScreen(output, 20, new Scalar(0x22, 0, 0xE3)); //BGR //RED
+            horizLineOnScreen(output, 35, new Scalar(0, 0x7E, 0xFF));
+            horizLineOnScreen(output, 50, new Scalar(0x08, 0x88, 0x13));
+            horizLineOnScreen(output, 65, new Scalar(0xBA, 0x48, 0));
+            horizLineOnScreen(output, 80, new Scalar(0x85, 0x15, 0xC7)); //VIOLET
+        }
+          }
+
       vOut.putFrame(output);
 
       //Put out rbg or hsv filter output depending on pipeline settings
-       vOutFilter.putFrame(pipeline.maskOutput());
+       vOutFilter.putFrame(filtered);
     });
 
     visionThread.start();
   }
 
+  public void lineOnScreen(Mat output, double totalWidth, Scalar colour) {
+    double offset = totalWidth/2;
+    double middle = IMG_WIDTH/2.0-adjustment;
+    Imgproc.line(output, new Point(middle+offset, 0), new Point(middle+offset, 120), colour);
+    Imgproc.line(output, new Point(middle-offset, 0), new Point(middle-offset, 120), colour);
+  }
+
+  public void horizLineOnScreen(Mat output, double height, Scalar colour) {
+    Imgproc.line(output, new Point(0, height), new Point(160, height), colour);
+  }
   /* =====================================
   Author: Lucas Jacobs
 
@@ -316,7 +384,7 @@ public class Vision extends SubsystemBase {
       xCentre = this.xCentre;
     }
 
-    double turn = xCentre - (IMG_WIDTH/ 2.0)+3;
+    double turn = xCentre - (IMG_WIDTH/ 2.0)+adjustment;
     SmartDashboard.putNumber("Dist to Target", turn);
 
     return turn; // return difference between the target and where the robot is pointed
@@ -332,14 +400,16 @@ public class Vision extends SubsystemBase {
 
     double x;
     synchronized (imgLock) {
-      x = this.width;
+      x = this.height;
     }
 
+    SmartDashboard.putNumber("Gotten Height", x);
     // Function to supply volts to the shooter (using Excel)
-    shooterSpeed = -0.0429332715477292*x + 6.57254402224279;
+    shooterSpeed = 0.000215681005927434*x*x - 0.0105548924930645*x + 4.4241301579637;
 
     shooterSpeed *= SPEED_ADJUST;
     SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
+    SmartDashboard.putNumber("Speedy", shooterSpeed);
 
     return shooterSpeed; // return difference between the target and where the robot is pointed
   }
