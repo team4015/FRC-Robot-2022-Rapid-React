@@ -28,7 +28,7 @@ public class Underglow extends SubsystemBase
   private SerialPort uart;
   private Timer timer;       // tracks the time between transmitted bytes
   private int index;         // index of the next byte to be transmitted
-  private int [] data;       // data to be transmitted
+  private int [] buffer;     // data to be transmitted
 
   public Underglow()
   {
@@ -39,18 +39,18 @@ public class Underglow extends SubsystemBase
     timer.reset();
     timer.start();
 
-    data = new int[0];
-    index = data.length;
+    buffer = null;
+    index = 0;
   }
 
   public boolean busy()
   {
-    if (data == null)
+    if (buffer == null)
     {
       return false;
     }
 
-    return index < data.length;
+    return index < buffer.length;
   }
 
   @Override
@@ -58,11 +58,11 @@ public class Underglow extends SubsystemBase
   {
     if (busy() && timer.get() >= TX_DELAY)
     {
-      byte [] buffer = new byte[1];
-      buffer[0] = (byte)data[index];
+      byte [] value = new byte[1];
+      value[0] = (byte)buffer[index];
       index++;
 
-      uart.write(buffer, 1);
+      uart.write(value, 1);
       uart.flush();
 
       timer.reset();
@@ -71,15 +71,15 @@ public class Underglow extends SubsystemBase
 
   private void transmit(int [] data)
   {
-    if (!busy())
+    if (!busy() && data != null)
     {
-      this.data = new int[data.length];
+      buffer = new int[data.length];
+      index = 0;
+
       for (int i = 0; i < data.length; i++)
       {
-        this.data[i] = data[i];
+        buffer[i] = data[i];
       }
-
-      index = 0;
     }
   }
 
