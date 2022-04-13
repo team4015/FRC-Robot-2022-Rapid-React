@@ -44,7 +44,7 @@ public class Vision extends SubsystemBase {
   final static int FPS = 30;
 
   final static int TURN_THRESHOLD = 8;
-  final static double SPEED_ADJUST = 1.06; //1.06
+  final static double SPEED_ADJUST = .96; //1.06
 
   private final static double PIXELS_TO_DEGREES = 0.35;
   private final static double TOLERANCE = 4.5;
@@ -311,12 +311,12 @@ public class Vision extends SubsystemBase {
           }
 
           Imgproc.line(output, new Point(adjustment, 0), new Point(adjustment, 40), new Scalar(0,0,0));
-            horizLineOnScreen(output, height, new Scalar(0, 0, 0));
+            /*horizLineOnScreen(output, height, new Scalar(0, 0, 0));
             horizLineOnScreen(output, 33, new Scalar(0x22, 0, 0xE3)); //BGR //RED
             horizLineOnScreen(output, 45, new Scalar(0, 0x7E, 0xFF));
             horizLineOnScreen(output, 57, new Scalar(0x08, 0x88, 0x13));
             horizLineOnScreen(output, 77, new Scalar(0xBA, 0x48, 0));
-            horizLineOnScreen(output, 90, new Scalar(0x85, 0x15, 0xC7)); //VIOLET
+            horizLineOnScreen(output, 90, new Scalar(0x85, 0x15, 0xC7)); //VIOLET*/
 
           this.xCentre = targetRect.x + (targetRect.width / 2); //Set the centre of the bounding rectangle
           this.width = targetRect.width;
@@ -333,11 +333,11 @@ public class Vision extends SubsystemBase {
 
       synchronized (imgLock) {
       Imgproc.line(output, new Point(adjustment, 0), new Point(adjustment, 40), new Scalar(0,0,0));
-            horizLineOnScreen(output, height, new Scalar(0, 0, 0));
-            horizLineOnScreen(output, 24, new Scalar(0x22, 0, 0xE3)); //BGR //RED
-            horizLineOnScreen(output, 33, new Scalar(0, 0x7E, 0xFF));
-            horizLineOnScreen(output, 49, new Scalar(0x08, 0x88, 0x13));
-            horizLineOnScreen(output, 68, new Scalar(0xBA, 0x48, 0));
+            //horizLineOnScreen(output, height, new Scalar(0, 0, 0));
+            horizLineOnScreen(output, 20, new Scalar(0x22, 0, 0xE3)); //BGR //RED
+            horizLineOnScreen(output, 35, new Scalar(0, 0x7E, 0xFF));
+            horizLineOnScreen(output, 50, new Scalar(0x08, 0x88, 0x13));
+            horizLineOnScreen(output, 65, new Scalar(0xBA, 0x48, 0));
             horizLineOnScreen(output, 80, new Scalar(0x85, 0x15, 0xC7)); //VIOLET
       }
 
@@ -394,12 +394,13 @@ public class Vision extends SubsystemBase {
       x = this.height;
     }
 
+    SmartDashboard.putNumber("Gotten Height", x);
     // Function to supply volts to the shooter (using Excel)
-    shooterSpeed = 0.013004629629629700000000000000*x + 3.89616287878786;
+    shooterSpeed = 0.000215681005927434*x*x - 0.0105548924930645*x + 4.4241301579637;
 
     shooterSpeed *= SPEED_ADJUST;
     SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
-    //shooterSpeed = SmartDashboard.getNumber("Speedy", shooterSpeed);
+    SmartDashboard.putNumber("Speedy", shooterSpeed);
 
     return shooterSpeed; // return difference between the target and where the robot is pointed
   }

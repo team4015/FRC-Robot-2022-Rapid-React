@@ -156,11 +156,11 @@ public class Operator
 
             */
 
-        shooterRed.whileHeld(new AutoVisionShoot(robot, 4.3));
-        shooterOrange.whileHeld(new AutoVisionShoot(robot, 4.3));
-        shooterGreen.whileHeld(new AutoVisionShoot(robot, 4.4));
-        shooterBlue.whileHeld(new AutoVisionShoot(robot, 4.6));
-        shooterViolet.whileHeld(new AutoVisionShoot(robot, 5));
+        shooterRed.whileHeld(new AutoVisionShoot(robot, 4.132));
+        shooterOrange.whileHeld(new AutoVisionShoot(robot, 4.142));
+        shooterGreen.whileHeld(new AutoVisionShoot(robot, 4.258));
+        shooterBlue.whileHeld(new AutoVisionShoot(robot, 4.48));
+        shooterViolet.whileHeld(new AutoVisionShoot(robot, 4.4785));
 
         //shooterHub.whenPressed(new AutoHubShoot(robot));
         //shooterSpin.whileHeld(new ShooterSpin(robot, SHOOTER_SPEED_SPIN));
