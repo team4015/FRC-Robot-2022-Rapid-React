@@ -1,6 +1,7 @@
 /* ==================================================
- * Authors: Shane Pinto
- *
+ * Authors:
+ * Shane Pinto
+ * Kyle Pinto
  * --------------------------------------------------
  * Description: Code for LED Light strips underneath
  * robot. Communicates via Serial using the RS-232
