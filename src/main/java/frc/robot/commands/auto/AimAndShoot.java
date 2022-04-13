@@ -17,7 +17,7 @@ public class AimAndShoot extends ParallelCommandGroup {
     public AimAndShoot(Robot robot) {
         super(
             new VisionAim(robot),
-            new AutoVisionShootTimed(robot, 5)
+            new AutoVisionShootTimed(robot, 4)
         );
     }
 }

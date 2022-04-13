@@ -92,7 +92,7 @@
 	</widget>
 	<widget field="Shooter Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.SimpleDial">
 		<location x="985" y="422"/>
-		<property name="Upper Limit" value="1.0"/>
+		<property name="Upper Limit" value="5.0"/>
 		<property name="Lower Limit" value="4.0"/>
 		<property name="Tick Interval" value="0.1"/>
 	</widget>

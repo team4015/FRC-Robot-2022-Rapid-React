@@ -119,12 +119,11 @@ public class Vision extends SubsystemBase {
     inRange = false;
 
     visionPipelines = new SendableChooser<>();
-    visionPipelines.setDefaultOption("Long School Vision", new LongSettings());
-    visionPipelines.addOption("St. Mary Vision", new StMarySettings());
+    visionPipelines.setDefaultOption("Highschool Vision", new LongSettings());
+    visionPipelines.addOption("Provincial Vision", new ProvincialSettings());
+    visionPipelines.addOption("Practice field Vision", new StMarySettings());
     visionPipelines.addOption("Waterloo Vision", new WaterlooSettings());
-    visionPipelines.addOption("School Vision", new SchoolSettings());
     visionPipelines.addOption("Humber Vision", new HumberSettings());
-    visionPipelines.addOption("Test Vision", new TestSettings());
     SmartDashboard.putData(visionPipelines);
 
     showRectangles = new SendableChooser<>();
