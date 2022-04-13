@@ -71,6 +71,7 @@ public class Vision extends SubsystemBase {
 
   private SendableChooser<PipelineSettings> visionPipelines;
   private SendableChooser<Boolean> showRectangles;
+  private SendableChooser<Boolean> showLines;
   private SendableChooser<VisionType> visionType;
 
   private boolean aimingLight;
@@ -130,6 +131,11 @@ public class Vision extends SubsystemBase {
     showRectangles.setDefaultOption("Show Boxes", true);
     showRectangles.addOption("Don't Show Boxes", false);
     SmartDashboard.putData(showRectangles);
+
+    showLines = new SendableChooser<>();
+    showLines.setDefaultOption("Show Lines", true);
+    showLines.addOption("Don't Show Lines", false);
+    SmartDashboard.putData(showLines);
 
     visionType = new SendableChooser<>();
     visionType.setDefaultOption("Long", VisionType.LONG);
@@ -203,6 +209,7 @@ public class Vision extends SubsystemBase {
 
       //Create output frames which will have rectangles drawn on them
       Mat output = new Mat();
+      Mat filtered = pipeline.maskOutput();
       vIn.grabFrame(output);
 
       SmartDashboard.putNumber("Targets Detected", pipeline.filterContoursOutput().size());
@@ -331,7 +338,9 @@ public class Vision extends SubsystemBase {
         }
       }
 
+
       synchronized (imgLock) {
+        if (showLines.getSelected()) {
       Imgproc.line(output, new Point(adjustment, 0), new Point(adjustment, 40), new Scalar(0,0,0));
             //horizLineOnScreen(output, height, new Scalar(0, 0, 0));
             horizLineOnScreen(output, 20, new Scalar(0x22, 0, 0xE3)); //BGR //RED
@@ -339,12 +348,13 @@ public class Vision extends SubsystemBase {
             horizLineOnScreen(output, 50, new Scalar(0x08, 0x88, 0x13));
             horizLineOnScreen(output, 65, new Scalar(0xBA, 0x48, 0));
             horizLineOnScreen(output, 80, new Scalar(0x85, 0x15, 0xC7)); //VIOLET
-      }
+        }
+          }
 
       vOut.putFrame(output);
 
       //Put out rbg or hsv filter output depending on pipeline settings
-       vOutFilter.putFrame(pipeline.maskOutput());
+       vOutFilter.putFrame(filtered);
     });
 
     visionThread.start();
