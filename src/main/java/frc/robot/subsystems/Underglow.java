@@ -16,8 +16,11 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.colours.*;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.*;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Underglow extends SubsystemBase
@@ -32,9 +35,14 @@ public class Underglow extends SubsystemBase
   private int index;         // index of the next byte to be transmitted
   private int [] buffer;     // data to be transmitted
 
+  private Colours oldColour;
+
+  private SendableChooser<Colours> colourOption;
+
   public Underglow()
   {
-    uart = new SerialPort(BAUD_RATE, Port.kOnboard, 8, Parity.kNone, StopBits.kOne);
+    uart = new SerialPort(BAUD_RATE, Port.kMXP, 8, Parity.kNone, StopBits.kOne);
+    uart.reset();
     uart.setFlowControl(FlowControl.kNone);
     uart.setTimeout(TIMEOUT);
 
@@ -44,6 +52,19 @@ public class Underglow extends SubsystemBase
 
     buffer = null;
     index = 0;
+
+    oldColour = new Colours();
+
+    colourOption = new SendableChooser<>();
+    colourOption.addOption("Red", new Red());
+    colourOption.addOption("Green", new Green());
+    colourOption.addOption("Blue", new Blue());
+    colourOption.addOption("Purple", new Purple());
+    colourOption.addOption("Yellow", new Yellow());
+    colourOption.addOption("Orange", new Orange());
+    colourOption.addOption("White", new White());
+    colourOption.addOption("Off", new Off());
+    SmartDashboard.putData(colourOption);
   }
 
   public boolean busy()
@@ -98,45 +119,31 @@ public class Underglow extends SubsystemBase
     transmit(colourPacket);
   }
 
+  public void pickColour()
+  {
+    Colours colour = colourOption.getSelected();
+
+    if (isSameColour(colour, oldColour))
+    {
+      return;
+    }
+    
+    setColour(colour.red, colour.green, colour.blue);
+
+    oldColour.red = colour.red;
+    oldColour.green = colour.green;
+    oldColour.blue = colour.blue;
+  }
+
+  public boolean isSameColour(Colours colour1, Colours colour2)
+  {
+    return (colour1.red == colour2.red) && (colour1.green == colour2.green) && (colour1.blue == colour2.blue);
+  }
+
   // COLOURS //
 
   public void off()
   {
     setColour(0, 0, 0);
-  }
-
-  public void blue()
-  {
-    setColour(0, 0, 255);
-  }
-
-  public void red()
-  {
-    setColour(255, 0, 0);
-  }
-
-  public void green()
-  {
-    setColour(255, 0, 0);
-  }
-
-  public void purple()
-  {
-    setColour(200, 0, 128);
-  }
-
-  public void yellow()
-  {
-    setColour(125, 255, 0);
-  }
-
-  public void orange()
-  {
-    setColour(240, 255, 0);
-  }
-
-  public void white()
-  {
-    setColour(100, 255, 255);
   }
 }
