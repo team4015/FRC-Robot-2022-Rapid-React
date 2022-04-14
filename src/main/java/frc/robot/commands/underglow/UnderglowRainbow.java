@@ -129,12 +129,9 @@ public class UnderglowRainbow extends CommandBase
   @Override
   public void execute()
   {
-    if (!robot.underglow.busy())
-    {
-      updateTargets();
-      updateBrightnesses();
-      updateColour();
-    }
+    updateTargets();
+    updateBrightnesses();
+    updateColour();
   }
 
   @Override

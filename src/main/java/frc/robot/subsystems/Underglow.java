@@ -4,8 +4,8 @@
  * Kyle Pinto
  * --------------------------------------------------
  * Description: Code for LED Light strips underneath
- * robot. Communicates via Serial using the RS-232
- * port (UART) on the RoboRIO.  Bytes will only be
+ * robot. Communicates via Serial using the TTL UART
+ * on the RoboRIO MXP port.  Bytes will only be
  * transmitted to the RGB controller if busy()
  * returns false, meaning that there are no pending
  * bytes to send.
@@ -26,33 +26,17 @@ import edu.wpi.first.wpilibj.Timer;
 public class Underglow extends SubsystemBase
 {
   private static final int HEADER = 0xFF;
-  private static final int BAUD_RATE = 9600;
-  private static final double TIMEOUT = 100e-3;    // 100 ms
-  private static final double TX_DELAY = 1.5e-3;   // 1.5 ms
 
-  private SerialPort uart;
-  private Timer timer;       // tracks the time between transmitted bytes
-  private int index;         // index of the next byte to be transmitted
-  private int [] buffer;     // data to be transmitted
-
-  private Colours oldColour;
+  private SerialThread serialThread;
+  private int index;       // index of the next byte to be transmitted
+  private int [] buffer;   // data to be transmitted
+  private Object mutex;    // buffer mutex
 
   private SendableChooser<Colours> colourOption;
+  private Colours oldColour;
 
   public Underglow()
   {
-    uart = new SerialPort(BAUD_RATE, Port.kMXP, 8, Parity.kNone, StopBits.kOne);
-    uart.reset();
-    uart.setFlowControl(FlowControl.kNone);
-    uart.setTimeout(TIMEOUT);
-
-    timer = new Timer();
-    timer.reset();
-    timer.start();
-
-    buffer = null;
-    index = 0;
-
     oldColour = new Colours();
 
     colourOption = new SendableChooser<>();
@@ -65,9 +49,17 @@ public class Underglow extends SubsystemBase
     colourOption.addOption("White", new White());
     colourOption.addOption("Off", new Off());
     SmartDashboard.putData(colourOption);
+
+    buffer = null;
+    index = 0;
+    mutex = new Object();
+    
+    serialThread = new SerialThread();
+    serialThread.start();
   }
 
-  public boolean busy()
+  // Do not call this method without acquiring the mutex first
+  private boolean busy()
   {
     if (buffer == null)
     {
@@ -77,26 +69,71 @@ public class Underglow extends SubsystemBase
     return index < buffer.length;
   }
 
-  @Override
-  public void periodic()
+  private class SerialThread extends Thread
   {
-    if (busy() && timer.get() >= TX_DELAY)
+    private static final int BAUD_RATE = 9600;
+    private static final double TIMEOUT = 100e-3;    // 100 ms
+    private static final double TX_DELAY = 1.5e-3;   // 1.5 ms
+
+    private SerialPort uart;
+    private Timer timer;       // tracks the time between transmitted bytes
+
+    public SerialThread()
     {
-      byte [] value = new byte[1];
-      value[0] = (byte)buffer[index];
-      index++;
+      uart = new SerialPort(BAUD_RATE, Port.kMXP, 8, Parity.kNone, StopBits.kOne);
+      uart.reset();
+      uart.setFlowControl(FlowControl.kNone);
+      uart.setTimeout(TIMEOUT);
 
-      uart.write(value, 1);
-      uart.flush();
-
+      timer = new Timer();
       timer.reset();
+      timer.start();
+    }
+
+    @Override
+    public void run()
+    {
+      boolean write = false;
+      byte value = 0;
+
+      while (true)
+      {
+        // acquire mutex and load next byte
+        synchronized (mutex)
+        {
+          if (busy() && timer.get() >= TX_DELAY)
+          {
+            value = (byte)buffer[index];
+            index++;
+            write = true;
+          }
+        }
+
+        // TX byte after releasing mutex.
+        // write() may block so we release the mutex to unblock transmit().
+        if (write)
+        {
+          byte [] writeBuffer = new byte[1];
+          writeBuffer[0] = value;
+          uart.write(writeBuffer, 1);
+          uart.flush();
+          timer.reset();
+          write = false;
+        }
+      }
     }
   }
 
   private void transmit(int [] data)
   {
-    if (!busy() && data != null)
+    // acquire the mutex and save the data if there isn't other data waiting to be transmitted
+    synchronized (mutex)
     {
+      if (busy() || data == null)
+      {
+        return;
+      }
+
       buffer = new int[data.length];
       index = 0;
 
@@ -106,6 +143,8 @@ public class Underglow extends SubsystemBase
       }
     }
   }
+
+  // PUBLIC API //
 
   public void setColour(int red, int green, int blue)
   {
@@ -127,7 +166,7 @@ public class Underglow extends SubsystemBase
     {
       return;
     }
-    
+
     setColour(colour.red, colour.green, colour.blue);
 
     oldColour.red = colour.red;
@@ -139,8 +178,6 @@ public class Underglow extends SubsystemBase
   {
     return (colour1.red == colour2.red) && (colour1.green == colour2.green) && (colour1.blue == colour2.blue);
   }
-
-  // COLOURS //
 
   public void off()
   {
