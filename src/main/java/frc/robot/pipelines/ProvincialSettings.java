@@ -15,10 +15,10 @@ public class ProvincialSettings extends PipelineSettings {
 		cameraExposure = 25;
 
 		rgbThresholdRed[0] = 100;
-		rgbThresholdRed[1] = 242;
+		rgbThresholdRed[1] = 250;
 		rgbThresholdGreen[0] = 140;
 		rgbThresholdGreen[1] = 255;
-		rgbThresholdBlue[0] = 124;
+		rgbThresholdBlue[0] = 110;
 		rgbThresholdBlue[1] = 255;
 
 		hsvThresholdHue[0] = 60;

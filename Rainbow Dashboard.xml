@@ -1,7 +1,7 @@
 <xml version="1.0">
 <dashboard>
 	<widget field="SendableChooser[4]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="0" y="590"/>
+		<location x="1243" y="304"/>
 	</widget>
 	<widget field="Target Height" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
 		<location x="708" y="55"/>
@@ -97,7 +97,7 @@
 		<property name="Tick Interval" value="0.1"/>
 	</widget>
 	<widget field="SendableChooser[3]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="1247" y="324"/>
+		<location x="348" y="581"/>
 	</widget>
 	<widget field="Has Pressure" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
 		<location x="799" y="511"/>

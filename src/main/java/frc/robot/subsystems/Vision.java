@@ -44,7 +44,7 @@ public class Vision extends SubsystemBase {
   final static int FPS = 30;
 
   final static int TURN_THRESHOLD = 8;
-  final static double SPEED_ADJUST = .96; //1.06
+   double SPEED_ADJUST = 1.08; //.96 for school
 
   private final static double PIXELS_TO_DEGREES = 0.35;
   private final static double TOLERANCE = 4.5;
@@ -97,6 +97,7 @@ public class Vision extends SubsystemBase {
     pid.setTolerance(TOLERANCE);
     pid.setIntegratorRange(-.5, .5);
 
+    SmartDashboard.putNumber("Speed Adjust",SPEED_ADJUST);
     SmartDashboard.putNumber("Inverse Height", height);
     SmartDashboard.putNumber("Adjust", adjustment);
     SmartDashboard.putNumber("Overlay Width", overlayWidth);
@@ -407,6 +408,7 @@ public class Vision extends SubsystemBase {
     // Function to supply volts to the shooter (using Excel)
     shooterSpeed = 0.000215681005927434*x*x - 0.0105548924930645*x + 4.4241301579637;
 
+    SPEED_ADJUST = SmartDashboard.getNumber("Speed Adjust", SPEED_ADJUST);
     shooterSpeed *= SPEED_ADJUST;
     SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
     SmartDashboard.putNumber("Speedy", shooterSpeed);

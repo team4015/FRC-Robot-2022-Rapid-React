@@ -35,7 +35,7 @@ public class AutoVisionShoot extends CommandBase
 
   // CONSTANTS //
   private final static double CONVEYOR_REVERSE_TIME = 0.3;
-  private final static int SAVED_SPEEDS = 90;
+  private final static int SAVED_SPEEDS = 100;
   private final static double DIFF_THRESHOLD = 1; 
   private final static double CONVEYOR_FEED_TIME = 0.25; 
   private final static double TIME_BETWEEN_BALLS = .6;
