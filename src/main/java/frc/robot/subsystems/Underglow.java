@@ -158,6 +158,31 @@ public class Underglow extends SubsystemBase
     transmit(colourPacket);
   }
 
+  public void setAlignment(boolean aligned)
+  {
+    Colours colour;
+
+    if (aligned)
+    {
+      colour = new Green();
+    }
+    else
+    {
+      colour = new Red();
+    }
+
+    if (isSameColour(colour, oldColour))
+    {
+      return;
+    }
+
+    setColour(colour.red, colour.green, colour.blue);
+
+    oldColour.red = colour.red;
+    oldColour.green = colour.green;
+    oldColour.blue = colour.blue;
+  }
+
   public void pickColour()
   {
     Colours colour = colourOption.getSelected();

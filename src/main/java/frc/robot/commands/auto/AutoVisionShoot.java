@@ -48,7 +48,7 @@ public class AutoVisionShoot extends CommandBase
     vision = robot.vision;
 
     // subsystems that this command requires
-    addRequirements(robot.shooter/*, robot.conveyor*/);
+    addRequirements(robot.shooter, robot.underglow);
   }
 
   // METHODS //
@@ -140,6 +140,7 @@ public class AutoVisionShoot extends CommandBase
   * ===============================*/
   private boolean constantShooterSpeed() {
     boolean aligned = robot.vision.isAligned();
+    robot.underglow.setAlignment(aligned);
     boolean isConsistent = false;
     double currentSpeed = vision.getShooterSpeed();
     speeds.add(currentSpeed);

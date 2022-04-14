@@ -12,7 +12,7 @@ public class Yellow extends Colours
 {
     public Yellow()
     {
-        red = 125;
+        red = 255;
         green = 255;
         blue = 0;
     }
