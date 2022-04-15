@@ -160,8 +160,8 @@ public class Vision extends SubsystemBase {
   }
 
   public double getTurnSpeed() {
-    //if (Math.abs(turnSpeed) < MAX_TURN_SPEED) return turnSpeed;
-    return turnSpeed;
+    if (Math.abs(turnSpeed) <= 3.5) return turnSpeed;
+    else return Math.copySign(3.5, turnSpeed);
   }
 
   /* =====================================
@@ -271,7 +271,7 @@ public class Vision extends SubsystemBase {
             Point potentialCentre = new Point(potential.x + potential.width/2, potential.y + potential.height/2);
 
             //if potential rect is in target
-            if (Math.abs(potentialCentre.x - checkedCentre.x) < 40 && Math.abs(potentialCentre.y - checkedCentre.y) < 20) {
+            if (Math.abs(potentialCentre.x - checkedCentre.x) < 30 && Math.abs(potentialCentre.y - checkedCentre.y) < 12) {
               checkThese.add(potential);
               targets.remove(i);
               i--;
@@ -310,7 +310,7 @@ public class Vision extends SubsystemBase {
         }
 
         if (contour.y + contour.height > .85*IMG_HEIGHT) continue; // Skip rectangles in the bottom fourth of the screen
-
+        if (contour.area() > 1600) continue;
         if (contour.width > targetRect.width) targetRect = contour;
 
         // Show contours in green
@@ -422,9 +422,9 @@ public class Vision extends SubsystemBase {
     double turn = xCentre - (IMG_WIDTH/ 2.0)+adjustment;
     SmartDashboard.putNumber("Dist to Target", turn);
 
+    //return (2)
   //  if (height < 60) {
-    if (Math.abs(angleError) > 3) return turn; // return difference between the target and where the robot is pointed
-    else return 0;
+     return turn; // return difference between the target and where the robot is pointed
     // } else {
  //   return Math.
  // }
@@ -601,16 +601,19 @@ public class Vision extends SubsystemBase {
       currentAngle = angle;
       double pidAdjustment = pid.calculate(currentAngle);
       double estimate = 0;
-      if (Math.abs(turn) > TOLERANCE) estimate = Math.copySign(estimateCoeff, turn);
-      turnSpeed = pidAdjustment + feedForward.calculate(estimate);
+      if (Math.abs(angleError) > TOLERANCE*.75) { estimate = Math.copySign(estimateCoeff, turn);
+      turnSpeed = pidAdjustment + feedForward.calculate(estimate);}
+   // turnSpeed = Math.copySign(2.6, turn);}
+      else turnSpeed = 0;
     } else {
       previousTurn = turn;
       angleError = turn*PIXELS_TO_DEGREES;
       currentAngle = angle;
       double pidAdjustment = pid.calculate(currentAngle, currentAngle + angleError);
       double estimate = 0;
-      if (Math.abs(turn) > TOLERANCE) estimate = Math.copySign(estimateCoeff, turn);
-      turnSpeed = pidAdjustment +  feedForward.calculate(estimate); // get new PID value and change the setpoint
+     if (Math.abs(angleError) > TOLERANCE*.75) {estimate = Math.copySign(estimateCoeff, turn);
+     turnSpeed = pidAdjustment +  feedForward.calculate(estimate); /*turnSpeed = Math.copySign(2.6, turn);*/} // get new PID value and change the setpoint
+      else turnSpeed = 0;
     }
 
     aligned = Math.abs(angleError) < TOLERANCE && inRange;

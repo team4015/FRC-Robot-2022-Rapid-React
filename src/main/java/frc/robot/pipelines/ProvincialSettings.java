@@ -30,15 +30,15 @@ public class ProvincialSettings extends PipelineSettings {
 
 		filterContoursMinArea = 1.0;
 		filterContoursMinPerimeter = 0.0;
-		filterContoursMinWidth = 0.0;
+		filterContoursMinWidth = 2.0;
 		filterContoursMaxWidth = 1000.0;
 		filterContoursMinHeight = 0.0;
 		filterContoursMaxHeight = 30.0;
-		filterContoursSolidity[0] = 0;
+		filterContoursSolidity[0] = 30;
 		filterContoursSolidity[1] = 100;
 		filterContoursMaxVertices = 1000000.0;
 		filterContoursMinVertices = 0.0;
-		filterContoursMinRatio = 1.1;
+		filterContoursMinRatio = 0.5;
 		filterContoursMaxRatio = 30;
 	}
 }
