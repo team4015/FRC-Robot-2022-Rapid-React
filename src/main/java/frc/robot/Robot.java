@@ -105,8 +105,6 @@ public class Robot
 
     vision.initCamera();
     shooter.stop();
-
-    underglow.off();
   }
 
   /* -------------------------------------

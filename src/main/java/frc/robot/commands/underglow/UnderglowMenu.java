@@ -37,7 +37,7 @@ public class UnderglowMenu extends CommandBase
   @Override
   public void initialize()
   {
-    robot.underglow.off();
+    robot.underglow.pickColour();
   }
 
   @Override
@@ -49,7 +49,7 @@ public class UnderglowMenu extends CommandBase
   @Override
   public void end(boolean interrupted)
   {
-    robot.underglow.off();
+    
   }
 
   @Override

@@ -181,15 +181,17 @@ public class Underglow extends SubsystemBase
     }
 
     setColour(colour.red, colour.green, colour.blue);
-
-    oldColour.red = colour.red;
-    oldColour.green = colour.green;
-    oldColour.blue = colour.blue;
+    saveOldColour(colour);
   }
 
   public void pickColour()
   {
     Colours colour = colourOption.getSelected();
+
+    if (colour == null)
+    {
+      return;
+    }
 
     if (isSameColour(colour, oldColour))
     {
@@ -197,7 +199,11 @@ public class Underglow extends SubsystemBase
     }
 
     setColour(colour.red, colour.green, colour.blue);
+    saveOldColour(colour);
+  }
 
+  private void saveOldColour(Colours colour)
+  {
     oldColour.red = colour.red;
     oldColour.green = colour.green;
     oldColour.blue = colour.blue;
@@ -212,10 +218,12 @@ public class Underglow extends SubsystemBase
   {
     Colours colour = new Off();
 
-    setColour(colour.red, colour.green, colour.blue);
+    if (isSameColour(colour, oldColour))
+    {
+      return;
+    }
 
-    oldColour.red = colour.red;
-    oldColour.green = colour.green;
-    oldColour.blue = colour.blue;
+    setColour(colour.red, colour.green, colour.blue);
+    saveOldColour(colour);
   }
 }
