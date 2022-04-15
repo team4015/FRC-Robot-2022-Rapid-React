@@ -22,6 +22,7 @@ public class TurnAngle extends CommandBase
   private double speed;
   private double degrees;
   private double targetAngle;
+  private boolean endCommand;
 
   // CONSTANTS //
   private static final double MIN_TURN_SPEED = .5
@@ -47,6 +48,7 @@ public class TurnAngle extends CommandBase
   public void initialize()
   {
     targetAngle = robot.drivetrain.gyroAngle() + degrees;
+    endCommand = false;
 
     SmartDashboard.putString("Robot Mode:", "Turn Angle");
   }
@@ -58,13 +60,10 @@ public class TurnAngle extends CommandBase
     double currentAngle = robot.drivetrain.gyroAngle();
     double error = targetAngle - currentAngle;
 
-    while (Math.abs(error) > ANGLE_THRESHOLD) {
+    if (Math.abs(error) < ANGLE_THRESHOLD) endCommand =true;
       double turnSpeed = Math.copySign(Math.max(MIN_TURN_SPEED, Math.abs(speed*error)), error); 
 
       robot.drivetrain.moveMotors(0, turnSpeed);
-      currentAngle = robot.drivetrain.gyroAngle();
-      error = targetAngle - currentAngle;
-    }
   }
 
   // Called once the command ends or is interrupted.
@@ -81,6 +80,6 @@ public class TurnAngle extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return true;
+    return endCommand;
   }
 }

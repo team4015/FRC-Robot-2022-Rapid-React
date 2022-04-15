@@ -120,8 +120,8 @@ public class Vision extends SubsystemBase {
     inRange = false;
 
     visionPipelines = new SendableChooser<>();
-    visionPipelines.setDefaultOption("Highschool Vision", new LongSettings());
-    visionPipelines.addOption("Provincial Vision", new ProvincialSettings());
+    visionPipelines.setDefaultOption("Provincial Vision", new ProvincialSettings());
+    visionPipelines.addOption("Highschool Vision", new LongSettings());
     visionPipelines.addOption("Practice field Vision", new StMarySettings());
     visionPipelines.addOption("Waterloo Vision", new WaterlooSettings());
     visionPipelines.addOption("Humber Vision", new HumberSettings());
@@ -225,7 +225,7 @@ public class Vision extends SubsystemBase {
         for (int i = 0; i < pipeline.filterContoursOutput().size(); i++) {
           Rect contour = Imgproc.boundingRect(pipeline.filterContoursOutput().get(i));
 
-          if (contour.y + contour.height > .85*IMG_HEIGHT) continue; // Skip rectangles in the bottom fourth of the screen
+         //  if (contour.y + contour.height > .85*IMG_HEIGHT) continue; // Skip rectangles in the bottom fourth of the screen
           targets.add(contour);
 
           if (contour.area() > biggest.area()) biggest = contour;
@@ -237,13 +237,7 @@ public class Vision extends SubsystemBase {
             }
           }
         }
-        // --------------------------------------------- 
-        LinkedList<Rect> checkThese = new LinkedList<Rect>();
-
-        checkThese.add(biggest);
-
-        Rect targetRect = biggest.clone();
-
+        // ---------------------------------------------
         //Show biggest contour in red
         synchronized (imgLock) {
           if (showRectangles.getSelected()) {
@@ -251,6 +245,21 @@ public class Vision extends SubsystemBase {
           }
         }
 
+        ArrayList<Rect> targetRects = new ArrayList<>();
+        LinkedList<Rect> checkThese = new LinkedList<Rect>();
+        boolean firstLoop = true;
+        
+        while (targets.size() > 0) {
+          Rect targetRect = new Rect();
+
+          if (firstLoop) {
+            targetRect = biggest;
+            firstLoop = false;
+          } else {
+            targetRect = targets.get(0);
+          } 
+
+          checkThese.add(targetRect);
         while (checkThese.size() > 0) { // Go through rectangles in the target
           Rect checked = checkThese.pop();
 
@@ -286,6 +295,26 @@ public class Vision extends SubsystemBase {
             }
           }
         }
+        targetRects.add(targetRect);
+        }
+
+      Rect targetRect = biggest;
+
+      for (int i = 0; i < targetRects.size(); i++) {
+        Rect contour = targetRects.get(i);
+
+        if (contour.y + contour.height > .85*IMG_HEIGHT) continue; // Skip rectangles in the bottom fourth of the screen
+
+        if (contour.width > targetRect.width) targetRect = contour;
+
+        // Show contours in green
+        //synchronized (imgLock) {
+        //  if (showRectangles.getSelected()) {
+        //    Imgproc.rectangle(output, contour,  new Scalar(0, 255, 255, 255), 1);
+        //  }
+      }
+
+
         //-----------------------------------------------------
 
         synchronized (imgLock) {
