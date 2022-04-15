@@ -303,6 +303,12 @@ public class Vision extends SubsystemBase {
       for (int i = 0; i < targetRects.size(); i++) {
         Rect contour = targetRects.get(i);
 
+        synchronized (imgLock) {
+          if (showRectangles.getSelected()) {
+            Imgproc.rectangle(output, contour,  new Scalar(0xE6, 0xD8, 0xAD, 255), 1);
+          }
+        }
+
         if (contour.y + contour.height > .85*IMG_HEIGHT) continue; // Skip rectangles in the bottom fourth of the screen
 
         if (contour.width > targetRect.width) targetRect = contour;

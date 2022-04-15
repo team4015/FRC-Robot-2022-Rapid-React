@@ -25,7 +25,7 @@ public class ProvincialSettings extends PipelineSettings {
 		hsvThresholdHue[1] = 164;
 		hsvThresholdSaturation[0] = 25;
 		hsvThresholdSaturation[1] = 255;
-		hsvThresholdValue[0] = 140;
+		hsvThresholdValue[0] = 160;
 		hsvThresholdValue[1] = 255.0;
 
 		filterContoursMinArea = 1.0;
