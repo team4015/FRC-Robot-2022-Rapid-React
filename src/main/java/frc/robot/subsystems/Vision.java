@@ -50,7 +50,7 @@ public class Vision extends SubsystemBase {
   private final static double TOLERANCE = 4.5;
   //private final static double BASE_TURN_SPEED = .3;
   //private final static double MIN_TURN_SPEED = 0.5;
-  //private final static double MAX_TURN_SPEED = 0.8;
+  private final static double MAX_TURN_SPEED = 3;
 
   // VARIABLES //
   private VisionThread visionThread;
@@ -78,7 +78,7 @@ public class Vision extends SubsystemBase {
   private boolean shootingLight;
 
   private PIDController pid;
-  private double p = 0.04;
+  private double p = 0.03;
   private double i = 0.1;
   private double d = 0.001;
 
@@ -160,7 +160,8 @@ public class Vision extends SubsystemBase {
   }
 
   public double getTurnSpeed() {
-    return turnSpeed;
+    if (Math.abs(turnSpeed) < MAX_TURN_SPEED) return turnSpeed;
+    else return Math.copySign(MAX_TURN_SPEED, turnSpeed);
   }
 
   /* =====================================
@@ -258,7 +259,6 @@ public class Vision extends SubsystemBase {
           } else {
             targetRect = targets.get(0);
           } 
-
           checkThese.add(targetRect);
         while (checkThese.size() > 0) { // Go through rectangles in the target
           Rect checked = checkThese.pop();
@@ -298,7 +298,7 @@ public class Vision extends SubsystemBase {
         targetRects.add(targetRect);
         }
 
-      Rect targetRect = biggest;
+     Rect targetRect = biggest;
 
       for (int i = 0; i < targetRects.size(); i++) {
         Rect contour = targetRects.get(i);
@@ -315,9 +315,9 @@ public class Vision extends SubsystemBase {
 
         // Show contours in green
         //synchronized (imgLock) {
-        //  if (showRectangles.getSelected()) {
-        //    Imgproc.rectangle(output, contour,  new Scalar(0, 255, 255, 255), 1);
-        //  }
+          //if (showRectangles.getSelected()) {
+            //Imgproc.rectangle(output, contour,  new Scalar(0, 255, 255, 255), 1);
+        //}
       }
 
 
@@ -376,7 +376,7 @@ public class Vision extends SubsystemBase {
 
       synchronized (imgLock) {
         if (showLines.getSelected()) {
-      Imgproc.line(output, new Point(adjustment, 0), new Point(adjustment, 40), new Scalar(0,0,0));
+      //Imgproc.line(output, new Point(adjustment, 0), new Point(adjustment, 40), new Scalar(0,0,0));
             //horizLineOnScreen(output, height, new Scalar(0, 0, 0));
             horizLineOnScreen(output, 20, new Scalar(0x22, 0, 0xE3)); //BGR //RED
             horizLineOnScreen(output, 35, new Scalar(0, 0x7E, 0xFF));
