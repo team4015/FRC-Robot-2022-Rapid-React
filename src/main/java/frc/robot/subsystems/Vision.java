@@ -78,8 +78,8 @@ public class Vision extends SubsystemBase {
   private boolean shootingLight;
 
   private PIDController pid;
-  private double p = 0.03;
-  private double i = 0.1;
+  private double p = 0.02;
+  private double i = 0.08;
   private double d = 0.001;
 
   private double estimateCoeff = 0.3
@@ -160,8 +160,8 @@ public class Vision extends SubsystemBase {
   }
 
   public double getTurnSpeed() {
-    if (Math.abs(turnSpeed) < MAX_TURN_SPEED) return turnSpeed;
-    else return Math.copySign(MAX_TURN_SPEED, turnSpeed);
+    //if (Math.abs(turnSpeed) < MAX_TURN_SPEED) return turnSpeed;
+    return turnSpeed;
   }
 
   /* =====================================
@@ -414,7 +414,6 @@ public class Vision extends SubsystemBase {
   ===================================== */
   public double aimAtTarget() {
     if (!inRange) return 0;
-
     double xCentre;
     synchronized (imgLock) {
       xCentre = this.xCentre;
@@ -423,7 +422,12 @@ public class Vision extends SubsystemBase {
     double turn = xCentre - (IMG_WIDTH/ 2.0)+adjustment;
     SmartDashboard.putNumber("Dist to Target", turn);
 
-    return turn; // return difference between the target and where the robot is pointed
+  //  if (height < 60) {
+    if (Math.abs(angleError) > 3) return turn; // return difference between the target and where the robot is pointed
+    else return 0;
+    // } else {
+ //   return Math.
+ // }
   }
 
   /* =====================================
