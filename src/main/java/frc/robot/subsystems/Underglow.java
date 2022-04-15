@@ -43,7 +43,7 @@ public class Underglow extends SubsystemBase
     colourOption.addOption("Red", new Red());
     colourOption.addOption("Green", new Green());
     colourOption.addOption("Blue", new Blue());
-    colourOption.addOption("Purple", new Purple());
+    colourOption.setDefaultOption("Purple", new Purple());
     colourOption.addOption("Yellow", new Yellow());
     colourOption.addOption("Orange", new Orange());
     colourOption.addOption("White", new White());
@@ -158,13 +158,17 @@ public class Underglow extends SubsystemBase
     transmit(colourPacket);
   }
 
-  public void setAlignment(boolean aligned)
+  public void setAlignment(boolean aligned, boolean isConsistent)
   {
     Colours colour;
 
-    if (aligned)
+    if (aligned && isConsistent)
     {
       colour = new Green();
+    }
+    else if (aligned && !isConsistent)
+    {
+      colour = new Yellow();
     }
     else
     {
@@ -206,6 +210,12 @@ public class Underglow extends SubsystemBase
 
   public void off()
   {
-    setColour(0, 0, 0);
+    Colours colour = new Off();
+
+    setColour(colour.red, colour.green, colour.blue);
+
+    oldColour.red = colour.red;
+    oldColour.green = colour.green;
+    oldColour.blue = colour.blue;
   }
 }

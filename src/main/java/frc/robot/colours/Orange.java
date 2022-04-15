@@ -12,8 +12,8 @@ public class Orange extends Colours
 {
     public Orange()
     {
-        red = 240;
-        green = 255;
+        red = 255;
+        green = 60;
         blue = 0;
     }
 }

@@ -43,7 +43,7 @@ public class UnderglowMenu extends CommandBase
   @Override
   public void execute()
   {
-      robot.underglow.pickColour();
+    robot.underglow.pickColour();
   }
 
   @Override

@@ -14,6 +14,6 @@ public class White extends Colours
     {
         red = 255;
         green = 255;
-        blue = 255;
+        blue = 90;
     }
 }

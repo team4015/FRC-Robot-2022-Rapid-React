@@ -72,6 +72,8 @@ public class AutoVisionShoot extends CommandBase
     timerInit = 0;
 
     SmartDashboard.putString("Robot Mode:", "Auto Shoot");
+
+    robot.underglow.setAlignment(false, false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -140,7 +142,6 @@ public class AutoVisionShoot extends CommandBase
   * ===============================*/
   private boolean constantShooterSpeed() {
     boolean aligned = robot.vision.isAligned();
-    robot.underglow.setAlignment(aligned);
     boolean isConsistent = false;
     double currentSpeed = vision.getShooterSpeed();
     speeds.add(currentSpeed);
@@ -163,6 +164,9 @@ public class AutoVisionShoot extends CommandBase
 
     SmartDashboard.putBoolean("Aligned Auto", aligned);
     SmartDashboard.putBoolean("Consistent Speed", isConsistent);
+
+    robot.underglow.setAlignment(aligned, isConsistent);
+
     return aligned && isConsistent;
   }
 }
