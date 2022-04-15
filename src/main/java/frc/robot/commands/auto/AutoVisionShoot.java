@@ -49,7 +49,7 @@ public class AutoVisionShoot extends CommandBase
     vision = robot.vision;
 
     // subsystems that this command requires
-    addRequirements(robot.shooter/*, robot.conveyor*/);
+    addRequirements(robot.shooter, robot.underglow);
   }
 
   // METHODS //
@@ -72,6 +72,8 @@ public class AutoVisionShoot extends CommandBase
     timerInit = 0;
 
     SmartDashboard.putString("Robot Mode:", "Auto Shoot");
+
+    robot.underglow.setAlignment(false, false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -162,6 +164,9 @@ public class AutoVisionShoot extends CommandBase
 
     SmartDashboard.putBoolean("Aligned Auto", aligned);
     SmartDashboard.putBoolean("Consistent Speed", isConsistent);
+
+    robot.underglow.setAlignment(aligned, isConsistent);
+
     return aligned && isConsistent;
   }
 
