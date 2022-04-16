@@ -29,11 +29,12 @@ public class TwoBallAuto extends SequentialCommandGroup {
         super(
             new IntakeDeploy(robot),
             new IntakeSpinForever(robot),
-            new DriveDistance(robot, 1.6),
+            new DriveDistance(robot, 1),
             new Wait(2),
             new IntakeRetract(robot),
             new StopIntakeSpinForever(robot),
-            new TurnAngle(robot, 0.01, 180),
+            new TurnAngle(robot, 0.01, 170),
+            new DriveDistance(robot, 0.4),
            new AimAndShoot(robot)
         );
         this.robot = robot;
