@@ -23,6 +23,8 @@ public class AutoShoot extends CommandBase
   private Timer timer;
   private double speed;
   private double timeToShot;
+  private boolean timerReset;
+  private boolean endCommand;
   private final static double CONVEYOR_SPIN_TIME = .5;
 
   // CONSTANTS //
@@ -35,6 +37,7 @@ public class AutoShoot extends CommandBase
     this.speed = speed;
     this.timeToShot = timeToShot;
     timer = new Timer();
+    timerReset = false;
 
     // subsystems that this command requires
     addRequirements(robot.shooter, robot.conveyor);
@@ -48,6 +51,8 @@ public class AutoShoot extends CommandBase
   {
     timer.start();
     timer.reset();
+    timerReset = false;
+    endCommand = false;
     SmartDashboard.putString("Robot Mode:", "Auto Shoot");
   }
 
@@ -56,16 +61,20 @@ public class AutoShoot extends CommandBase
   public void execute()
   {
     //Spin shooter
-    while (timer.get() < timeToShot) {
+    if (timer.get() < timeToShot) {
       robot.shooter.spin(speed);
+    } else if (timer.get() < CONVEYOR_SPIN_TIME) {
+
+    if (!timerReset) {
+      timer.reset();
+      timerReset = true;
     }
 
-    timer.reset();
-
     //Spin shooter and feed the conveyor
-    while (timer.get() < CONVEYOR_SPIN_TIME) {
       robot.shooter.spin(speed);
       robot.conveyor.feed();
+    } else {
+      endCommand = true;
     }
   }
 
@@ -85,6 +94,6 @@ public class AutoShoot extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return true;
+    return endCommand;
   }
 }

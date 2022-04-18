@@ -22,6 +22,7 @@ public class DriveDistance extends CommandBase
 
   private Robot robot;
   private double distance;
+  private boolean endCommand;
 
   // CONSTANTS //
   private static final double DRIVE_SPEED = .7;
@@ -43,7 +44,7 @@ public class DriveDistance extends CommandBase
   public void initialize()
   {
     robot.drivetrain.resetOdometry(new Pose2d(0,0,new Rotation2d(0)));
-
+    endCommand = false;
     SmartDashboard.putString("Robot Mode:", "Drive Distance");
   }
 
@@ -51,9 +52,8 @@ public class DriveDistance extends CommandBase
   @Override
   public void execute()
   {
-    while (robot.drivetrain.updateOdometry().getX() < distance) {
+    if (robot.drivetrain.updateOdometry().getX() >= distance) endCommand = true;
       robot.drivetrain.moveMotors(DRIVE_SPEED, 0);
-    }
   }
 
   // Called once the command ends or is interrupted.
@@ -70,6 +70,6 @@ public class DriveDistance extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return true;
+    return endCommand;
   }
 }

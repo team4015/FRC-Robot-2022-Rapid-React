@@ -42,7 +42,7 @@ public class StandardPipeline implements VisionPipeline {
 	public double[] hsvThresholdValue = new double[2];
 
     public double filterContoursMinArea = 0;
-	public double maxArea = 500;
+	public double maxArea = 150;
     public double filterContoursMinPerimeter = 0;
     public double filterContoursMinWidth = 0;
 	public double filterContoursMaxWidth = 0;

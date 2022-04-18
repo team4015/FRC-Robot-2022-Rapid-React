@@ -17,7 +17,7 @@ import frc.robot.Robot;
 public class AutoHubShoot extends SequentialCommandGroup {
     public AutoHubShoot(Robot robot) {
         super(
-            new AutoDrive(robot, -.8, 0, 1), // drive backwards
+            new DriveDistance(robot, -1), // drive backwards
             new AutoShoot(robot, .365, 1.7) //shoot
         );
     }

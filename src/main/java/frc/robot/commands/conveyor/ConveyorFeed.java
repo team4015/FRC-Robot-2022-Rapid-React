@@ -46,15 +46,14 @@ public class ConveyorFeed extends CommandBase
   @Override
   public void execute()
   {
-    if (robot.shooter.isAutoShooting()) {
+    /*if (robot.shooter.isAutoShooting()) {
       if (robot.vision.isAligned()) {
         robot.conveyor.feed();
       }
-    } else {
+    } else {*/
       robot.conveyor.feed();
-    }
   }
-
+  
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted)

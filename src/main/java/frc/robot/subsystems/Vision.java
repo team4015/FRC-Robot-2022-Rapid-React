@@ -44,13 +44,13 @@ public class Vision extends SubsystemBase {
   final static int FPS = 30;
 
   final static int TURN_THRESHOLD = 8;
-  final static double SPEED_ADJUST = .96; //1.06
+   double SPEED_ADJUST = 1.08; //.96 for school
 
   private final static double PIXELS_TO_DEGREES = 0.35;
   private final static double TOLERANCE = 4.5;
   //private final static double BASE_TURN_SPEED = .3;
   //private final static double MIN_TURN_SPEED = 0.5;
-  //private final static double MAX_TURN_SPEED = 0.8;
+  private final static double MAX_TURN_SPEED = 3;
 
   // VARIABLES //
   private VisionThread visionThread;
@@ -78,8 +78,8 @@ public class Vision extends SubsystemBase {
   private boolean shootingLight;
 
   private PIDController pid;
-  private double p = 0.04;
-  private double i = 0.1;
+  private double p = 0.02;
+  private double i = 0.08;
   private double d = 0.001;
 
   private double estimateCoeff = 0.3
@@ -97,6 +97,7 @@ public class Vision extends SubsystemBase {
     pid.setTolerance(TOLERANCE);
     pid.setIntegratorRange(-.5, .5);
 
+    SmartDashboard.putNumber("Speed Adjust",SPEED_ADJUST);
     SmartDashboard.putNumber("Inverse Height", height);
     SmartDashboard.putNumber("Adjust", adjustment);
     SmartDashboard.putNumber("Overlay Width", overlayWidth);
@@ -119,8 +120,8 @@ public class Vision extends SubsystemBase {
     inRange = false;
 
     visionPipelines = new SendableChooser<>();
-    visionPipelines.setDefaultOption("Highschool Vision", new LongSettings());
-    visionPipelines.addOption("Provincial Vision", new ProvincialSettings());
+    visionPipelines.setDefaultOption("Provincial Vision", new ProvincialSettings());
+    visionPipelines.addOption("Highschool Vision", new LongSettings());
     visionPipelines.addOption("Practice field Vision", new StMarySettings());
     visionPipelines.addOption("Waterloo Vision", new WaterlooSettings());
     visionPipelines.addOption("Humber Vision", new HumberSettings());
@@ -159,7 +160,8 @@ public class Vision extends SubsystemBase {
   }
 
   public double getTurnSpeed() {
-    return turnSpeed;
+    if (Math.abs(turnSpeed) <= 3.5) return turnSpeed;
+    else return Math.copySign(3.5, turnSpeed);
   }
 
   /* =====================================
@@ -224,7 +226,7 @@ public class Vision extends SubsystemBase {
         for (int i = 0; i < pipeline.filterContoursOutput().size(); i++) {
           Rect contour = Imgproc.boundingRect(pipeline.filterContoursOutput().get(i));
 
-          if (contour.y + contour.height > .85*IMG_HEIGHT) continue; // Skip rectangles in the bottom fourth of the screen
+         //  if (contour.y + contour.height > .85*IMG_HEIGHT) continue; // Skip rectangles in the bottom fourth of the screen
           targets.add(contour);
 
           if (contour.area() > biggest.area()) biggest = contour;
@@ -236,13 +238,7 @@ public class Vision extends SubsystemBase {
             }
           }
         }
-        // --------------------------------------------- 
-        LinkedList<Rect> checkThese = new LinkedList<Rect>();
-
-        checkThese.add(biggest);
-
-        Rect targetRect = biggest.clone();
-
+        // ---------------------------------------------
         //Show biggest contour in red
         synchronized (imgLock) {
           if (showRectangles.getSelected()) {
@@ -250,6 +246,20 @@ public class Vision extends SubsystemBase {
           }
         }
 
+        ArrayList<Rect> targetRects = new ArrayList<>();
+        LinkedList<Rect> checkThese = new LinkedList<Rect>();
+        boolean firstLoop = true;
+        
+        while (targets.size() > 0) {
+          Rect targetRect = new Rect();
+
+          if (firstLoop) {
+            targetRect = biggest;
+            firstLoop = false;
+          } else {
+            targetRect = targets.get(0);
+          } 
+          checkThese.add(targetRect);
         while (checkThese.size() > 0) { // Go through rectangles in the target
           Rect checked = checkThese.pop();
 
@@ -261,7 +271,7 @@ public class Vision extends SubsystemBase {
             Point potentialCentre = new Point(potential.x + potential.width/2, potential.y + potential.height/2);
 
             //if potential rect is in target
-            if (Math.abs(potentialCentre.x - checkedCentre.x) < 40 && Math.abs(potentialCentre.y - checkedCentre.y) < 20) {
+            if (Math.abs(potentialCentre.x - checkedCentre.x) < 30 && Math.abs(potentialCentre.y - checkedCentre.y) < 12) {
               checkThese.add(potential);
               targets.remove(i);
               i--;
@@ -285,6 +295,32 @@ public class Vision extends SubsystemBase {
             }
           }
         }
+        targetRects.add(targetRect);
+        }
+
+     Rect targetRect = biggest;
+
+      for (int i = 0; i < targetRects.size(); i++) {
+        Rect contour = targetRects.get(i);
+
+        synchronized (imgLock) {
+          if (showRectangles.getSelected()) {
+            Imgproc.rectangle(output, contour,  new Scalar(0xE6, 0xD8, 0xAD, 255), 1);
+          }
+        }
+
+        if (contour.y + contour.height > .85*IMG_HEIGHT) continue; // Skip rectangles in the bottom fourth of the screen
+        if (contour.area() > 1600) continue;
+        if (contour.width > targetRect.width) targetRect = contour;
+
+        // Show contours in green
+        //synchronized (imgLock) {
+          //if (showRectangles.getSelected()) {
+            //Imgproc.rectangle(output, contour,  new Scalar(0, 255, 255, 255), 1);
+        //}
+      }
+
+
         //-----------------------------------------------------
 
         synchronized (imgLock) {
@@ -340,7 +376,7 @@ public class Vision extends SubsystemBase {
 
       synchronized (imgLock) {
         if (showLines.getSelected()) {
-      Imgproc.line(output, new Point(adjustment, 0), new Point(adjustment, 40), new Scalar(0,0,0));
+      //Imgproc.line(output, new Point(adjustment, 0), new Point(adjustment, 40), new Scalar(0,0,0));
             //horizLineOnScreen(output, height, new Scalar(0, 0, 0));
             horizLineOnScreen(output, 20, new Scalar(0x22, 0, 0xE3)); //BGR //RED
             horizLineOnScreen(output, 35, new Scalar(0, 0x7E, 0xFF));
@@ -378,7 +414,6 @@ public class Vision extends SubsystemBase {
   ===================================== */
   public double aimAtTarget() {
     if (!inRange) return 0;
-
     double xCentre;
     synchronized (imgLock) {
       xCentre = this.xCentre;
@@ -387,7 +422,12 @@ public class Vision extends SubsystemBase {
     double turn = xCentre - (IMG_WIDTH/ 2.0)+adjustment;
     SmartDashboard.putNumber("Dist to Target", turn);
 
-    return turn; // return difference between the target and where the robot is pointed
+    //return (2)
+  //  if (height < 60) {
+     return turn; // return difference between the target and where the robot is pointed
+    // } else {
+ //   return Math.
+ // }
   }
 
   /* =====================================
@@ -407,6 +447,7 @@ public class Vision extends SubsystemBase {
     // Function to supply volts to the shooter (using Excel)
     shooterSpeed = 0.000215681005927434*x*x - 0.0105548924930645*x + 4.4241301579637;
 
+    SPEED_ADJUST = SmartDashboard.getNumber("Speed Adjust", SPEED_ADJUST);
     shooterSpeed *= SPEED_ADJUST;
     SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
     SmartDashboard.putNumber("Speedy", shooterSpeed);
@@ -560,16 +601,19 @@ public class Vision extends SubsystemBase {
       currentAngle = angle;
       double pidAdjustment = pid.calculate(currentAngle);
       double estimate = 0;
-      if (Math.abs(turn) > TOLERANCE) estimate = Math.copySign(estimateCoeff, turn);
-      turnSpeed = pidAdjustment + feedForward.calculate(estimate);
+      if (Math.abs(angleError) > TOLERANCE*.75) { estimate = Math.copySign(estimateCoeff, turn);
+      turnSpeed = pidAdjustment + feedForward.calculate(estimate);}
+   // turnSpeed = Math.copySign(2.6, turn);}
+      else turnSpeed = 0;
     } else {
       previousTurn = turn;
       angleError = turn*PIXELS_TO_DEGREES;
       currentAngle = angle;
       double pidAdjustment = pid.calculate(currentAngle, currentAngle + angleError);
       double estimate = 0;
-      if (Math.abs(turn) > TOLERANCE) estimate = Math.copySign(estimateCoeff, turn);
-      turnSpeed = pidAdjustment +  feedForward.calculate(estimate); // get new PID value and change the setpoint
+     if (Math.abs(angleError) > TOLERANCE*.75) {estimate = Math.copySign(estimateCoeff, turn);
+     turnSpeed = pidAdjustment +  feedForward.calculate(estimate); /*turnSpeed = Math.copySign(2.6, turn);*/} // get new PID value and change the setpoint
+      else turnSpeed = 0;
     }
 
     aligned = Math.abs(angleError) < TOLERANCE && inRange;
