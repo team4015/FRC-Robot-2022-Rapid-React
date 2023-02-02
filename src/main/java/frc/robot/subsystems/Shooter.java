@@ -17,7 +17,7 @@ public class Shooter extends SubsystemBase
  // Ports //
  public static final int SHOOTER_MOTOR = 2;
  // Constants //
- public static final double DEFAULT_SHOOTER_SPEED= 0.5;
+ public static final double DEFAULT_SHOOTER_SPEED= 0.6;
 
  // VARIABLES // 
  private boolean autoShooting;
